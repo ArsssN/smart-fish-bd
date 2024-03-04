@@ -60,5 +60,3 @@ Route::group(['prefix' => 'invitation'], function () {
 });
 // recovery
 Route::post('recover/{type}', RecoveryController::class);
-// sslcommerz
-require base_path('routes/sslcommerz.php');

@@ -60,27 +60,3 @@ Route::group(['prefix' => 'sms'], function () {
 
 // checkInvitation
 Route::get('/checkInvitation', [\App\Http\Controllers\InvitationController::class, 'checkInvitation']);
-
-// sslcommerz
-Route::group(['prefix' => 'sslcommerz'], function () {
-    Route::get('/', function () {
-
-        return \Illuminate\Support\Facades\Blade::render('<script src="/assets/js/sandbox.js"></script><button class="your-button-class" id="sslczPayBtn"
-                token="if you have any token validation"
-                postdata="your javascript arrays or objects which requires in backend"
-                order=\'{"amount":100,"currency":"BDT","description":"Computer.","name":"Customer Name","email":"","phone":"","address":"","city":"","postcode":"","country":""}\'
-                endpoint="/sslcommerz/pay-via-ajax"> Pay Now
-        </button>');
-        //dd('sslcommerz');
-    });
-
-    Route::get('/example1', [\App\Http\Controllers\SslCommerzPaymentController::class, 'exampleEasyCheckout']);
-    Route::get('/example2', [\App\Http\Controllers\SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-    Route::get('/pay', [\App\Http\Controllers\SslCommerzPaymentController::class, 'index']);
-    Route::post('/pay-via-ajax', [\App\Http\Controllers\SslCommerzPaymentController::class, 'payViaAjax']);
-    Route::post('/success', [\App\Http\Controllers\SslCommerzPaymentController::class, 'success']);
-    Route::post('/fail', [\App\Http\Controllers\SslCommerzPaymentController::class, 'fail']);
-    Route::post('/cancel', [\App\Http\Controllers\SslCommerzPaymentController::class, 'cancel']);
-    Route::post('/ipn', [\App\Http\Controllers\SslCommerzPaymentController::class, 'ipn']);
-});
