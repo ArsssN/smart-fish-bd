@@ -24,4 +24,5 @@ Route::group([
     Route::crud('social', 'SocialCrudController');
     Route::crud('footer-link-group', 'FooterLinkGroupCrudController');
     Route::crud('footer-link', 'FooterLinkCrudController');
+    Route::crud('customer', 'UserCrudController');
 }); // this should be the absolute last line of this file

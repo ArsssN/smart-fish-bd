@@ -1,6 +1,6 @@
 <?php
 $users = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
     'name' => 'Afzalur Rahman Sabbir',
@@ -14,11 +14,11 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'name' => 'Admin',
-    'email' => 'admin@gmail.com',
+    'email' => 'admin@yopmail.com',
     'username' => 'admin',
     'email_verified_at' => NULL,
     'password' => '$2y$10$qXLHzXgR2MwIsxeyyDgFEOonsN0m1ET29JRht6NBVQ8Rim21jhF.u',
@@ -28,15 +28,29 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'User',
-    'email' => 'user@gmail.com',
+    'email' => 'user@yopmail.com',
     'username' => 'user',
     'email_verified_at' => NULL,
     'password' => '$2y$10$jxfSScf5ClZRPSy76ZNedudsd7pUBYeUnVUMzPxHBJEPsYS/RuIlq',
     'is_admin' => 0,
+    'remember_token' => NULL,
+    'created_at' => NULL,
+    'updated_at' => NULL,
+    'deleted_at' => NULL,
+  ),
+  3 =>
+  array (
+    'id' => 4,
+    'name' => 'Super Admin',
+    'email' => 'superadmin@yopmail.com',
+    'username' => 'superadmin',
+    'email_verified_at' => NULL,
+    'password' => '$2a$12$NMYqJXW3s8.LSURNY9lhfuXwDccCLPrZxQ.G81KL3M45J93KBrzXy',
+    'is_admin' => 1,
     'remember_token' => NULL,
     'created_at' => NULL,
     'updated_at' => NULL,

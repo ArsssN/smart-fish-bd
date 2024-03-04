@@ -29,6 +29,6 @@ Route::get('/', function () {
 });
 
 // php info
-Route::get('/phpinfo', function () {
+/*Route::get('/phpinfo', function () {
     return phpinfo();
-});
+});*/
