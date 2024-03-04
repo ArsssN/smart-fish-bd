@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -14,15 +16,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::query()->firstOrCreate([
-            'name'  => 'Admin',
-            'email' => 'smart-fish-bd@yopmail.com',
-            'is_admin' => 1,
-        ], [
-            'password'          => bcrypt('password'),
-            'email_verified_at' => now(),
-        ]);
+        require_once(__DIR__ . '/seeder-data/users.php');
 
-        \App\Models\User::factory(100)->create();
+        DB::table('users')->insert($users ?? []);
     }
 }

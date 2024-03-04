@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-//use App\Http\Resources\Api\UserResource;
+use App\Http\Resources\Api\UserResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +30,7 @@ class AuthHelper
             'expires_at'      => Carbon::parse(
                 $tokenResult->accessToken->expires_at
             )->toDateTimeString(),
-            'user'            => $user,
+            'user'            => UserResource::make($user),
             'isAuthenticated' => true,
         ];
     }

@@ -1,0 +1,136 @@
+<?php
+$invitations = array (
+  0 => 
+  array (
+    'id' => 1,
+    'invitee_id' => 1,
+    'code' => '17082301',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/17082301.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/17082301.png"}',
+    'created_by' => NULL,
+    'created_at' => '2022-12-18 05:17:07',
+    'updated_at' => '2022-12-18 05:17:07',
+    'deleted_at' => NULL,
+  ),
+  1 => 
+  array (
+    'id' => 2,
+    'invitee_id' => 2,
+    'code' => '27166812',
+    'event_id' => 2,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-2\\/27166812.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-2\\/27166812.png"}',
+    'created_by' => NULL,
+    'created_at' => '2022-12-18 05:17:08',
+    'updated_at' => '2022-12-18 05:17:08',
+    'deleted_at' => NULL,
+  ),
+  2 => 
+  array (
+    'id' => 4,
+    'invitee_id' => 3,
+    'code' => '23769393',
+    'event_id' => 2,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-2\\/23769393.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-2\\/23769393.png"}',
+    'created_by' => NULL,
+    'created_at' => '2022-12-18 05:17:10',
+    'updated_at' => '2022-12-18 05:17:10',
+    'deleted_at' => NULL,
+  ),
+  3 => 
+  array (
+    'id' => 5,
+    'invitee_id' => 4,
+    'code' => '45664751',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/16415854.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/16415854.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:41',
+    'updated_at' => '2022-12-20 07:41:41',
+    'deleted_at' => NULL,
+  ),
+  4 => 
+  array (
+    'id' => 6,
+    'invitee_id' => 5,
+    'code' => '55035181',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/19402765.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/19402765.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:42',
+    'updated_at' => '2022-12-20 07:41:42',
+    'deleted_at' => NULL,
+  ),
+  5 => 
+  array (
+    'id' => 7,
+    'invitee_id' => 6,
+    'code' => '60534211',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/13872866.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/13872866.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:43',
+    'updated_at' => '2022-12-20 07:41:43',
+    'deleted_at' => NULL,
+  ),
+  6 => 
+  array (
+    'id' => 8,
+    'invitee_id' => 7,
+    'code' => '73825261',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/15458697.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/15458697.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:43',
+    'updated_at' => '2022-12-20 07:41:43',
+    'deleted_at' => NULL,
+  ),
+  7 => 
+  array (
+    'id' => 9,
+    'invitee_id' => 8,
+    'code' => '81019101',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/19602208.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/19602208.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:44',
+    'updated_at' => '2022-12-20 07:41:44',
+    'deleted_at' => NULL,
+  ),
+  8 => 
+  array (
+    'id' => 10,
+    'invitee_id' => 9,
+    'code' => '92583591',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/13341269.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/13341269.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:44',
+    'updated_at' => '2022-12-20 07:41:44',
+    'deleted_at' => NULL,
+  ),
+  9 => 
+  array (
+    'id' => 11,
+    'invitee_id' => 10,
+    'code' => '10356901',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/16025110.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/16025110.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:45',
+    'updated_at' => '2022-12-20 07:41:45',
+    'deleted_at' => NULL,
+  ),
+  10 => 
+  array (
+    'id' => 12,
+    'invitee_id' => 11,
+    'code' => '11600321',
+    'event_id' => 1,
+    'card' => '{"front":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/10544811.png","back":"https:\\/\\/api.nockbay.com\\/uploads\\/event\\/invitation\\/event-1\\/10544811.png"}',
+    'created_by' => 1,
+    'created_at' => '2022-12-20 07:41:45',
+    'updated_at' => '2022-12-20 07:41:45',
+    'deleted_at' => NULL,
+  ),
+);
+return $invitations;

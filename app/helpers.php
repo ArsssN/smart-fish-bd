@@ -2,7 +2,9 @@
 
 use App\Models\Cycle;
 use App\Models\EMI;
-use App\Models\Role as AppRole;
+use App\Models\Invitation;
+use App\Models\InvitationOtp;
+use App\Models\Setting;
 use App\Models\User;
 use Backpack\PermissionManager\app\Models\Permission;
 use Backpack\PermissionManager\app\Models\Role;
@@ -45,11 +47,14 @@ if (!function_exists('cacheStore')) {
 if (!function_exists('getSettingValue')) {
     /**
      * @param $meta_slug
+     * @param bool $config
      * @return Builder|Model
      */
-    function getSettingValue($meta_slug)
+    function getSettingValue($meta_slug, bool $config = false)
     {
-        return Config::get("settings.{$meta_slug}");
+        return $config
+            ? Config::get("settings.$meta_slug")
+            : Setting::query()->where('key', $meta_slug)->firstOrFail()->value;
     }
 }
 
@@ -162,12 +167,37 @@ if (!function_exists('setPermissionsToAdmin')) {
      * @param bool $manual
      * @return void
      */
-    function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
+    function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = []): void
     {
         $guard_name        = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except        = array_unique(array_merge($except, [
+        $except        = array_unique(array_merge($except, getAdminPermissionExcepts()));
+        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $permissionIds = array_diff($permissionIds, $exceptIDs);
+
+        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
+            ->whereIn('name', $accept)
+            ->pluck('id')
+            ->toArray();
+        $permissionIds = array_unique(array_merge(
+            $acceptIDs,
+            $permissionIds
+        ));
+        $permissionIds = mergePublicPermissions($permissionIds);
+
+        $role->syncPermissions($permissionIds);
+    }
+}
+
+// get admin excepts
+if (!function_exists('getAdminPermissionExcepts')) {
+    /**
+     * @return array
+     */
+    function getAdminPermissionExcepts(): array
+    {
+        return [
             "permission.create",
             "permission.destroy",
             "permission.edit",
@@ -211,21 +241,7 @@ if (!function_exists('setPermissionsToAdmin')) {
             "route-list.update",
             "route-list.destroy",
             "route-list.show",
-        ]));
-        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
-        $permissionIds = array_diff($permissionIds, $exceptIDs);
-
-        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
-            ->whereIn('name', $accept)
-            ->pluck('id')
-            ->toArray();
-        $permissionIds = array_unique(array_merge(
-            $acceptIDs,
-            $permissionIds
-        ));
-        $permissionIds = mergePublicPermissions($permissionIds);
-
-        $role->syncPermissions($permissionIds);
+        ];
     }
 }
 
@@ -380,14 +396,14 @@ if (!function_exists('crudAccessList')) {
 }
 if (!function_exists('denyAccessArray')) {
     /**
-     * @param $route
-     * @return array
+     * @param string|null $route
+     * @return array|string[]
      */
-    function denyAccessArray($route = null): array
+    function denyAccessArray(string $route = null): array
     {
         $routeArray     = explode('.', $route);
         $crudAccessList = crudAccessList();
-        $action         = array_pop($routeArray);
+        $action         = end($routeArray);
         $hasPermission  = userHasPermission($route);
 
         return $hasPermission
@@ -420,16 +436,22 @@ if (!function_exists('userHasPermission')) {
         }
 
         $routePost = [
-            'create'         => 'create',
-            'store'          => 'create',
-            'destroy'        => 'destroy',
-            'edit'           => 'edit',
-            'update'         => 'edit',
-            'index'          => 'index',
-            'search'         => 'index',
-            'show'           => 'show',
-            'showDetailsRow' => 'show',
-            'reorder'        => 'reorder',
+            'create'               => 'create',
+            'store'                => 'create',
+            'destroy'              => 'destroy',
+            'edit'                 => 'edit',
+            'info'                 => 'info',
+            'update'               => 'edit',
+            'index'                => 'index',
+            'search'               => 'index',
+            'show'                 => 'show',
+            'showDetailsRow'       => 'show',
+            'reorder'              => 'reorder',
+            'popup'                => 'popup',
+            'theme'                => 'theme',
+            'connector'            => 'connector',
+            'bulkInvitationCreate' => 'bulkInvitationCreate',
+            'bulkInvitationStore'  => 'bulkInvitationStore',
         ];
 
         $routeArr                 = explode('.', $route);
@@ -601,7 +623,7 @@ if (!function_exists('backpackSetting')) {
      */
     function backpackSetting(string $key): string|array|object|int
     {
-        return BackpackSetting::get($key)
+        return BackpackSetting::query()->get($key)
             ?: '[]';
     }
 }
@@ -875,16 +897,141 @@ if (!function_exists('getCycleId')) {
     }
 }
 
-// getShellAdmin
-if (!function_exists('getShellOrSuperAdmin')) {
+// create UniqueInvitation Code
+if (!function_exists('createUniqueInvitationCode')) {
     /**
-     * @return Builder|Model|null
+     * @param string|int $length
+     * @param string|int $eventId
+     * @param string|int $inviteeId
+     * @param string|int $tolerance
+     * @param int $iteration
+     * @return string
      */
-    function getShellOrSuperAdmin(): Model|Builder|null
+    function createUniqueInvitationCode(string|int $length = 8, string|int $eventId = '', string|int $inviteeId = '', string|int $tolerance = '', int $iteration = 0): string
     {
-        return User::query()->whereHas('roles', function ($q) {
-            $q->whereIn('name', ['ShellAdmin', 'SuperAdmin']);
-        })->firstOrFail();
+        $IDsLength = strlen($eventId) + strlen($inviteeId);
+        $length    = $length - $IDsLength + $iteration;
+
+        $code = $eventId . createInvitationCode($length) . $tolerance . $inviteeId;
+        if (Invitation::query()->where('code', $code)->exists()) {
+            return createUniqueInvitationCode($length, $eventId, $inviteeId, rand(0, $IDsLength), $iteration + 1);
+        }
+
+        return $code;
     }
 }
 
+
+// create Invitation Code
+if (!function_exists('createInvitationCode')) {
+    /**
+     * @param $length
+     * @return string
+     */
+    function createInvitationCode($length): string
+    {
+        $characters       = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString     = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+}
+
+if (!function_exists('getCurrentApiVersion')) {
+    /**
+     * @return string
+     */
+    function getCurrentApiVersion(): string
+    {
+        return 'v1';
+    }
+}
+
+// get otp
+if (!function_exists('getOtp')) {
+    /**
+     * @param int $length
+     * @return string
+     */
+    function getOtp(int $length = 4): string
+    {
+        $characters       = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString     = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+}
+
+// getInvitationOTPMessage
+if (!function_exists('getInvitationOTPMessage')) {
+    /**
+     * @param string $otp
+     * @return string
+     */
+    function getInvitationOTPMessage(string $otp): string
+    {
+        return "Your " . config("app.name") . " OTP is $otp." . PHP_EOL . "Please do not share this OTP with anyone. "
+               . PHP_EOL . "This OTP is valid for " . InvitationOtp::EXPIRY_TIME . " minutes.";
+    }
+}
+
+// canSendSMS
+if (!function_exists('canSendSMS')) {
+    /**
+     * @return bool
+     */
+    function canSendSMS(): bool
+    {
+        $smsService = json_decode(getSettingValue('sms_service'), true)[0] ?? [];
+        return $smsService['send_sms'] === 'Yes';
+    }
+}
+
+// canSendEmail
+if (!function_exists('canSendEmail')) {
+    /**
+     * @return bool
+     */
+    function canSendEmail(): bool
+    {
+        $emailService = json_decode(getSettingValue('email_service'), true)[0] ?? [];
+        return $emailService['send_email'] === 'Yes';
+    }
+}
+
+// unique username from email
+if (!function_exists('uniqueUserNameFromEmail')) {
+    /**
+     * @param string $email
+     * @return string
+     */
+    function uniqueUserNameFromEmail(string $email): string
+    {
+        $username = explode('@', $email)[0];
+        if (User::query()->where('username', $username)->exists()) {
+            $username = $username . "_" . rand(111, 999);
+
+            return uniqueUserNameFromEmail($username);
+        }
+        return $username;
+    }
+}
+
+// canUserBeCreatedFromInvitee
+if (!function_exists('canUserBeCreatedFromInvitee')) {
+    /**
+     * @return bool
+     */
+    function canUserBeCreatedFromInvitee(): bool
+    {
+        $superAdminSettings = json_decode(getSettingValue('super_admin_settings', false), true)[0] ?? [];
+
+        return !!(int)($superAdminSettings['can_user_be_created_from_invitee'] ?? false);
+    }
+}

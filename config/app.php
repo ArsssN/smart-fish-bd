@@ -4,6 +4,13 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'frontend_base_url' => env('FRONTEND_BASE_URL', 'http://localhost:3000'),
+
+    'developer_name' => env('DEVELOPER_NAME', 'ArsssN'),
+    'developer_url' => env('DEVELOPER_URL', 'https://arsssn.github.io/'),
+    'developer_email' => env('DEVELOPER_EMAIL', 'arsssn.bd@gmail.com'),
+    'check_otp' => env('CHECK_OTP', true),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -41,7 +48,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +63,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url' => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +76,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dhaka',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +134,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Maintenance Mode Driver
+    |--------------------------------------------------------------------------
+    |
+    | These configuration options determine the driver used to determine and
+    | manage Laravel's "maintenance mode" status. The "cache" driver will
+    | allow maintenance mode to be controlled across multiple machines.
+    |
+    | Supported drivers: "file", "cache"
+    |
+    */
+
+    'maintenance' => [
+        'driver' => 'file',
+        // 'store'  => 'redis',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -167,6 +192,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -191,7 +217,9 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        // 'ExampleClass' => App\Example\ExampleClass::class,
+        'QrCode' => \SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];

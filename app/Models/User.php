@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\ImageMutator;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,8 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, CrudTrait;
-    use ImageMutator;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, CrudTrait, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
     ];
 
     /**
@@ -47,6 +47,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // protected $table = 'users';
+    // protected $primaryKey = 'id';
+    // public $timestamps = false;
+    // protected $guarded = ['id'];
+    // protected $fillable = [];
+    // protected $hidden = [];
+    // protected $dates = [];
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
@@ -60,8 +68,21 @@ class User extends Authenticatable
     */
 
     /**
-     * @return BelongsTo
+     * @return HasOne
      */
+    public function userDetails(): HasOne
+    {
+        return $this->hasOne(UserDetail::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function passwordReset(): HasOne
+    {
+        return $this->hasOne(PasswordReset::class, 'email', 'email');
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -74,14 +95,6 @@ class User extends Authenticatable
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * @return string
-     */
-    public function getProfilePictureAttribute(): string
-    {
-        return $this->image ?? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?s=160&d=mm';
-    }
 
     /*
     |--------------------------------------------------------------------------

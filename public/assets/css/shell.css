@@ -1,0 +1,44 @@
+body {
+    margin   : 0;
+    overflow : hidden;
+}
+
+.code-root {
+    background : black;
+    color      : white;
+    width      : 100%;
+    height     : 100vh;
+    margin     : 0;
+    overflow-y : auto;
+    /*border-radius : 4px;*/
+}
+
+.code-root > .code-container {
+    padding      : 8px;
+    margin-right : 10%;
+}
+
+.action-button-container {
+    padding  : 8px;
+    position : absolute;
+    bottom   : 8px;
+    right    : 20px;
+    display  : flex;
+    gap      : 8px;
+}
+
+.action-button-container .back {
+    border          : 1px solid #ddd;
+    border-radius   : 4px;
+    padding         : 4px 10px;
+    color           : white;
+    text-decoration : none;
+}
+
+.action-button-container .home {
+    border          : 1px solid #ddd;
+    border-radius   : 4px;
+    padding         : 4px 10px;
+    color           : white;
+    text-decoration : none;
+}

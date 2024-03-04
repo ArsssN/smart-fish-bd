@@ -7,13 +7,15 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 trait CreatedBy
 {
     /**
+     * @param string $name
+     * @param string $entity
      * @return void
      */
-    public function createdByList(): void
+    public function createdByList(string $name = 'created_by', string $entity = 'user'): void
     {
         CRUD::addColumn([
-            'name'   => 'created_by',
-            'entity' => 'user'
+            'name'   => $name,
+            'entity' => $entity
         ]);
     }
 }

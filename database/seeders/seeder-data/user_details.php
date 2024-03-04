@@ -1,0 +1,55 @@
+<?php
+$user_details = array (
+  0 =>
+  array (
+    'id' => 1,
+    'user_id' => 1,
+    'country_code' => '+88',
+    'phone' => '01721571954',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka, Bangladesh',
+    'city' => NULL,
+    'state' => NULL,
+    'country' => 'Bangladesh',
+    'zip_code' => NULL,
+    'photo' => 'http://api.nockbay.com/uploads/user/profile/c4ca4238a0b923820dcc509a6f75849b_wloiiU9AUfLbf8BAdr3Bwd0nUdjAjs74iPN6B63E.png',
+    'created_by' => NULL,
+    'created_at' => '2021-01-01 00:00:00',
+    'updated_at' => '2023-01-22 15:24:48',
+  ),
+  1 =>
+  array (
+    'id' => 2,
+    'user_id' => 2,
+    'country_code' => '+88',
+    'phone' => '01556616878',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka, Bangladesh',
+    'city' => NULL,
+    'state' => NULL,
+    'country' => 'Bangladesh',
+    'zip_code' => NULL,
+    'photo' => NULL,
+    'created_by' => NULL,
+    'created_at' => '2021-01-01 00:00:00',
+    'updated_at' => '2021-01-01 00:00:00',
+  ),
+  2 =>
+  array (
+    'id' => 3,
+    'user_id' => 3,
+    'country_code' => '+88',
+    'phone' => '01234567898',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka, Bangladesh',
+    'city' => NULL,
+    'state' => NULL,
+    'country' => 'Bangladesh',
+    'zip_code' => NULL,
+    'photo' => NULL,
+    'created_by' => NULL,
+    'created_at' => '2021-01-01 00:00:00',
+    'updated_at' => '2021-01-01 00:00:00',
+  ),
+);
+return $user_details;
