@@ -27,15 +27,9 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             PermissionSeeder::class,
             AboutSeeder::class,
-            FaqSeeder::class,
             FooterLinkGroupSeeder::class,
             FooterLinkSeeder::class,
             SocialSeeder::class,
-            EventSeeder::class,
-            InviteeSeeder::class,
-            InvitationSeeder::class,
-            InvitationOtpSeeder::class,
-            PricingSeerer::class,
         ]);
     }
 }
