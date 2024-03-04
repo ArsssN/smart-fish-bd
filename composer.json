@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "ext-curl": "*",
         "afzalsabbir/crud": "^5.512",
         "afzalsabbir/filemanager": "^2.0",
         "afzalsabbir/logmanager": "^4.0",
@@ -17,8 +18,8 @@
         "arsbs23/pro": "^1.1.1",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^9.0",
-        "laravel/sanctum": "^2.14",
+        "laravel/framework": "^9.19",
+        "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7"
     },
     "require-dev": {
