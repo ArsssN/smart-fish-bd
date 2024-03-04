@@ -1,25 +1,6 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
-<!-- Event Management -->
-<li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-calendar"></i> Event Management</a>
-    <ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ route('event.index', ['status' => 'active']) }}'><i class='nav-icon la la-calendar-plus'></i> Events</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('invitee') }}'><i class='nav-icon la la-user-tie'></i> Invitees</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('invitation') }}'><i class='nav-icon la la-envelope-open-text'></i> Invitations</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('invitation-otp') }}'><i class='nav-icon la la-code'></i> Invitation OTPs</a></li>
-    </ul>
-</li>
-
-<!-- Price Management -->
-<li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-money"></i> Price Management</a>
-    <ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pricing') }}'><i class='nav-icon la la-money-bill-wave'></i> Pricing</a></li>
-    </ul>
-</li>
-
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Footer Link Management"><i class="nav-icon la la-link"></i> Footer Link Man.</a>
@@ -31,7 +12,6 @@
 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('contact-us') }}'><i class='nav-icon la la-envelope'></i> Contact us</a></li>
 {{--<li class="nav-item"><a class="nav-link" href="{{ getSettingsUrl('about') }}"><i class="la la-address-book nav-icon"></i> {{ trans('About') }}</a></li>--}}
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sms-history') }}'><i class='nav-icon la la-mail-bulk'></i> SMS History</a></li>
 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('social') }}'><i class='nav-icon la la-share-alt'></i> Social</a></li>
 
