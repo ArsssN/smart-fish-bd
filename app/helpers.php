@@ -1,9 +1,5 @@
 <?php
 
-use App\Models\Cycle;
-use App\Models\EMI;
-use App\Models\Invitation;
-use App\Models\InvitationOtp;
 use App\Models\Setting;
 use App\Models\User;
 use Backpack\PermissionManager\app\Models\Permission;
@@ -113,20 +109,20 @@ if (!function_exists('setPermissionsToRole')) {
     }
 }
 
-if (!function_exists('setPermissionsToSuperAdmin')) {
+if (!function_exists('setPermissionsToShellAdmin')) {
     /**
      * @param $permissionIds
      * @param Role $role
      * @return void
      */
-    function setPermissionsToSuperAdmin($permissionIds, Role $role)
+    function setPermissionsToShellAdmin($permissionIds, Role $role)
     {
         $permissionIds = mergePublicPermissions($permissionIds);
         $role->syncPermissions($permissionIds);
     }
 }
 
-if (!function_exists('setPermissionsToShellAdmin')) {
+if (!function_exists('setPermissionsToSuperAdmin')) {
     /**
      * @param array $permissionIds
      * @param Role $role
@@ -135,16 +131,16 @@ if (!function_exists('setPermissionsToShellAdmin')) {
      * @param bool $manual
      * @return void
      */
-    function setPermissionsToShellAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
+    function setPermissionsToSuperAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
-        $guard_name        = config('backpack.base.guard') ?? 'web';
+        $guard_name = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except        = array_unique(array_merge($except, []));
-        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $except = array_unique(array_merge($except, getSuperAdminPermissionExcepts()));
+        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -169,14 +165,14 @@ if (!function_exists('setPermissionsToAdmin')) {
      */
     function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = []): void
     {
-        $guard_name        = config('backpack.base.guard') ?? 'web';
+        $guard_name = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except        = array_unique(array_merge($except, getAdminPermissionExcepts()));
-        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $except = array_unique(array_merge($except, getAdminPermissionExcepts()));
+        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -187,6 +183,45 @@ if (!function_exists('setPermissionsToAdmin')) {
         $permissionIds = mergePublicPermissions($permissionIds);
 
         $role->syncPermissions($permissionIds);
+    }
+}
+
+// get super admin excepts
+if (!function_exists('getSuperAdminPermissionExcepts')) {
+    /**
+     * @return array
+     */
+    function getSuperAdminPermissionExcepts(): array
+    {
+        return [
+            "permission.create",
+            "permission.destroy",
+            "permission.edit",
+            "permission.index",
+            "permission.search",
+            "permission.showDetailsRow",
+            "permission.store",
+            "permission.update",
+
+            /*"role.create",
+            "role.destroy",
+            "role.edit",*/
+            "role.index",
+            "role.search",
+            "role.showDetailsRow",
+            /*"role.store",
+            "role.update",*/
+
+            "route-list.index",
+            "route-list.search",
+            "route-list.showDetailsRow",
+            "route-list.create",
+            "route-list.store",
+            "route-list.edit",
+            "route-list.update",
+            "route-list.destroy",
+            "route-list.show",
+        ];
     }
 }
 
@@ -256,20 +291,20 @@ if (!function_exists('setPermissionsToUser')) {
      */
     function setPermissionsToUser(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
-        $permissionIds     = $manual
+        $permissionIds = $manual
             ? $permissionIds
             : [];
-        $guard_name        = config('backpack.base.guard') ?? 'web';
+        $guard_name = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query()->where('guard_name', $guard_name);
 
-        $except        = array_unique(array_merge(
+        $except = array_unique(array_merge(
             $except,
             $permissionBuilder->pluck('name')->toArray()
         ));
-        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -377,20 +412,20 @@ if (!function_exists('crudAccessList')) {
     function crudAccessList(): array
     {
         return [
-            'bulkdelete'   => 'bulkdelete',
-            'bulkclone'    => 'bulkclone',
-            'clone'        => 'clone',
-            'create'       => 'create',
-            'delete'       => 'delete',
-            'fetch'        => 'fetch',
+            'bulkdelete' => 'bulkdelete',
+            'bulkclone' => 'bulkclone',
+            'clone' => 'clone',
+            'create' => 'create',
+            'delete' => 'delete',
+            'fetch' => 'fetch',
             'inlinecreate' => 'inlinecreate',
-            'index'        => 'list',
-            'show'         => 'show',
-            'reorder'      => 'reorder',
-            'update'       => 'update',
+            'index' => 'list',
+            'show' => 'show',
+            'reorder' => 'reorder',
+            'update' => 'update',
 
             'revisions' => 'revisions',
-            'revise'    => 'revise',
+            'revise' => 'revise',
         ];
     }
 }
@@ -401,10 +436,10 @@ if (!function_exists('denyAccessArray')) {
      */
     function denyAccessArray(string $route = null): array
     {
-        $routeArray     = explode('.', $route);
+        $routeArray = explode('.', $route);
         $crudAccessList = crudAccessList();
-        $action         = end($routeArray);
-        $hasPermission  = userHasPermission($route);
+        $action = end($routeArray);
+        $hasPermission = userHasPermission($route);
 
         return $hasPermission
             ? []
@@ -436,28 +471,28 @@ if (!function_exists('userHasPermission')) {
         }
 
         $routePost = [
-            'create'               => 'create',
-            'store'                => 'create',
-            'destroy'              => 'destroy',
-            'edit'                 => 'edit',
-            'info'                 => 'info',
-            'update'               => 'edit',
-            'index'                => 'index',
-            'search'               => 'index',
-            'show'                 => 'show',
-            'showDetailsRow'       => 'show',
-            'reorder'              => 'reorder',
-            'popup'                => 'popup',
-            'theme'                => 'theme',
-            'connector'            => 'connector',
+            'create' => 'create',
+            'store' => 'create',
+            'destroy' => 'destroy',
+            'edit' => 'edit',
+            'info' => 'info',
+            'update' => 'edit',
+            'index' => 'index',
+            'search' => 'index',
+            'show' => 'show',
+            'showDetailsRow' => 'show',
+            'reorder' => 'reorder',
+            'popup' => 'popup',
+            'theme' => 'theme',
+            'connector' => 'connector',
             'bulkInvitationCreate' => 'bulkInvitationCreate',
-            'bulkInvitationStore'  => 'bulkInvitationStore',
+            'bulkInvitationStore' => 'bulkInvitationStore',
         ];
 
-        $routeArr                 = explode('.', $route);
-        $post                     = end($routeArr);
+        $routeArr = explode('.', $route);
+        $post = end($routeArr);
         $routeArr[key($routeArr)] = $routePost[$post];
-        $route                    = implode('.', $routeArr);
+        $route = implode('.', $routeArr);
 
         return backpack_user()->can($route);
     }
@@ -529,11 +564,11 @@ if (!function_exists('getRouteList')) {
         $routeList = Route::getRoutes()->getRoutes();
         $routeList = collect($routeList)->map(function ($route) {
             return [
-                'domain'     => $route->domain(),
-                'method'     => implode('|', $route->methods() ?? []),
-                'uri'        => $route->uri(),
-                'name'       => $route->getName(),
-                'action'     => $route->getActionName(),
+                'domain' => $route->domain(),
+                'method' => implode('|', $route->methods() ?? []),
+                'uri' => $route->uri(),
+                'name' => $route->getName(),
+                'action' => $route->getActionName(),
                 'middleware' => implode(', ', $route->middleware() ?? []),
             ];
         })->filter(function ($route) {
@@ -551,7 +586,7 @@ if (!function_exists('setCompanyData')) {
     function setCompanyData(): Model|Builder|DSCompany
     {
         // get subdomain
-        $urlArr  = explode('.', request()->getHost());
+        $urlArr = explode('.', request()->getHost());
         $company = new DSCompany();
 
         if (count($urlArr) > 2) {
@@ -581,8 +616,8 @@ if (!function_exists('getSettingsUrl')) {
     {
         $setting = Setting::query()->where('key', $key)->first(['id', 'key']);
         return $setting->id ?? false
-            ? route('setting.edit', $setting->id)
-            : '#';
+                ? route('setting.edit', $setting->id)
+                : '#';
     }
 }
 
@@ -650,10 +685,10 @@ if (!function_exists('pdfUrl')) {
     {
         $encrypt_url = encrypt(trim($url, '/'));
 
-        $urlArr         = explode('/', $url);
-        $urlFullName    = Arr::last($urlArr);
+        $urlArr = explode('/', $url);
+        $urlFullName = Arr::last($urlArr);
         $urlFullNameArr = explode('.', $urlFullName);
-        $name           = $urlFullNameArr[0] ?? 'pdf';
+        $name = $urlFullNameArr[0] ?? 'pdf';
 
         return route("pdf", [$encrypt_url, $name]);
     }
@@ -689,6 +724,16 @@ if (!function_exists('isAdmin')) {
     }
 }
 
+if (!function_exists('isOnlyAdmin')) {
+    /**
+     * @return bool
+     */
+    function isOnlyAdmin(): bool
+    {
+        return isAdmin() && !isSuperAdmin() && !isShellAdmin();
+    }
+}
+
 if (!function_exists('isShellAdmin')) {
     /**
      * @return bool
@@ -706,7 +751,7 @@ if (!function_exists('getActiveCycleCostQueryParam')) {
      */
     function getActiveCycleCostQueryParam($slug = null): string
     {
-        $slug  = strtolower($slug ?? now()->format('F-Y'));
+        $slug = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first();
 
         if ($cycle && $cycle->is_closed) {
@@ -731,7 +776,7 @@ if (!function_exists('getCycleCostQueryParam')) {
      */
     function getCycleCostQueryParam($slug = null): string
     {
-        $slug  = strtolower($slug ?? now()->format('F-Y'));
+        $slug = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first();
 
         if ($cycle) {
@@ -798,9 +843,9 @@ if (!function_exists('firstOfCreateCycle')) {
         return Cycle::query()->firstOrCreate([
             'slug' => $slug,
         ], [
-            'title'      => $date->format('F - Y'),
+            'title' => $date->format('F - Y'),
             'start_date' => $date->format('Y-m-1'),
-            'end_date'   => $date->addMonth()->format('Y-m-d'),
+            'end_date' => $date->addMonth()->format('Y-m-d'),
         ]);
     }
 }
@@ -824,9 +869,9 @@ if (!function_exists('getLastUnclosedCycle')) {
      */
     function getLastUnclosedCycle(string $slug = null): Cycle
     {
-        $slug  = strtolower($slug ?? now()->format('F-Y'));
+        $slug = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first()
-                 ?? firstOfCreateCycle($slug);
+            ?? firstOfCreateCycle($slug);
 
         if (
             $cycle
@@ -871,8 +916,8 @@ if (!function_exists('getEmiAt')) {
     function getEmiAt(string $date = null): Carbon
     {
         $emiClosingDate = EMI::EMI_CLOSING_DATE ?? 28;
-        $date           = $date ?? today()->format('Y-m-d');
-        $emiAt          = Carbon::parse($date);
+        $date = $date ?? today()->format('Y-m-d');
+        $emiAt = Carbon::parse($date);
         if (Carbon::parse($date)->day <= $emiClosingDate) {
             $emiAt = $emiAt->subMonth();
         }
@@ -910,7 +955,7 @@ if (!function_exists('createUniqueInvitationCode')) {
     function createUniqueInvitationCode(string|int $length = 8, string|int $eventId = '', string|int $inviteeId = '', string|int $tolerance = '', int $iteration = 0): string
     {
         $IDsLength = strlen($eventId) + strlen($inviteeId);
-        $length    = $length - $IDsLength + $iteration;
+        $length = $length - $IDsLength + $iteration;
 
         $code = $eventId . createInvitationCode($length) . $tolerance . $inviteeId;
         if (Invitation::query()->where('code', $code)->exists()) {
@@ -930,9 +975,9 @@ if (!function_exists('createInvitationCode')) {
      */
     function createInvitationCode($length): string
     {
-        $characters       = '0123456789';
+        $characters = '0123456789';
         $charactersLength = strlen($characters);
-        $randomString     = '';
+        $randomString = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
@@ -958,9 +1003,9 @@ if (!function_exists('getOtp')) {
      */
     function getOtp(int $length = 4): string
     {
-        $characters       = '0123456789';
+        $characters = '0123456789';
         $charactersLength = strlen($characters);
-        $randomString     = '';
+        $randomString = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
@@ -977,7 +1022,7 @@ if (!function_exists('getInvitationOTPMessage')) {
     function getInvitationOTPMessage(string $otp): string
     {
         return "Your " . config("app.name") . " OTP is $otp." . PHP_EOL . "Please do not share this OTP with anyone. "
-               . PHP_EOL . "This OTP is valid for " . InvitationOtp::EXPIRY_TIME . " minutes.";
+            . PHP_EOL . "This OTP is valid for " . InvitationOtp::EXPIRY_TIME . " minutes.";
     }
 }
 
