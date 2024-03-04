@@ -1,16 +1,5 @@
 <?php
 
-use App\Http\Controllers\Jobs\InviteeImportJobController;
-use App\Http\Controllers\SMSController;
-use App\Http\Resources\Api\InvitationResource;
-use App\Http\Resources\Api\InvitationUserProfileResource;
-use App\Imports\InviteeImport;
-use App\Jobs\InviteeImportJob;
-use App\Models\Event;
-use App\Models\Invitation;
-use App\Models\Invitee;
-use App\Notifications\InviteeOTPNotification;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +18,6 @@ Route::get('/', function () {
 });
 
 // php info
-Route::get('/phpinfo', function () {
+/*Route::get('/phpinfo', function () {
     return phpinfo();
-});
+});*/

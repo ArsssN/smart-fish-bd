@@ -8,7 +8,9 @@
 @endphp
 
 @include('crud::fields.inc.wrapper_start')
-
+@if(!isShellAdmin())
+<div class="d-none">
+@endif
     <label>{!! $field['label'] !!}</label>
     <?php
         $entity_model = $crud->getModel();
@@ -93,7 +95,15 @@
             @endif
           </div>
 
-      @foreach ($primary_dependency['model']::all() as $connected_entity_entry)
+          @php
+            $primary_dependency_query = $primary_dependency['model']::query();
+            /*if (isShellAdmin()) {
+                $primary_dependency_query->whereNotIn('name', ['ShellAdmin', 'SuperAdmin', 'User']);
+            }*/
+            $primary_dependency_data = $primary_dependency_query->get()
+          @endphp
+
+      @foreach ($primary_dependency_data as $connected_entity_entry)
           <div class="col-sm-{{ isset($primary_dependency['number_columns']) ? intval(12/$primary_dependency['number_columns']) : '4'}}">
               <div class="checkbox">
                   <label class="font-weight-normal">
@@ -224,7 +234,7 @@
                 hidden.remove();
             });
           };
-          
+
           thisField.find('div.hidden_fields_primary').children('input').first().on('CrudField:disable', function(e) {
               let input = $(e.target);
               input.parent().parent().find('input[type=checkbox]').attr('disabled', 'disabled');
@@ -315,3 +325,7 @@
 @endpush
 {{-- End of Extra CSS and JS --}}
 {{-- ########################################## --}}
+
+@if(!isShellAdmin())
+</div>
+@endif
