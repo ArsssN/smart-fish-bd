@@ -32,31 +32,3 @@ Route::get('/', function () {
 Route::get('/phpinfo', function () {
     return phpinfo();
 });
-
-// image
-Route::get('/image/{event}/{invitee}', function (Event $event, Invitee $invitee) {
-    $image = (new App\Helpers\InvitationCardHelper)->generate($event, $invitee);
-
-    return \Illuminate\Support\Facades\Blade::render("<img src='" . $image['front']
-                                                     . "' width='350px' /><br/><img src='" . $image['back']
-                                                     . "' width='350px' />");
-});
-
-// image
-Route::get('/otp/{event}/{invitee}', function (Event $event, Invitee $invitee) {
-    $invitation = $invitee->invitation()->where('event_id', $event->id)->first();
-    //dd($invitation);
-    $invitee->notify(new InviteeOTPNotification($invitation, '/'));
-});
-
-// read excel
-Route::get('/read-excel', [InviteeImportJobController::class, 'readExcel']);
-
-// sms
-Route::group(['prefix' => 'sms'], function () {
-    Route::get('/balance', [SMSController::class, 'balance']);
-    Route::get('/send', [SMSController::class, 'sendSMS']);
-});
-
-// checkInvitation
-Route::get('/checkInvitation', [\App\Http\Controllers\InvitationController::class, 'checkInvitation']);

@@ -18,25 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // daily action
-        /*$schedule->job(new DailyEventScheduleJob())
-            ->everySixHours()
-            ->emailOutputOnFailure('afzalbd1@gmail.com');
-
-        // delete expired invitation otp
-        $schedule->command('nockbay:delete-expired-invitation-otp')
-            ->everyThirtyMinutes()
-            ->emailOutputOnFailure('afzalbd1@gmail.com');
-
-        // delete expired events
-        $schedule->command('nockbay:expire-events-with-cascade')
-            ->everySixHours()
-            ->emailOutputOnFailure('afzalbd1@gmail.com');
-
-        // failed jobs retry every 6 hours
-        $schedule->command('queue:retry all')
-            ->everySixHours()
-            ->emailOutputOnFailure('afzalbd1@gmail.com');*/
+        //
     }
 
     /**
