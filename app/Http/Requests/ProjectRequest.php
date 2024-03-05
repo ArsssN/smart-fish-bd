@@ -28,6 +28,7 @@ class ProjectRequest extends FormRequest
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
             'user_id' => 'required|exists:users,id',
+            'description' => 'nullable|string|max:500',
         ];
     }
 

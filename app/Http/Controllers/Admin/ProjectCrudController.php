@@ -76,6 +76,7 @@ class ProjectCrudController extends CrudController
             'name' => 'user_id',
             'type' => 'select2',
             'label' => 'User',
+            'entity' => 'customer',
             'options' => (function ($query) {
                 return $query->whereHas('roles', function ($query) {
                     $query->where('name', 'Admin');
@@ -83,9 +84,14 @@ class ProjectCrudController extends CrudController
             }),
         ]);
         CRUD::addField([
+            'name' => 'sensorGroups',
+            'type' => 'select2_multiple',
+            'entity' => 'sensorGroups',
+            'pivot' => true,
+        ]);
+        CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
-
         ]);
         CRUD::field('description')->type('tinymce');
 

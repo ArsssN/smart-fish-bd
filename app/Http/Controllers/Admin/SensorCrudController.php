@@ -43,9 +43,6 @@ class SensorCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
-        CRUD::column('slug');
-        CRUD::column('description');
-        CRUD::column('sensor_group_id');
         CRUD::column('status');
 
         $this->createdByList();
@@ -69,10 +66,11 @@ class SensorCrudController extends CrudController
         CRUD::setValidation(SensorRequest::class);
 
         CRUD::field('name');
-        CRUD::field('slug');
-        CRUD::field('description');
-        CRUD::field('sensor_group_id');
-        CRUD::field('status');
+        CRUD::addField([
+            'name' => 'status',
+            'type' => 'enum',
+        ]);
+        CRUD::field('description')->type('tinymce');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

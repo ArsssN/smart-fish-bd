@@ -7,6 +7,7 @@ use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
@@ -46,6 +47,16 @@ class Project extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the project that owns the SensorGroup
+     *
+     * @return BelongsToMany
+     */
+    public function sensorGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(SensorGroup::class);
     }
 
     /*

@@ -1,6 +1,6 @@
 <?php
 $users = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'name' => 'Afzalur Rahman Sabbir',
@@ -14,7 +14,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'name' => 'Admin',
@@ -28,7 +28,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
     'name' => 'User',
@@ -42,7 +42,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  3 =>
+  3 => 
   array (
     'id' => 4,
     'name' => 'Super Admin',

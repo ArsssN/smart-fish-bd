@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name', 180);
             $table->string('slug', 191)->unique();
             $table->text('description')->nullable();
-            $table->foreignId('sensor_group_id')->nullable()->constrained('sensor_groups')->references('id')->cascadeOnDelete();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
