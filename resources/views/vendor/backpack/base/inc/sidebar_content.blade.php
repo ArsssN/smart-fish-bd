@@ -1,6 +1,17 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
+
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#" title="Project Management"><i class="nav-icon la la-campground"></i> <span>Project Manage.</span></a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Users</span></a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Sensor groups</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-bullhorn'></i> Sensors</a></li>
+    </ul>
+</li>
+
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Footer Link Management"><i class="nav-icon la la-link"></i> Footer Link Man.</a>
@@ -44,7 +55,7 @@
     </li>
 @endif
 
-@if(isShellAdminOrSuperAdmin())
+@if(isShellAdmin())
 <!-- command -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-terminal"></i> Command</a>
@@ -116,7 +127,6 @@
 @endif
 
 <!-- Users, Roles, Permissions -->
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Users</span></a></li>
 @if(isShellAdmin())
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Authentication</a>
@@ -131,4 +141,5 @@
 @if(isShellAdmin())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
 @endif
+
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>

@@ -30,6 +30,11 @@ class DatabaseSeeder extends Seeder
             FooterLinkGroupSeeder::class,
             FooterLinkSeeder::class,
             SocialSeeder::class,
+            SensorSeeder::class,
+            SensorGroupSeeder::class,
+            ProjectSeeder::class,
+            SensorSensorGroupSeeder::class,
+            ProjectSensorGroupSeeder::class
         ]);
     }
 }
