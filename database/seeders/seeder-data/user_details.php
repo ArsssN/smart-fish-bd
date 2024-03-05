@@ -51,5 +51,22 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
+  3 =>
+  array (
+    'id' => 4,
+    'user_id' => 4,
+    'country_code' => '+88',
+    'phone' => '03234567890',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka, Bangladesh',
+    'city' => NULL,
+    'state' => NULL,
+    'country' => 'Bangladesh',
+    'zip_code' => NULL,
+    'photo' => NULL,
+    'created_by' => NULL,
+    'created_at' => '2021-01-01 00:00:00',
+    'updated_at' => '2021-01-01 00:00:00',
+  ),
 );
 return $user_details;
