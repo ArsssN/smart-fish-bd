@@ -1,9 +1,9 @@
 <?php
 $sensors = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
-    'name' => 'Oxygen sensor',
+    'name' => 'Oxygen Sensor',
     'slug' => 'oxygen-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -12,10 +12,10 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:24',
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
-    'name' => 'TDS sensor',
+    'name' => 'TDS Sensor',
     'slug' => 'tds-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -24,7 +24,7 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:29',
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'Temperature Sensor',
@@ -36,7 +36,7 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:40',
     'deleted_at' => NULL,
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'name' => 'PH Sensor',
