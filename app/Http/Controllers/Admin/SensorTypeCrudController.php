@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SensorGroupRequest;
+use App\Http\Requests\SensorRequest;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class SensorGroupCrudController
+ * Class SensorCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class SensorGroupCrudController extends CrudController
+class SensorTypeCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -29,9 +29,13 @@ class SensorGroupCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\SensorGroup::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor-group');
-        CRUD::setEntityNameStrings('sensor', 'sensors');
+        CRUD::setModel(\App\Models\Sensor::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor-type');
+        CRUD::setEntityNameStrings('sensor type', 'sensor types');
+
+        if (!isShellAdmin()) {
+            CRUD::denyAccess(['update', 'delete', 'create']);
+        }
     }
 
     /**
@@ -44,11 +48,6 @@ class SensorGroupCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('status');
-
-        // only project owner can see the project
-        if(!isShellAdminOrSuperAdmin()) {
-            $this->crud->addClause('where', 'created_by', backpack_user()->id);
-        }
 
         $this->createdByList();
         $this->createdAtList();
@@ -68,27 +67,20 @@ class SensorGroupCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SensorGroupRequest::class);
+        CRUD::setValidation(SensorRequest::class);
 
         CRUD::field('name');
-        CRUD::addField([
-            'name' => 'sensors',
-            'label' => 'Sensor type',
-            'type' => 'select2_multiple',
-            'entity' => 'sensors',
-            'pivot' => true,
-            'max' => 1,
-        ]);
-        /*CRUD::addField([
-            'name' => 'projects',
-            'type' => 'select2_multiple',
-            'entity' => 'projects',
-            'pivot' => true,
-
-            'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),
-        ]);*/
+//        CRUD::addField([
+//            'name' => 'Controllers',
+//            'label' => "Controller",
+//            'type' => 'select2_multiple',
+//            'entity' => 'Controllers',
+//            'pivot' => true,
+//
+//            /*'options' => (function ($query) {
+//                return $query->where('created_by', backpack_user()->id)->get();
+//            }),*/
+//        ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',

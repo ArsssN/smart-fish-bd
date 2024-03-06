@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SensorType;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +31,7 @@ Route::get('/test/sensors', function () {
 
     if (request()->has('sensor_id')) {
         $sensor_id = request()->get('sensor_id');
-        $sensor = \App\Models\Sensor::query()->find($sensor_id);
+        $sensor = SensorType::query()->find($sensor_id);
 
         $sensorName = \Illuminate\Support\Str::replace(' ', '', $sensor->name);
         $helperMethodName = "get{$sensorName}Update";
@@ -40,7 +41,7 @@ Route::get('/test/sensors', function () {
                 request()->get('value', 0),
             ));
         } else {
-            $sensor_message = "No helper method found for sensor {$sensor->name}";
+            $sensor_message = "No helper method found for sensor: {$sensor->name}";
         }
     }
 

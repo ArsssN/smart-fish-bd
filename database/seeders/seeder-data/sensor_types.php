@@ -1,10 +1,9 @@
 <?php
-$sensors = array (
+$sensor_types = array (
   0 =>
   array (
     'id' => 1,
     'name' => 'Oxygen Sensor',
-    'sensor_type_id' => 1,
     'slug' => 'oxygen-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -17,7 +16,6 @@ $sensors = array (
   array (
     'id' => 2,
     'name' => 'TDS Sensor',
-    'sensor_type_id' => 2,
     'slug' => 'tds-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -30,7 +28,6 @@ $sensors = array (
   array (
     'id' => 3,
     'name' => 'Temperature Sensor',
-    'sensor_type_id' => 3,
     'slug' => 'temperature-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -43,7 +40,6 @@ $sensors = array (
   array (
     'id' => 4,
     'name' => 'PH Sensor',
-    'sensor_type_id' => 4,
     'slug' => 'ph-sensor',
     'description' => NULL,
     'status' => 'active',
@@ -53,4 +49,4 @@ $sensors = array (
     'deleted_at' => NULL,
   ),
 );
-return $sensors;
+return $sensor_types;

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SensorSensorGroup extends Model
+class SensorController extends Model
 {
     use HasFactory;
 
-    protected $table = 'sensor_sensor_group';
+    protected $table = 'sensor_controller';
 }

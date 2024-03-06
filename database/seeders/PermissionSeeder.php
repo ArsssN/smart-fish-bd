@@ -45,6 +45,6 @@ class PermissionSeeder extends Seeder
 
         // Model Permissions
         $permissionIDs = DB::table('permissions')->pluck('id')->toArray();
-        setPermissionsToRoles($permissionIDs, ['SuperAdmin', 'Admin', 'User', 'ShellAdmin']);
+        setPermissionsToRoles($permissionIDs, ['SuperAdmin', 'Admin', 'User', 'ShellAdmin', 'Customer']);
     }
 }

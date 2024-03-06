@@ -1,12 +1,12 @@
 <?php
-$sensor_groups = array (
+$controllers = array (
   0 =>
   array (
     'id' => 1,
     'name' => 'Controller 1',
     'slug' => 'controller-1',
     'description' => NULL,
-    'project_id' => NULL,
+//    'project_id' => NULL,
     'status' => 'active',
     'created_by' => 4,
     'created_at' => '2024-03-06 01:47:39',
@@ -19,7 +19,7 @@ $sensor_groups = array (
     'name' => 'Controller 2',
     'slug' => 'controller-2',
     'description' => NULL,
-    'project_id' => NULL,
+//    'project_id' => NULL,
     'status' => 'active',
     'created_by' => 4,
     'created_at' => '2024-03-06 01:48:48',
@@ -27,4 +27,4 @@ $sensor_groups = array (
     'deleted_at' => NULL,
   ),
 );
-return $sensor_groups;
+return $controllers;

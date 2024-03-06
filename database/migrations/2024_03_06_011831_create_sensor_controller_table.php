@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_sensor_group', function (Blueprint $table) {
-            $table->foreignId('project_id')->constrained('projects')->references('id')->cascadeOnDelete();
-            $table->foreignId('sensor_group_id')->constrained('sensor_groups')->references('id')->cascadeOnDelete();
+        Schema::create('sensor_controller', function (Blueprint $table) {
+            $table->foreignId('sensor_id')->constrained('sensors')->references('id')->cascadeOnDelete();
+            $table->foreignId('controller_id')->constrained('controllers')->references('id')->cascadeOnDelete();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensor_group_project');
+        Schema::dropIfExists('sensor_controller');
     }
 };

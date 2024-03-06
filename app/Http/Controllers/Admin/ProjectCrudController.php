@@ -98,10 +98,10 @@ class ProjectCrudController extends CrudController
             'default' => $isOnlyAdmin ? backpack_user()->id : null,
         ]);
         CRUD::addField([
-            'name' => 'sensorGroups',
+            'name' => 'Controllers',
             'label' => 'Controllers',
             'type' => 'select2_multiple',
-            'entity' => 'sensorGroups',
+            'entity' => 'Controllers',
             'pivot' => true,
 
             'options' => (function ($query) {

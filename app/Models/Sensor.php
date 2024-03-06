@@ -6,7 +6,7 @@ use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sensor extends Model
@@ -47,13 +47,13 @@ class Sensor extends Model
     */
 
     /**
-     * Get the project that owns the SensorGroup
+     * Get the project that owns the Controller
      *
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function sensorGroups(): BelongsToMany
+    public function sensorType(): BelongsTo
     {
-        return $this->belongsToMany(SensorGroup::class);
+        return $this->belongsTo(SensorType::class);
     }
 
     /*

@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class SensorGroupSeeder extends Seeder
+class ProjectControllerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,8 +15,8 @@ class SensorGroupSeeder extends Seeder
      */
     public function run()
     {
-        require_once(__DIR__ . '/seeder-data/sensor_groups.php');
+        require_once(__DIR__ . '/seeder-data/project_controller.php');
 
-        DB::table('sensor_groups')->insert($sensor_groups ?? []);
+        DB::table('project_controller')->insert($project_controller ?? []);
     }
 }

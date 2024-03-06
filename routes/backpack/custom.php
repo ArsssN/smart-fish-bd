@@ -26,6 +26,7 @@ Route::group([
     Route::crud('footer-link', 'FooterLinkCrudController');
     Route::crud('customer', 'UserCrudController');
     Route::crud('project', 'ProjectCrudController');
-    Route::crud('sensor-group', 'SensorGroupCrudController');
+    Route::crud('controller', 'ControllerCrudController');
+    Route::crud('sensor-type', 'SensorTypeCrudController');
     Route::crud('sensor', 'SensorCrudController');
 }); // this should be the absolute last line of this file

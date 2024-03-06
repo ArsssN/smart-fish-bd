@@ -22,15 +22,15 @@ class UserCrudController extends CrudController
 
     public function setup()
     {
-        $singular = isShellAdmin() ? trans('backpack::permissionmanager.user') : 'Customer';
-        $plural = isShellAdmin() ? trans('backpack::permissionmanager.users') : 'Customer';
+        $singular = isShellAdminOrSuperAdmin() ? trans('backpack::permissionmanager.user') : 'Customer';
+        $plural = isShellAdminOrSuperAdmin() ? trans('backpack::permissionmanager.users') : 'Customer';
 
         $this->crud->setModel(config('backpack.permissionmanager.models.user'));
         $this->crud->setEntityNameStrings($singular, $plural);
         $this->crud->setRoute(backpack_url('user'));
 
         // admin only can't access
-        if (isOnlyAdmin()) {
+        if (isCustomer()) {
             CRUD::denyAccess(['list', 'create', 'delete', 'update', 'show', 'reorder']);
         }
 
@@ -70,7 +70,7 @@ class UserCrudController extends CrudController
             ],
         ]);
 
-        if (backpack_pro() && isShellAdmin()) {
+        if (backpack_pro() && isShellAdminOrSuperAdmin()) {
             // Role Filter
             $this->crud->addFilter(
                 [
@@ -102,15 +102,15 @@ class UserCrudController extends CrudController
             );
         }
 
-        // except ShellAdmin
-        if (!isShellAdmin()) {
-            $shellAdminRole = Role::query()->where('name', 'ShellAdmin')->first();
+        // except ShellAdmin or SuperAdmin
+        if (!isShellAdminOrSuperAdmin()) {
+            $adminRoles = Role::query()->whereIn('name', ['ShellAdmin', 'SuperAdmin', 'user'])->get();
 
-            if ($shellAdminRole) {
-                $this->crud->addClause('whereDoesntHave', 'roles', function ($query) use ($shellAdminRole) {
-                    $query->where('role_id', '=', $shellAdminRole->id);
+            $adminRoles->map(function ($role) {
+                $this->crud->addClause('whereDoesntHave', 'roles', function ($query) use ($role) {
+                    $query->where('role_id', '=', $role->id);
                 });
-            }
+            });
         }
     }
 
@@ -139,7 +139,7 @@ class UserCrudController extends CrudController
 
         $roles = $this->crud->getRequest()->input('roles');
         if ($roles == null) {
-            $adminRole = Role::query()->where('name', 'Admin')->first();
+            $adminRole = Role::query()->where('name', 'Customer')->first();
 
             if ($adminRole) {
                 $roles = [$adminRole->id];

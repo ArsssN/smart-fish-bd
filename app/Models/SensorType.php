@@ -6,11 +6,10 @@ use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Project extends Model
+class SensorType extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
@@ -20,7 +19,7 @@ class Project extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'projects';
+    protected $table = 'sensor_types';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -46,24 +45,15 @@ class Project extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * Get the user that owns the Project
-     *
-     * @return BelongsTo
-     */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     /**
      * Get the project that owns the Controller
      *
-     * @return BelongsToMany
+     * @return HasMany
      */
-    public function Controllers(): BelongsToMany
+    public function sensors(): HasMany
     {
-        return $this->belongsToMany(Controller::class);
+        return $this->hasMany(Sensor::class);
     }
 
     /*

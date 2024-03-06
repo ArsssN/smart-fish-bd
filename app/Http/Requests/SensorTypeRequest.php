@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SensorRequest extends FormRequest
+class SensorTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,6 @@ class SensorRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
-            'sensorType' => 'required|exists:sensor_types,id',
             'description' => 'nullable|string|max:500',
         ];
     }

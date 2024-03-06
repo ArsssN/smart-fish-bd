@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sensors', function (Blueprint $table) {
+        Schema::create('controllers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
             $table->string('slug', 191)->unique();
-            $table->foreignId('sensor_type_id')->constrained('sensor_types')->references('id')->cascadeOnDelete();
+//            $table->foreignId('project_id')->nullable()->constrained('projects')->references('id')->cascadeOnDelete();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensors');
+        Schema::dropIfExists('controllers');
     }
 };

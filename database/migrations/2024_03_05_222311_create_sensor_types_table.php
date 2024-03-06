@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sensor_groups', function (Blueprint $table) {
+        Schema::create('sensor_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
             $table->string('slug', 191)->unique();
             $table->text('description')->nullable();
-            $table->foreignId('project_id')->nullable()->constrained('projects')->references('id')->cascadeOnDelete();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensor_groups');
+        Schema::dropIfExists('sensors');
     }
 };

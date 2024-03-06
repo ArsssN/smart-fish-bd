@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SensorGroup extends Model
+class Controller extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
@@ -19,7 +19,7 @@ class SensorGroup extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'sensor_groups';
+    protected $table = 'controllers';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -47,7 +47,7 @@ class SensorGroup extends Model
     */
 
     /**
-     * Get the project that owns the SensorGroup
+     * Get the project that owns the Controller
      *
      * @return BelongsToMany
      */
@@ -57,7 +57,7 @@ class SensorGroup extends Model
     }
 
     /**
-     * Get the project that owns the SensorGroup
+     * Get the project that owns the Controller
      *
      * @return BelongsToMany
      */

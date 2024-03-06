@@ -3,8 +3,9 @@
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Customers</span></a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
 
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
@@ -24,7 +25,7 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
 @endif
 
-@if(isShellAdmin())
+@if(isShellAdminOrSuperAdmin())
     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('route-list') }}'><i class='nav-icon la la-route'></i> Route lists</a></li>
 
     <!-- Backup -->
@@ -49,7 +50,7 @@
     </li>
 @endif
 
-@if(isShellAdmin())
+@if(isShellAdminOrSuperAdmin())
 <!-- command -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-terminal"></i> Command</a>
@@ -60,7 +61,7 @@
             "text" => "Git status",
             "confirmation" => "Are you sure you want to run Git status?"
         ])
-        @if(isShellAdmin())
+        @if(isShellAdminOrSuperAdmin())
             <li class="nav-divider"></li>
             @include("partials.menu-item-confirmation", [
                 "url" => route('shell.command.git.pull', ['autoRedirect' => false]),
@@ -121,7 +122,7 @@
 @endif
 
 <!-- Users, Roles, Permissions -->
-@if(isShellAdmin())
+@if(isShellAdminOrSuperAdmin())
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Authentication</a>
     <ul class="nav-dropdown-items">
@@ -132,7 +133,7 @@
 </li>
 @endif
 
-@if(isShellAdmin())
+@if(isShellAdminOrSuperAdmin())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
 @endif
 

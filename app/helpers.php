@@ -136,7 +136,7 @@ if (!function_exists('setPermissionsToSuperAdmin')) {
         $guard_name = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except = array_unique(array_merge($except, getSuperAdminPermissionExcepts()));
+        $except = array_unique(array_merge($except, []));
         $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
@@ -163,7 +163,7 @@ if (!function_exists('setPermissionsToAdmin')) {
      * @param bool $manual
      * @return void
      */
-    function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = []): void
+    function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
         $guard_name = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
@@ -186,12 +186,44 @@ if (!function_exists('setPermissionsToAdmin')) {
     }
 }
 
+if (!function_exists('setPermissionsToCustomer')) {
+    /**
+     * @param array $permissionIds
+     * @param Role $role
+     * @param array $accept
+     * @param array $except
+     * @param bool $manual
+     * @return void
+     */
+    function setPermissionsToCustomer(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = []): void
+    {
+        $guard_name = config('backpack.base.guard') ?? 'web';
+        $permissionBuilder = Permission::query();
+
+        $except = array_unique(array_merge($except, getCustomerPermissionExcepts()));
+        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $permissionIds = array_diff($permissionIds, $exceptIDs);
+
+        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
+            ->whereIn('name', $accept)
+            ->pluck('id')
+            ->toArray();
+        $permissionIds = array_unique(array_merge(
+            $acceptIDs,
+            $permissionIds
+        ));
+        $permissionIds = mergePublicPermissions($permissionIds);
+
+        $role->syncPermissions($permissionIds);
+    }
+}
+
 // get super admin excepts
-if (!function_exists('getSuperAdminPermissionExcepts')) {
+if (!function_exists('getAdminPermissionExcepts')) {
     /**
      * @return array
      */
-    function getSuperAdminPermissionExcepts(): array
+    function getAdminPermissionExcepts(): array
     {
         return [
             "permission.create",
@@ -225,12 +257,12 @@ if (!function_exists('getSuperAdminPermissionExcepts')) {
     }
 }
 
-// get admin excepts
-if (!function_exists('getAdminPermissionExcepts')) {
+// get customer excepts
+if (!function_exists('getCustomerPermissionExcepts')) {
     /**
      * @return array
      */
-    function getAdminPermissionExcepts(): array
+    function getCustomerPermissionExcepts(): array
     {
         return [
             "permission.create",
@@ -731,6 +763,16 @@ if (!function_exists('isOnlyAdmin')) {
     function isOnlyAdmin(): bool
     {
         return isAdmin() && !isSuperAdmin() && !isShellAdmin();
+    }
+}
+
+if (!function_exists('isCustomer')) {
+    /**
+     * @return bool
+     */
+    function isCustomer(): bool
+    {
+        return backpack_user()->hasRole('Customer');
     }
 }
 
