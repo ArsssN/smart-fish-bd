@@ -32,6 +32,10 @@ class SensorCrudController extends CrudController
         CRUD::setModel(\App\Models\Sensor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
         CRUD::setEntityNameStrings('sensor', 'sensors');
+
+        if (isCustomer()) {
+            CRUD::denyAccess(['list', 'update', 'delete', 'create']);
+        }
     }
 
     /**
@@ -43,6 +47,7 @@ class SensorCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
+        CRUD::column('serial_number');
         CRUD::column('status');
 
         $this->createdByList();
@@ -75,6 +80,9 @@ class SensorCrudController extends CrudController
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
             }),*/
+        ]);
+        CRUD::addField([
+            'name' => 'serial_number',
         ]);
         CRUD::addField([
             'name' => 'status',

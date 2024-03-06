@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Sensor;
 use App\Models\SensorType;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,16 +26,14 @@ Route::get('/', function () {
 });*/
 
 Route::get('/test/sensors', function () {
-    $sensors = \App\Models\Sensor::all();
-
-//    dd($sensors->toArray(), request()->all());
+    $sensors = Sensor::all();
     $sensor_message = null;
 
     if (request()->has('sensor_id')) {
         $sensor_id = request()->get('sensor_id');
-        $sensor = SensorType::query()->find($sensor_id);
+        $sensorType = Sensor::query()->findOrFail($sensor_id)->sensorType;
 
-        $sensorName = \Illuminate\Support\Str::replace(' ', '', $sensor->name);
+        $sensorName = Str::replace(' ', '', $sensorType->name);
         $helperMethodName = "get{$sensorName}Update";
 
         if (function_exists($helperMethodName)) {
@@ -41,7 +41,7 @@ Route::get('/test/sensors', function () {
                 request()->get('value', 0),
             ));
         } else {
-            $sensor_message = "No helper method found for sensor: {$sensor->name}";
+            $sensor_message = "No helper method found for sensor: {$sensorType->name}";
         }
     }
 

@@ -32,6 +32,10 @@ class ControllerCrudController extends CrudController
         CRUD::setModel(\App\Models\Controller::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/controller');
         CRUD::setEntityNameStrings('controller', 'controllers');
+
+        if (!isShellAdminOrSuperAdmin()) {
+            CRUD::denyAccess(['create', 'update', 'delete']);
+        }
     }
 
     /**
@@ -46,9 +50,9 @@ class ControllerCrudController extends CrudController
         CRUD::column('status');
 
         // only project owner can see the project
-        if(!isShellAdminOrSuperAdmin()) {
+        /*if(!isShellAdminOrSuperAdmin()) {
             $this->crud->addClause('where', 'created_by', backpack_user()->id);
-        }
+        }*/
 
         $this->createdByList();
         $this->createdAtList();

@@ -35,7 +35,8 @@ class DatabaseSeeder extends Seeder
             ControllerSeeder::class,
             ProjectSeeder::class,
             SensorControllerSeeder::class,
-            ProjectControllerSeeder::class
+            ControllerProjectSeeder::class,
+            ProjectSensorSeeder::class,
         ]);
     }
 }

@@ -36,6 +36,10 @@ class SensorTypeCrudController extends CrudController
         if (!isShellAdmin()) {
             CRUD::denyAccess(['update', 'delete', 'create']);
         }
+
+        if (isCustomer()) {
+            CRUD::denyAccess(['list', 'update', 'delete', 'create', 'show']);
+        }
     }
 
     /**

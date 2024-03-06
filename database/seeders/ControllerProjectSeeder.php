@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProjectControllerSeeder extends Seeder
+class ControllerProjectSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,8 +15,8 @@ class ProjectControllerSeeder extends Seeder
      */
     public function run()
     {
-        require_once(__DIR__ . '/seeder-data/project_controller.php');
+        require_once(__DIR__ . '/seeder-data/controller_project.php');
 
-        DB::table('project_controller')->insert($project_controller ?? []);
+        DB::table('controller_project')->insert($controller_project ?? []);
     }
 }

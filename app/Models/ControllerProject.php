@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectController extends Model
+class ControllerProject extends Model
 {
     use HasFactory;
 
-    protected $table = 'project_controller';
+    protected $table = 'controller_project';
 }

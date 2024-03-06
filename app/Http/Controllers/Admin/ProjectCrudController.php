@@ -46,18 +46,31 @@ class ProjectCrudController extends CrudController
         CRUD::column('name');
         CRUD::addColumn([
             'name' => 'user_id',
+            'label' => 'Customer',
             'entity' => 'customer',
             'model' => User::class,
         ]);
         CRUD::column('status');
 
         // only project owner can see the project
-        if(!isShellAdminOrSuperAdmin()) {
+        if(isCustomer()) {
             $this->crud->addClause('where', 'user_id', backpack_user()->id);
         }
 
         $this->createdByList();
         $this->createdAtList();
+
+        // filter
+        $this->crud->addFilter([
+            'name' => 'status',
+            'type' => 'select2',
+            'label' => 'Status'
+        ], ['active' => 'Active', 'inactive' => 'Inactive']);
+        $this->crud->addFilter([
+            'name' => 'customer',
+            'type' => 'select2',
+            'label' => 'Status'
+        ], ['active' => 'Active', 'inactive' => 'Inactive']);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -76,37 +89,48 @@ class ProjectCrudController extends CrudController
     {
         CRUD::setValidation(ProjectRequest::class);
 
-        $isOnlyAdmin = isOnlyAdmin();
+        $isCustomer = isCustomer();
 
         CRUD::field('name');
         CRUD::addField([
             'name' => 'user_id',
-            'type' => 'select2',
-            'label' => 'User',
+            'type' => $isCustomer ? 'hidden' : 'select2',
+            'label' => 'Customer',
             'entity' => 'customer',
-            'options' => (function ($query) use($isOnlyAdmin) {
-                if($isOnlyAdmin) {
+            'options' => (function ($query) use($isCustomer) {
+                if($isCustomer) {
                     $user = $query->where('id', backpack_user()->id)->get();
                 } else {
                     $user = $query->whereHas('roles', function ($query) {
-                        $query->where('name', 'Admin');
+                        $query->where('name', 'Customer');
                     })->get();
                 }
 
                 return $user;
             }),
-            'default' => $isOnlyAdmin ? backpack_user()->id : null,
+            'default' => $isCustomer ? backpack_user()->id : null,
         ]);
-        CRUD::addField([
-            'name' => 'Controllers',
+        /*CRUD::addField([
+            'name' => 'controllers',
             'label' => 'Controllers',
             'type' => 'select2_multiple',
-            'entity' => 'Controllers',
+            'entity' => 'controllers',
             'pivot' => true,
 
             'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
             }),
+        ]);*/
+        CRUD::addField([
+            'name' => 'sensors',
+            'label' => 'Sensors',
+            'type' => 'select2_multiple',
+            'entity' => 'sensors',
+            'pivot' => true,
+
+            /*'options' => (function ($query) {
+                return $query->where('created_by', backpack_user()->id)->get();
+            }),*/
         ]);
         CRUD::addField([
             'name' => 'status',

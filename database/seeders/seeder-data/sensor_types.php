@@ -1,6 +1,6 @@
 <?php
 $sensor_types = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'name' => 'Oxygen Sensor',
@@ -12,7 +12,7 @@ $sensor_types = array (
     'updated_at' => '2024-03-06 01:41:24',
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'name' => 'TDS Sensor',
@@ -24,7 +24,7 @@ $sensor_types = array (
     'updated_at' => '2024-03-06 01:41:29',
     'deleted_at' => NULL,
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
     'name' => 'Temperature Sensor',
@@ -36,7 +36,7 @@ $sensor_types = array (
     'updated_at' => '2024-03-06 01:41:40',
     'deleted_at' => NULL,
   ),
-  3 =>
+  3 => 
   array (
     'id' => 4,
     'name' => 'PH Sensor',

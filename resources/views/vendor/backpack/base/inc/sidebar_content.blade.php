@@ -1,12 +1,18 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
+<li class='nav-item mb-2'></li>
+@if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Customers</span></a></li>
+@endif
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
+@if(!isCustomer())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
-
+@endif
+<li class='nav-item mb-2'></li>
+@if(!isCustomer())
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Footer Link Management"><i class="nav-icon la la-link"></i> Footer Link Man.</a>
@@ -20,6 +26,7 @@
 {{--<li class="nav-item"><a class="nav-link" href="{{ getSettingsUrl('about') }}"><i class="la la-address-book nav-icon"></i> {{ trans('About') }}</a></li>--}}
 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('social') }}'><i class='nav-icon la la-share-alt'></i> Social</a></li>
+@endif
 
 @if(isShellAdminOrSuperAdmin())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
@@ -137,4 +144,6 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
 @endif
 
+@if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>
+@endif
