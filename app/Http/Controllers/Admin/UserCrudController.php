@@ -22,8 +22,11 @@ class UserCrudController extends CrudController
 
     public function setup()
     {
+        $singular = isShellAdmin() ? trans('backpack::permissionmanager.user') : 'Customer';
+        $plural = isShellAdmin() ? trans('backpack::permissionmanager.users') : 'Customer';
+
         $this->crud->setModel(config('backpack.permissionmanager.models.user'));
-        $this->crud->setEntityNameStrings(trans('backpack::permissionmanager.user'), trans('backpack::permissionmanager.users'));
+        $this->crud->setEntityNameStrings($singular, $plural);
         $this->crud->setRoute(backpack_url('user'));
 
         // admin only can't access
@@ -67,7 +70,7 @@ class UserCrudController extends CrudController
             ],
         ]);
 
-        if (backpack_pro()) {
+        if (backpack_pro() && isShellAdmin()) {
             // Role Filter
             $this->crud->addFilter(
                 [
