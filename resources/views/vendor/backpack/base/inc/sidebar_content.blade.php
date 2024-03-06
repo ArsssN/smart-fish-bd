@@ -5,9 +5,11 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Project Management"><i class="nav-icon la la-campground"></i> <span>Project Manage.</span></a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Users</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Customers</span></a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Sensor groups</a></li>
+        @if(isShellAdmin())
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Controllers</a></li>
+        @endif
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-bullhorn'></i> Sensors</a></li>
     </ul>
 </li>

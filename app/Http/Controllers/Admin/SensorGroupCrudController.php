@@ -31,7 +31,7 @@ class SensorGroupCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\SensorGroup::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor-group');
-        CRUD::setEntityNameStrings('sensor group', 'sensor groups');
+        CRUD::setEntityNameStrings('controller', 'controllers');
     }
 
     /**
