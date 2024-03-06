@@ -71,6 +71,17 @@ class SensorCrudController extends CrudController
 
         CRUD::field('name');
         CRUD::addField([
+            'name' => 'sensorGroups',
+            'label' => "Controller",
+            'type' => 'select2_multiple',
+            'entity' => 'sensorGroups',
+            'pivot' => true,
+
+            /*'options' => (function ($query) {
+                return $query->where('created_by', backpack_user()->id)->get();
+            }),*/
+        ]);
+        CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
         ]);

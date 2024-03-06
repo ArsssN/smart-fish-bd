@@ -99,7 +99,7 @@ class ProjectCrudController extends CrudController
         ]);
         CRUD::addField([
             'name' => 'sensorGroups',
-            'label' => 'Sensor Groups',
+            'label' => 'Controllers',
             'type' => 'select2_multiple',
             'entity' => 'sensorGroups',
             'pivot' => true,
