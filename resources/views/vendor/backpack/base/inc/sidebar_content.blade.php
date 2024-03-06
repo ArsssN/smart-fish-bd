@@ -3,10 +3,8 @@
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Customers</span></a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
-@if(isShellAdmin())
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Controllers</a></li>
-@endif
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-bullhorn'></i> Sensors</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-group') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
 
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">

@@ -31,7 +31,7 @@ class SensorGroupCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\SensorGroup::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor-group');
-        CRUD::setEntityNameStrings('controller', 'controllers');
+        CRUD::setEntityNameStrings('sensor', 'sensors');
     }
 
     /**
@@ -73,11 +73,13 @@ class SensorGroupCrudController extends CrudController
         CRUD::field('name');
         CRUD::addField([
             'name' => 'sensors',
+            'label' => 'Sensor type',
             'type' => 'select2_multiple',
             'entity' => 'sensors',
             'pivot' => true,
+            'max' => 1,
         ]);
-        CRUD::addField([
+        /*CRUD::addField([
             'name' => 'projects',
             'type' => 'select2_multiple',
             'entity' => 'projects',
@@ -86,7 +88,7 @@ class SensorGroupCrudController extends CrudController
             'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
             }),
-        ]);
+        ]);*/
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',

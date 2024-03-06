@@ -31,9 +31,9 @@ class SensorCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Sensor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
-        CRUD::setEntityNameStrings('sensor', 'sensors');
+        CRUD::setEntityNameStrings('sensor type', 'sensor types');
 
-        if (isOnlyAdmin()) {
+        if (!isShellAdmin()) {
             CRUD::denyAccess(['create', 'update', 'delete']);
         }
     }
@@ -70,17 +70,17 @@ class SensorCrudController extends CrudController
         CRUD::setValidation(SensorRequest::class);
 
         CRUD::field('name');
-        CRUD::addField([
-            'name' => 'sensorGroups',
-            'label' => "Controller",
-            'type' => 'select2_multiple',
-            'entity' => 'sensorGroups',
-            'pivot' => true,
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
+//        CRUD::addField([
+//            'name' => 'sensorGroups',
+//            'label' => "Controller",
+//            'type' => 'select2_multiple',
+//            'entity' => 'sensorGroups',
+//            'pivot' => true,
+//
+//            /*'options' => (function ($query) {
+//                return $query->where('created_by', backpack_user()->id)->get();
+//            }),*/
+//        ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
