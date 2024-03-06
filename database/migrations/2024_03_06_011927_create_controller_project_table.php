@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_controller', function (Blueprint $table) {
-            $table->foreignId('project_id')->constrained('projects')->references('id')->cascadeOnDelete();
+        Schema::create('controller_project', function (Blueprint $table) {
             $table->foreignId('controller_id')->constrained('controllers')->references('id')->cascadeOnDelete();
+            $table->foreignId('project_id')->constrained('projects')->references('id')->cascadeOnDelete();
         });
     }
 

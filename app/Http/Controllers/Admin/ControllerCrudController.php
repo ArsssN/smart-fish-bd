@@ -32,6 +32,10 @@ class ControllerCrudController extends CrudController
         CRUD::setModel(\App\Models\Controller::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/controller');
         CRUD::setEntityNameStrings('controller', 'controllers');
+
+        if (!isShellAdminOrSuperAdmin()) {
+            CRUD::denyAccess(['create', 'update', 'delete']);
+        }
     }
 
     /**
@@ -46,9 +50,9 @@ class ControllerCrudController extends CrudController
         CRUD::column('status');
 
         // only project owner can see the project
-        if(!isShellAdminOrSuperAdmin()) {
+        /*if(!isShellAdminOrSuperAdmin()) {
             $this->crud->addClause('where', 'created_by', backpack_user()->id);
-        }
+        }*/
 
         $this->createdByList();
         $this->createdAtList();
@@ -111,5 +115,33 @@ class ControllerCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('name');
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'   => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+        CRUD::addColumn([
+            'name'     => 'sensors',
+        ]);
+
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
     }
 }

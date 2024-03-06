@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SensorRequest;
+use App\Models\SensorType;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -29,12 +30,16 @@ class SensorTypeCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Sensor::class);
+        CRUD::setModel(\App\Models\SensorType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor-type');
         CRUD::setEntityNameStrings('sensor type', 'sensor types');
 
         if (!isShellAdmin()) {
             CRUD::denyAccess(['update', 'delete', 'create']);
+        }
+
+        if (isCustomer()) {
+            CRUD::denyAccess(['list', 'update', 'delete', 'create', 'show']);
         }
     }
 
@@ -103,5 +108,42 @@ class SensorTypeCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('name');
+        CRUD::column('status');
+
+        CRUD::addColumn([
+            'name' => 'sensors',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'projects',
+            'type'     => 'closure',
+            'escaped'  => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->with('sensors.projects')->first()->sensors->flatMap->projects->pluck('name')->unique()->implode(', ') ?? '-';
+            },
+        ]);
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'  => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+
+        $this->createdByList();
+        $this->createdAtList();
     }
 }

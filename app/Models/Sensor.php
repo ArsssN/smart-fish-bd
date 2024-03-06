@@ -7,6 +7,7 @@ use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sensor extends Model
@@ -54,6 +55,26 @@ class Sensor extends Model
     public function sensorType(): BelongsTo
     {
         return $this->belongsTo(SensorType::class);
+    }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return BelongsToMany
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_sensor', 'sensor_id', 'project_id');
+    }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return BelongsToMany
+     */
+    public function controllers(): BelongsToMany
+    {
+        return $this->belongsToMany(Controller::class);
     }
 
     /*

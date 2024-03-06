@@ -27,6 +27,7 @@ class SensorRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
+            'serial_number' => 'nullable|string|max:100',
             'sensorType' => 'required|exists:sensor_types,id',
             'description' => 'nullable|string|max:500',
         ];

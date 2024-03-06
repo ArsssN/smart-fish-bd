@@ -66,6 +66,16 @@ class Project extends Model
         return $this->belongsToMany(Controller::class);
     }
 
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return BelongsToMany
+     */
+    public function sensors(): BelongsToMany
+    {
+        return $this->belongsToMany(Sensor::class, 'project_sensor', 'project_id', 'sensor_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

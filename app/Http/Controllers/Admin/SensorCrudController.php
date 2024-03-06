@@ -32,6 +32,10 @@ class SensorCrudController extends CrudController
         CRUD::setModel(\App\Models\Sensor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
         CRUD::setEntityNameStrings('sensor', 'sensors');
+
+        if (isCustomer()) {
+            CRUD::denyAccess(['list', 'update', 'delete', 'create']);
+        }
     }
 
     /**
@@ -43,6 +47,7 @@ class SensorCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
+        CRUD::column('serial_number');
         CRUD::column('status');
 
         $this->createdByList();
@@ -77,6 +82,9 @@ class SensorCrudController extends CrudController
             }),*/
         ]);
         CRUD::addField([
+            'name' => 'serial_number',
+        ]);
+        CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
         ]);
@@ -98,5 +106,37 @@ class SensorCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+
+        CRUD::column('name');
+        CRUD::column('serial_number');
+        CRUD::addColumn([
+            'name'     => 'controllers',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'projects',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'   => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
     }
 }

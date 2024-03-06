@@ -1,5 +1,5 @@
 <?php
-$sensor_controller = array (
+$controller_sensor = array (
   0 =>
   array (
     'sensor_id' => 1,
@@ -21,4 +21,4 @@ $sensor_controller = array (
     'controller_id' => 2,
   ),
 );
-return $sensor_controller;
+return $controller_sensor;

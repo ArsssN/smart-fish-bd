@@ -1,11 +1,12 @@
 <?php
 $sensors = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
-    'name' => 'Oxygen Sensor',
-    'sensor_type_id' => 1,
+    'name' => 'Oxygen Sensor - 1',
+    'serial_number' => '13423223',
     'slug' => 'oxygen-sensor',
+    'sensor_type_id' => 1,
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
@@ -13,12 +14,13 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:24',
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
-    'name' => 'TDS Sensor',
-    'sensor_type_id' => 2,
+    'name' => 'TDS Sensor - 1',
+    'serial_number' => '2108755',
     'slug' => 'tds-sensor',
+    'sensor_type_id' => 2,
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
@@ -26,12 +28,13 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:29',
     'deleted_at' => NULL,
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
-    'name' => 'Temperature Sensor',
-    'sensor_type_id' => 3,
+    'name' => 'Temperature Sensor - 1',
+    'serial_number' => '32345623',
     'slug' => 'temperature-sensor',
+    'sensor_type_id' => 3,
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
@@ -39,12 +42,13 @@ $sensors = array (
     'updated_at' => '2024-03-06 01:41:40',
     'deleted_at' => NULL,
   ),
-  3 =>
+  3 => 
   array (
     'id' => 4,
-    'name' => 'PH Sensor',
-    'sensor_type_id' => 4,
+    'name' => 'PH Sensor - 1',
+    'serial_number' => '4856545',
     'slug' => 'ph-sensor',
+    'sensor_type_id' => 4,
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,

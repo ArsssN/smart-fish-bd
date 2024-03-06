@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sensors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
+            $table->string('serial_number', 100)->nullable();
             $table->string('slug', 191)->unique();
             $table->foreignId('sensor_type_id')->constrained('sensor_types')->references('id')->cascadeOnDelete();
             $table->text('description')->nullable();
