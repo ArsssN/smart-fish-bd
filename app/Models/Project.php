@@ -73,7 +73,7 @@ class Project extends Model
      */
     public function sensors(): BelongsToMany
     {
-        return $this->belongsToMany(Sensor::class);
+        return $this->belongsToMany(Sensor::class, 'project_sensor', 'project_id', 'sensor_id');
     }
 
     /*

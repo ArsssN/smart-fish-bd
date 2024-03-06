@@ -15,8 +15,8 @@ class SensorControllerSeeder extends Seeder
      */
     public function run()
     {
-        require_once(__DIR__ . '/seeder-data/sensor_controller.php');
+        require_once(__DIR__ . '/seeder-data/controller_sensor.php');
 
-        DB::table('sensor_controller')->insert($sensor_controller ?? []);
+        DB::table('controller_sensor')->insert($controller_sensor ?? []);
     }
 }

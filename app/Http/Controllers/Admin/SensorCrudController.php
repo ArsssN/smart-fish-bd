@@ -107,4 +107,36 @@ class SensorCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+
+        CRUD::column('name');
+        CRUD::column('serial_number');
+        CRUD::addColumn([
+            'name'     => 'controllers',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'projects',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'   => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
+    }
 }

@@ -7,6 +7,7 @@ use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SensorType extends Model
@@ -55,6 +56,17 @@ class SensorType extends Model
     {
         return $this->hasMany(Sensor::class);
     }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return HasManyThrough
+     */
+    public function projects(): HasManyThrough
+    {
+        return $this->hasManyThrough(Project::class, Sensor::class);
+    }
+
 
     /*
     |--------------------------------------------------------------------------

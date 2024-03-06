@@ -45,15 +45,15 @@ class ProjectCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::addColumn([
-            'name' => 'user_id',
-            'label' => 'Customer',
+            'name'   => 'user_id',
+            'label'  => 'Customer',
             'entity' => 'customer',
-            'model' => User::class,
+            'model'  => User::class,
         ]);
         CRUD::column('status');
 
         // only project owner can see the project
-        if(isCustomer()) {
+        if (isCustomer()) {
             $this->crud->addClause('where', 'user_id', backpack_user()->id);
         }
 
@@ -62,13 +62,13 @@ class ProjectCrudController extends CrudController
 
         // filter
         $this->crud->addFilter([
-            'name' => 'status',
-            'type' => 'select2',
+            'name'  => 'status',
+            'type'  => 'select2',
             'label' => 'Status'
         ], ['active' => 'Active', 'inactive' => 'Inactive']);
         $this->crud->addFilter([
-            'name' => 'customer',
-            'type' => 'select2',
+            'name'  => 'customer',
+            'type'  => 'select2',
             'label' => 'Status'
         ], ['active' => 'Active', 'inactive' => 'Inactive']);
 
@@ -93,12 +93,14 @@ class ProjectCrudController extends CrudController
 
         CRUD::field('name');
         CRUD::addField([
-            'name' => 'user_id',
-            'type' => $isCustomer ? 'hidden' : 'select2',
-            'label' => 'Customer',
-            'entity' => 'customer',
-            'options' => (function ($query) use($isCustomer) {
-                if($isCustomer) {
+            'name'    => 'user_id',
+            'type'    => $isCustomer
+                ? 'hidden'
+                : 'select2',
+            'label'   => 'Customer',
+            'entity'  => 'customer',
+            'options' => (function ($query) use ($isCustomer) {
+                if ($isCustomer) {
                     $user = $query->where('id', backpack_user()->id)->get();
                 } else {
                     $user = $query->whereHas('roles', function ($query) {
@@ -108,7 +110,9 @@ class ProjectCrudController extends CrudController
 
                 return $user;
             }),
-            'default' => $isCustomer ? backpack_user()->id : null,
+            'default' => $isCustomer
+                ? backpack_user()->id
+                : null,
         ]);
         /*CRUD::addField([
             'name' => 'controllers',
@@ -122,11 +126,11 @@ class ProjectCrudController extends CrudController
             }),
         ]);*/
         CRUD::addField([
-            'name' => 'sensors',
-            'label' => 'Sensors',
-            'type' => 'select2_multiple',
+            'name'   => 'sensors',
+            'label'  => 'Sensors',
+            'type'   => 'select2_multiple',
             'entity' => 'sensors',
-            'pivot' => true,
+            'pivot'  => true,
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
@@ -154,5 +158,40 @@ class ProjectCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('name');
+        CRUD::addColumn([
+            'name'   => 'user_id',
+            'label'  => 'Customer',
+            'entity' => 'customer',
+            'model'  => User::class,
+        ]);
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'   => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+        CRUD::addColumn([
+            'name'     => 'sensors',
+        ]);
+
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
+        $this->createdAtList('updated_at');
     }
 }

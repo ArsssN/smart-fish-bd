@@ -116,4 +116,32 @@ class ControllerCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('name');
+        CRUD::addColumn([
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'   => false, // allow HTML in this column
+            'function' => function ($entry) {
+                return $entry->description;
+            },
+        ]);
+        CRUD::addColumn([
+            'name'     => 'sensors',
+        ]);
+
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
+    }
 }
