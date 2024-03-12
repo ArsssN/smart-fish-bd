@@ -12,7 +12,7 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
-          debug: false
+          debug: true
           host: ${{ secrets.S_HOST }}
           username: ${{ secrets.S_USERNAME }}
 #          port: 21098
