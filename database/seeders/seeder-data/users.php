@@ -1,6 +1,6 @@
 <?php
 $users = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
     'name' => 'Afzalur Rahman Sabbir',
@@ -14,7 +14,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'name' => 'Admin',
@@ -28,7 +28,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'User',
@@ -42,7 +42,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'name' => 'Super Admin',
@@ -56,11 +56,11 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  4 => 
+  4 =>
   array (
     'id' => 5,
     'name' => 'Customer 1',
-    'email' => 'customer-1@yopmain.com',
+    'email' => 'customer-1@yopmail.com',
     'username' => 'customer-1',
     'email_verified_at' => NULL,
     'password' => '$2y$10$t.2zItf1QrcH0hMzM70GOeTfc/oMRD1/6PVnGqJNm8SRKuf47BCVK',
@@ -70,11 +70,11 @@ $users = array (
     'updated_at' => '2024-03-06 02:12:38',
     'deleted_at' => NULL,
   ),
-  5 => 
+  5 =>
   array (
     'id' => 6,
     'name' => 'Customer 2',
-    'email' => 'customer-2@yopmain.com',
+    'email' => 'customer-2@yopmail.com',
     'username' => 'customer-2',
     'email_verified_at' => NULL,
     'password' => '$2y$10$NU9MdxQrPHKp8RgEkH3fzOpeq.p.QT09ds.P.sw33tpEw0hlGgw5e',
@@ -84,11 +84,11 @@ $users = array (
     'updated_at' => '2024-03-06 02:13:02',
     'deleted_at' => NULL,
   ),
-  6 => 
+  6 =>
   array (
     'id' => 7,
     'name' => 'Customer 3',
-    'email' => 'customer-3@yopmain.com',
+    'email' => 'customer-3@yopmail.com',
     'username' => 'customer-3',
     'email_verified_at' => NULL,
     'password' => '$2y$10$.p8iJocWTeH8kMm94Z5Tr.xCD5lO/LNUMJ6R1YLaJ/FXPqJJ7ZXZC',
