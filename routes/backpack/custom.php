@@ -29,4 +29,6 @@ Route::group([
     Route::crud('controller', 'ControllerCrudController');
     Route::crud('sensor-type', 'SensorTypeCrudController');
     Route::crud('sensor', 'SensorCrudController');
+    Route::crud('fish', 'FishCrudController');
+    Route::crud('fish-weight', 'FishWeightCrudController');
 }); // this should be the absolute last line of this file
