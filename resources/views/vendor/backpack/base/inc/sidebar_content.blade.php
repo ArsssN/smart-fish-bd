@@ -12,6 +12,9 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
 @endif
 <li class='nav-item mb-2'></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish-weight') }}'><i class='nav-icon la la-weight-hanging'></i> Fish weights</a></li>
+<li class='nav-item mb-2'></li>
 @if(!isCustomer())
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">

@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             SensorControllerSeeder::class,
             ControllerProjectSeeder::class,
             ProjectSensorSeeder::class,
+            FishSeeder::class,
+            FishWeightSeeder::class,
         ]);
     }
 }
