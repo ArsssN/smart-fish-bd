@@ -6,11 +6,10 @@ use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Project extends Model
+class Feeder extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
@@ -20,7 +19,7 @@ class Project extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'projects';
+    protected $table = 'feeders';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -46,54 +45,15 @@ class Project extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * Get the user that owns the Project
-     *
-     * @return BelongsTo
-     */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     /**
-     * Get the project that owns the Controller
+     * The projects that belong to the Feeder
      *
      * @return BelongsToMany
      */
-    public function Controllers(): BelongsToMany
+    public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Controller::class);
-    }
-
-    /**
-     * Get the project that owns the Feeder
-     *
-     * @return BelongsToMany
-     */
-    public function sensors(): BelongsToMany
-    {
-        return $this->belongsToMany(Sensor::class, 'project_sensor', 'project_id', 'sensor_id');
-    }
-
-    /**
-     * Get the project that owns the Aerator
-     *
-     * @return BelongsToMany
-     */
-    public function aerators(): BelongsToMany
-    {
-        return $this->belongsToMany(Aerator::class, 'aerator_project');
-    }
-
-    /**
-     * Get the project that owns the Feeder
-     *
-     * @return BelongsToMany
-     */
-    public function feeders(): BelongsToMany
-    {
-        return $this->belongsToMany(Feeder::class, 'feeder_project');
+        return $this->belongsToMany(Project::class, 'feeder_project');
     }
 
     /*

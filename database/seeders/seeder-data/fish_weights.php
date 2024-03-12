@@ -1,6 +1,6 @@
 <?php
 $fish_weights = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'date' => '2024-03-12',
@@ -16,7 +16,7 @@ $fish_weights = array (
     'updated_at' => '2024-03-12 15:53:01',
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'date' => '2024-03-12',
@@ -32,7 +32,7 @@ $fish_weights = array (
     'updated_at' => '2024-03-12 15:53:01',
     'deleted_at' => NULL,
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
     'date' => '2024-03-12',

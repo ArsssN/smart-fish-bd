@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjectRequest extends FormRequest
+class AeratorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +27,7 @@ class ProjectRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
-            'sensors' => 'required|array',
-            'aerators' => 'required|array',
-            'feeders' => 'required|array',
-            /*'sensors.*' => 'required|exists:sensors,id',
-            'aerators.*' => 'required|exists:aerators,id',
-            'feeders.*' => 'required|exists:feeders,id',*/
-            'user_id' => 'required|exists:users,id',
+            'serial_number' => 'nullable|string|max:100',
             'description' => 'nullable|string|max:500',
         ];
     }
