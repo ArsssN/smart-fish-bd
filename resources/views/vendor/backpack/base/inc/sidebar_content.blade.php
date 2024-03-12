@@ -10,6 +10,8 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>
 @endif
 <li class='nav-item mb-2'></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>
