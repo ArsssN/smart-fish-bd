@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.S_USERNAME }}
 #          port: 21098
           key: ${{ secrets.S_SSH_KEY }}
-          passphrase: ${{ secrets.S_PASSWORD }}
+#          passphrase: ${{ secrets.S_PASSWORD }}
           script: |
             cd /var/www/dev-smart-fish/
             php artisan down
