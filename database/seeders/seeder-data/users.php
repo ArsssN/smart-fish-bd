@@ -60,7 +60,7 @@ $users = array (
   array (
     'id' => 5,
     'name' => 'Customer 1',
-    'email' => 'customer-1@yopmain.com',
+    'email' => 'customer-1@yopmail.com',
     'username' => 'customer-1',
     'email_verified_at' => NULL,
     'password' => '$2y$10$t.2zItf1QrcH0hMzM70GOeTfc/oMRD1/6PVnGqJNm8SRKuf47BCVK',
@@ -74,7 +74,7 @@ $users = array (
   array (
     'id' => 6,
     'name' => 'Customer 2',
-    'email' => 'customer-2@yopmain.com',
+    'email' => 'customer-2@yopmail.com',
     'username' => 'customer-2',
     'email_verified_at' => NULL,
     'password' => '$2y$10$NU9MdxQrPHKp8RgEkH3fzOpeq.p.QT09ds.P.sw33tpEw0hlGgw5e',
@@ -88,7 +88,7 @@ $users = array (
   array (
     'id' => 7,
     'name' => 'Customer 3',
-    'email' => 'customer-3@yopmain.com',
+    'email' => 'customer-3@yopmail.com',
     'username' => 'customer-3',
     'email_verified_at' => NULL,
     'password' => '$2y$10$.p8iJocWTeH8kMm94Z5Tr.xCD5lO/LNUMJ6R1YLaJ/FXPqJJ7ZXZC',
