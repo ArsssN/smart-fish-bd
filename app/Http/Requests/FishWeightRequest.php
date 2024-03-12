@@ -25,7 +25,13 @@ class FishWeightRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'fish_id' => 'required|exists:fishes,id',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'weight' => 'required|numeric|min:0|max:9999999999',
+            'weight_in_24_hours' => 'required|numeric|min:0|max:9999999999',
+            'status' => 'required|in:active,inactive',
+            'description' => 'nullable|string|max:500'
         ];
     }
 
