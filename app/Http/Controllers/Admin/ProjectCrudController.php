@@ -126,11 +126,16 @@ class ProjectCrudController extends CrudController
             }),
         ]);*/
         CRUD::addField([
-            'name'   => 'sensors',
-            'label'  => 'Sensors',
-            'type'   => 'select2_multiple',
-            'entity' => 'sensors',
-            'pivot'  => true,
+            'name'          => 'sensors',
+            'label'         => 'Sensors',
+            'type'          => 'relationship',
+            'entity'        => 'sensors',
+            'pivot'         => true,
+            'ajax'          => true,
+            'inline_create' => [
+                'entity' => 'sensor',
+                'field'  => 'name',
+            ]
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
@@ -179,13 +184,13 @@ class ProjectCrudController extends CrudController
             'name'     => 'description',
             'label'    => 'Description',
             'type'     => 'closure',
-            'escaped'   => false, // allow HTML in this column
+            'escaped'  => false, // allow HTML in this column
             'function' => function ($entry) {
                 return $entry->description;
             },
         ]);
         CRUD::addColumn([
-            'name'     => 'sensors',
+            'name' => 'sensors',
         ]);
 
         CRUD::column('status');

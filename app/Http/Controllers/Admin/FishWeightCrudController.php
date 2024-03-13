@@ -68,9 +68,14 @@ class FishWeightCrudController extends CrudController
     {
         CRUD::setValidation(FishWeightRequest::class);
 
-        CRUD::field('fish_id');
-        CRUD::field('date');
-        CRUD::field('time');
+        CRUD::addField([
+            'name'          => 'fish_id',
+            'type'          => 'relationship',
+            'ajax'          => true,
+            'inline_create' => true,
+        ]);
+        CRUD::field('date')->default(date('Y-m-d'));
+        CRUD::field('time')->default(date('H:i'));
         CRUD::field('weight')->type('number');
         CRUD::field('weight_in_24_hours')->type('number');
         CRUD::addField([
