@@ -2,6 +2,7 @@
 
 use App\Models\Sensor;
 use App\Models\SensorType;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,30 @@ use Illuminate\Support\Str;
 |
 */
 
+use PhpMqtt\Client\Facades\MQTT;
 Route::get('/', function () {
+
+    MQTT::publish('some/topic1', 'Hello World!');
+    return view('welcome');
+});
+
+Route::get('/some/topic1', function () {
+    // Create an MQTT client instance
+    $mqtt = MQTT::connection();
+
+    // Subscribe to the topic
+    $mqtt->subscribe('some/topic1', function (string $topic, string $message) {
+        // Handle the received message
+        Log::info(sprintf('Received message on topic [%s]: %s', $topic, $message));
+    }, 1);
+
+    // Start the MQTT event loop
+    $mqtt->loop(true);
+
+    // Log a message for testing purposes
+    Log::info('MQTT event loop started');
+
+    // Return a response (you may not need to return a view, depending on your application)
     return view('welcome');
 });
 
