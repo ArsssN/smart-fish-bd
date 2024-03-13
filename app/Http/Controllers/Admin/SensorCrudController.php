@@ -72,12 +72,24 @@ class SensorCrudController extends CrudController
     {
         CRUD::setValidation(SensorRequest::class);
 
-        CRUD::field('name');
+        CRUD::field('name')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
+        CRUD::addField([
+            'name' => 'status',
+            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
         CRUD::addField([
             'name' => 'sensorType',
             'label' => 'Sensor Type',
             'type' => 'select2',
             'entity' => 'sensorType',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
@@ -85,10 +97,9 @@ class SensorCrudController extends CrudController
         ]);
         CRUD::addField([
             'name' => 'serial_number',
-        ]);
-        CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
         CRUD::field('description')->type('tinymce');
 

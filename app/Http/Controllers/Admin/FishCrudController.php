@@ -67,12 +67,17 @@ class FishCrudController extends CrudController
     {
         CRUD::setValidation(FishRequest::class);
 
-        CRUD::field('name');
-        CRUD::field('image')->type('browse')->hint('Image size 1920x899');
+        CRUD::field('name')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
         ]);
+        CRUD::field('image')->type('browse')->hint('Image size 1920x899');
         CRUD::field('description')->type('tinymce');
 
         /**

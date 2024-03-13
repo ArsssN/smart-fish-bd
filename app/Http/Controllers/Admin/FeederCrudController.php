@@ -7,6 +7,7 @@ use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class FeederCrudController
@@ -20,6 +21,7 @@ class FeederCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use InlineCreateOperation;
     use CreatedAt, CreatedBy;
 
     /**
@@ -67,17 +69,28 @@ class FeederCrudController extends CrudController
     {
         CRUD::setValidation(FeederRequest::class);
 
-        CRUD::field('name');
-        CRUD::addField([
-            'name' => 'serial_number',
-        ]);
-        CRUD::addField([
-            'name' => 'run_status',
-            'type' => 'enum',
+        CRUD::field('name')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
+        ]);
+        CRUD::addField([
+            'name' => 'serial_number',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
+        ]);
+        CRUD::addField([
+            'name' => 'run_status',
+            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
         CRUD::field('description')->type('tinymce');
 
