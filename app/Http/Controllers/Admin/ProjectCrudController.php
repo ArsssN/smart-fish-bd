@@ -216,6 +216,8 @@ class ProjectCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
+        $this->crud->setShowView('backpack::crud.custom.show');
+
         CRUD::column('name');
         CRUD::addColumn([
             'name' => 'user_id',
