@@ -142,6 +142,28 @@ class ProjectCrudController extends CrudController
             }),*/
         ]);
         CRUD::addField([
+            'name'   => 'aerators',
+            'label'  => 'Aerators',
+            'type'   => 'select2_multiple',
+            'entity' => 'aerators',
+            'pivot'  => true,
+
+            /*'options' => (function ($query) {
+                return $query->where('created_by', backpack_user()->id)->get();
+            }),*/
+        ]);
+        CRUD::addField([
+            'name'   => 'feeders',
+            'label'  => 'Feeders',
+            'type'   => 'select2_multiple',
+            'entity' => 'feeders',
+            'pivot'  => true,
+
+            /*'options' => (function ($query) {
+                return $query->where('created_by', backpack_user()->id)->get();
+            }),*/
+        ]);
+        CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
         ]);
@@ -191,6 +213,12 @@ class ProjectCrudController extends CrudController
         ]);
         CRUD::addColumn([
             'name' => 'sensors',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'aerators',
+        ]);
+        CRUD::addColumn([
+            'name'     => 'feeders',
         ]);
 
         CRUD::column('status');
