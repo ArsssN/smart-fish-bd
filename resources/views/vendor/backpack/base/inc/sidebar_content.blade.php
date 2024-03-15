@@ -1,7 +1,7 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
-<li class='nav-item mb-2'></li>
+<li class='nav-item mb-2'>Project</li>
 @if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-users"></i> <span>Customers</span></a></li>
 @endif
@@ -10,13 +10,15 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>
+<li class='nav-item mb-2'>Feeder</li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder-history') }}'><i class='nav-icon la la-bacon'></i> Feeder histories</a></li>
 @endif
-<li class='nav-item mb-2'></li>
+<li class='nav-item mb-2'>Fish</li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish-weight') }}'><i class='nav-icon la la-weight-hanging'></i> Fish weights</a></li>
-<li class='nav-item mb-2'></li>
+<li class='nav-item mb-2'>Other</li>
 @if(!isCustomer())
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">

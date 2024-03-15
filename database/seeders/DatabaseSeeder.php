@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             AeratorSeeder::class,
             FeederProjectSeeder::class,
             AeratorProjectSeeder::class,
+            FeederHistorySeeder::class,
         ]);
     }
 }
