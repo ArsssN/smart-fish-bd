@@ -60,10 +60,8 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="row">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Name
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-4">Name</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
                                             {{
                                                 $entry->name
@@ -73,10 +71,8 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="row">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Customer
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-4">Customer</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
 {{--                                            <a href="{{ route('user.showDetailsRow', $entry->customer->id) }}" target="_blank">--}}
                                                 {{
@@ -88,10 +84,8 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="row">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Status
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-4">Status</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
                                             {{
                                                 $entry->status
@@ -100,24 +94,9 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
-                                    <div class="row">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Created by
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
-                                        <div class="col-sm-6 col-lg-6 col-xl-7">
-                                            {{
-                                                $entry->user->name
-                                            }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="row" title="{{$entry->created_at}}">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Created
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-4">Created</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
                                             {{
                                                 $entry->created_at->diffForHumans()
@@ -127,10 +106,8 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="row" title="{{$entry->updated_at}}">
-                                        <div class="col-sm-4 font-weight-bold">
-                                            Updated
-                                        </div>
-                                        <div class="font-weight-bold col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-4">Updated</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
                                             {{
                                                 $entry->updated_at->diffForHumans()
@@ -140,9 +117,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-sm-12 font-weight-bold">
-                                            Description :
-                                        </div>
+                                        <div class="col-sm-12">Description :</div>
                                         <div class="col-sm-12">
                                             {!!
                                                 $entry->description
