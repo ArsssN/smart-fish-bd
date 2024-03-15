@@ -101,4 +101,9 @@ class User extends Authenticatable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function setNameAttribute($value): void
+    {
+        $userDetails = request()->userDetails;
+        $this->attributes['name'] = $userDetails['first_name'] . ' ' . $userDetails['last_name'];
+    }
 }
