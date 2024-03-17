@@ -26,3 +26,4 @@ jobs:
             php artisan o:c
             php artisan migrate:fresh --seed
             php artisan up
+            chmod -R 777 storage/framework/*
