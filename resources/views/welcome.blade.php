@@ -280,7 +280,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Contact Information</h5>
                                 <ul class="list-unstyled">
-                                    <li><strong>Phone:</strong> +1 (555) 123-4567 </li>
+                                    <li><strong>Phone:</strong> +1 (555) 123-4567</li>
                                     <li><strong>Email:</strong> info@smartfish.com</li>
                                 </ul>
                             </div>
