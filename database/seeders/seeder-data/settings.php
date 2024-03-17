@@ -152,5 +152,23 @@ $settings = array(
             'created_at'  => NULL,
             'updated_at'  => NULL,
         ),
+    4 =>
+        array(
+            'id'          => 5,
+            'key'         => 'banner_images',
+            'name'        => 'Banner Images',
+            'description' => 'Banner Images',
+            'value'       => '["uploads\\banner\\banner-1.jpg","uploads\\banner\\banner-2.jpg","uploads\\banner\\banner-3.jpg","uploads\\banner\\banner-4.jpg"]',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Banner Images',
+                'type'      => 'browse_multiple',
+                'min_rows'  => 1,
+                'init_rows' => 1,
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
 );
 return $settings;

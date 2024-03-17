@@ -68,32 +68,29 @@
 <div data-bs-spy="scroll" data-bs-target="#navbar-scroll-spy" data-bs-smooth-scroll="true">
     {{-- HERO SLIDER SECTION --}}
     <section id="welcome" class="main-banner bg-body-secondary">
-        <div id="heroCarousel" class="carousel slide mb-4">
+        <div id="heroCarousel2" class="carousel slide mb-4">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
-                        aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
+                @foreach($banner_images as $banner_image)
+                    <button type="button" data-bs-target="#heroCarousel2" data-bs-slide-to="{{ $loop->index }}"
+                            class="{{ $loop->first ? 'active' : '' }}"
+                            aria-label="Slide {{ $loop->index }}"></button>
+                @endforeach
             </div>
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://picsum.photos/640/360" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://picsum.photos/640/360" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://picsum.photos/640/360" class="d-block w-100" alt="...">
-                </div>
+                @foreach($banner_images as $banner_image)
+                    <div class="carousel-item {{$loop->first ? 'active' : ''}}">
+                        <img
+                            src="{{ asset($banner_image) }}"
+                            class="d-block w-100" alt="{{ $loop->iteration }} slide">
+                    </div>
+                @endforeach
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel"
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel2"
                     data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel"
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel2"
                     data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
