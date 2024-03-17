@@ -58,7 +58,7 @@ $settings = array(
             'key'         => 'about',
             'name'        => 'About',
             'description' => 'Website about',
-            'value'       => '[{"image":"uploads\/about\/about.jpg","description":"<p>Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.<\/p>\r\n\r\n<p>At Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you&#39;re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.<\/p>\r\n\r\n<p>Our team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.<\/p>\r\n\r\n<p>Join us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living.<\/p>"}]',
+            'value'       => '[{"image":"uploads\/abouts\/about.jpg","description":"<p>Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.<\/p>\r\n\r\n<p>At Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you&#39;re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.<\/p>\r\n\r\n<p>Our team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.<\/p>\r\n\r\n<p>Join us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living.<\/p>"}]',
             'field'       => json_encode([
                 "name"      => "value",
                 "label"     => "About",
@@ -150,7 +150,7 @@ $settings = array(
             'key'         => 'banner_images',
             'name'        => 'Banner Images',
             'description' => 'Banner Images',
-            'value'       => "[\"uploads\\\\banner\\\\banner-1.jpg\",\"uploads\\\\banner\\\\banner-2.jpg\",\"uploads\\\\banner\\\\banner-3.jpg\",\"uploads\\\\banner\\\\banner-4.jpg\"]",
+            'value'       => "[\"uploads\\\\banners\\\\banner-1.jpg\",\"uploads\\\\banners\\\\banner-2.jpg\",\"uploads\\\\banners\\\\banner-3.jpg\",\"uploads\\\\banners\\\\banner-4.jpg\"]",
             'field'       => json_encode([
                 'name'      => 'value',
                 'label'     => 'Banner Images',
@@ -173,6 +173,44 @@ $settings = array(
                 'name'      => 'value',
                 'label'     => 'Welcome Message',
                 'type'      => 'ckeditor',
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
+    6 =>
+        array(
+            'id'          => 7,
+            'key'         => 'services',
+            'name'        => 'Services',
+            'description' => 'Services',
+            'value'       => '[{"title":"Automated Feeding Solutions - 1","image":"uploads\/services\/banner-1.jpg","description":"Automated Feeding Solutions - 1\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 2","image":"uploads\/services\/banner-2.jpg","description":"Automated Feeding Solutions - 2\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 3","image":"uploads\/services\/banner-3.jpg","description":"Automated Feeding Solutions - 3\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 4","image":"uploads\/services\/banner-4.jpg","description":"Automated Feeding Solutions - 4\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."}]',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Services',
+                'type'      => 'repeatable',
+                'subfields' => [
+                    [
+                        'name'  => 'title',
+                        'label' => 'Title',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'name'  => 'image',
+                        'label' => 'Image',
+                        'type'  => 'browse',
+                    ],
+                    [
+                        'name'  => 'description',
+                        'label' => 'Description',
+                        'type'  => 'textarea',
+                        'attributes' => [
+                            'rows' => '4'
+                        ],
+                    ],
+                ],
+                'min_rows'  => 1,
+                'init_rows' => 1,
             ]),
             'active'      => 1,
             'created_at'  => NULL,

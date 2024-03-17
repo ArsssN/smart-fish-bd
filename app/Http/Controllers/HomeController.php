@@ -19,11 +19,12 @@ class HomeController extends Controller
         $banner_images = json_decode(Setting::get('banner_images')) ?? [];
         $welcome_message = Setting::get('welcome_message') ?? '';
         $about = json_decode(Setting::get('about'))[0] ?? new \stdClass();
+        $services = json_decode(Setting::get('services')) ?? [];
 
-//        dd($contact_info, $banner_images, $welcome_message, $about);
+//        dd($contact_info, $banner_images, $welcome_message, $about, $services);
 
         $socials = Social::query()->where('status', '=', 'active')->get();
 
-        return view('welcome', compact('socials', 'contact_info', 'banner_images', 'welcome_message', 'about'));
+        return view('welcome', compact('socials', 'contact_info', 'banner_images', 'welcome_message', 'about', 'services'));
     }
 }

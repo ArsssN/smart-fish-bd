@@ -112,7 +112,8 @@
 
             <div class="row align-items-center gap-4 gap-lg-0">
                 <div class="col-lg-6">
-                    <img src="{{ asset($about->image) }}" alt="Smart Fish about" class="img-fluid rounded">
+                    <img src="{{ asset($about->image) }}" alt="Smart Fish about"
+                         class="img-fluid rounded d-flex m-auto">
                 </div>
                 <div class="col-lg-6">
                     {!! $about->description !!}
@@ -128,20 +129,51 @@
 
             <div class="row">
                 <div class="owl-carousel owl-theme">
-
-                    @for ($i = 0; $i < 4; $i++)
+                    @foreach($services as $service)
+                        @php($short_description = \Illuminate\Support\Str::substr($service->description, 0, 100))
                         <div class="card h-100">
-                            <img src="https://picsum.photos/640/360" class="card-img-top" alt="Service 1">
+                            <img src="{{asset($service->image)}}" class="card-img-top" alt="Service {{ $loop->index }}">
                             <div class="card-body">
-                                <h5 class="card-title">Automated Feeding Solutions</h5>
-                                <p class="card-text">Experience hassle-free fish feeding with our smart automated
-                                    feeding solutions. Set schedules and portions to keep your fish healthy and
-                                    well-fed.</p>
-                                <a href="" class="btn btn-primary mt-3">Details</a>
+                                <h5 class="card-title">
+                                    {{ $service->title }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $short_description }}{{ strlen($service->description) > 100 ? '...' : ''}}
+                                </p>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{$loop->index}}">
+                                    Details
+                                </button>
                             </div>
                         </div>
-                    @endfor
+                    @endforeach
                 </div>
+
+                @foreach($services as $service)
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModal{{$loop->index}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="white-space: pre-wrap">{!! $service->description !!}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
             </div>
         </div>
     </section>

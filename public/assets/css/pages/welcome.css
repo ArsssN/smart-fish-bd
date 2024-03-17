@@ -56,6 +56,7 @@ img.card-img-top {
     color: #fff !important;
     opacity: .5;
     transition: all .4s;
+    transform: translateY(-50%);
 }
 
 .owl-nav button:hover {
@@ -100,6 +101,15 @@ img.card-img-top {
     margin-right: 0.25rem !important;
 }
 
-div[data-bs-spy="scroll"] section {
+div[data-bs-spy="scroll"] > section {
     min-height: calc(100vh - var(--navbar-scroll-height));
+}
+
+div[data-bs-spy="scroll"] > section:not(:first-child) {
+    display: flex;
+    margin: auto;
+}
+
+div[data-bs-spy="scroll"] > section > div {
+    margin: auto;
 }
