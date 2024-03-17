@@ -16,9 +16,11 @@ class HomeController extends Controller
     public function __invoke(): Factory|View|Application
     {
         $contact_info = json_decode(Setting::get('contact_info'))[0] ?? new \stdClass();
-        $banner_images = json_decode(Setting::get('banner_images')) ?? new \stdClass();
+        $banner_images = json_decode(Setting::get('banner_images')) ?? [];
+        $welcome_message = Setting::get('welcome_message') ?? '';
+
         $socials = Social::query()->where('status', '=', 'active')->get();
 
-        return view('welcome', compact('socials', 'contact_info', 'banner_images'));
+        return view('welcome', compact('socials', 'contact_info', 'banner_images', 'welcome_message'));
     }
 }

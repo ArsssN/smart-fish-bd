@@ -98,12 +98,9 @@
         </div>
         <div class="container">
             <h1 class="title">Welcome message</h1>
-            <p>
-                Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the
-                way
-                people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the
-                importance of creating a harmonious environment for both fish and their owners.
-            </p>
+            <div>
+                {!! $welcome_message !!}
+            </div>
         </div>
 
     </section>
