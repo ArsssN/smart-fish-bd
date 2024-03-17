@@ -269,7 +269,9 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <h5 class="card-title">Visit Us</h5>
-                            <p class="card-text">123 Smart Fish Lane<br> Aquacity, Oceanland</p>
+                            <p class="card-text">
+                                {!! $contact_info->address !!}
+                            </p>
                         </div>
                     </div>
 
@@ -277,8 +279,8 @@
                         <div class="card-body">
                             <h5 class="card-title">Contact Information</h5>
                             <ul class="list-unstyled">
-                                <li><strong>Phone:</strong> +1 (555) 123-4567</li>
-                                <li><strong>Email:</strong> info@smartfish.com</li>
+                                <li><strong>Phone:</strong> {!! $contact_info->phone !!}</li>
+                                <li><strong>Email:</strong> {!! $contact_info->email !!}</li>
                             </ul>
                         </div>
                     </div>
@@ -300,8 +302,8 @@
                 <p>
                     {!! $contact_info->address !!}
                 </p>
-                <p><strong>Email:</strong> {!! $contact_info->email !!}</p>
                 <p><strong>Phone:</strong> {!! $contact_info->phone !!}</p>
+                <p><strong>Email:</strong> {!! $contact_info->email !!}</p>
             </div>
             <div class="col-md-4 mb-3 mb-md-0">
                 <h5 class="mb-3">Menu</h5>
