@@ -29,7 +29,7 @@
 
 #heroCarousel .carousel-item img {
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 #heroCarousel2 .carousel-item {
@@ -41,9 +41,14 @@
     object-fit: cover;
 }
 
+#our-service img.card-img-top {
+    height: 280px;
+    object-fit: cover;
+}
+
 img.card-img-top {
     height: 280px;
-    object-fit: cover
+    object-fit: contain;
 }
 
 .owl-nav button {

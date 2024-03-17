@@ -183,16 +183,21 @@
         <div class="container">
             <h1 class="title">Our Team</h1>
             <div class="owl-carousel owl-theme">
-                @for ($i = 0; $i < 4; $i++)
+                @foreach($teams as $team)
                     <div class="card h-100">
-                        <img src="https://i.pravatar.cc/150?img=56" class="card-img-top" alt="Team Member 1">
+                        <img src="{{ asset($team->image) }}" class="card-img-top p-2"
+                             alt="Team Member {{ $loop->iteration }}">
                         <div class="card-body text-center">
-                            <h5 class="card-title">John Doe</h5>
-                            <p class="card-text">Marine Biologist</p>
-                            <a href="#" class="btn btn-primary mt-3">Connect</a>
+                            <h5 class="card-title">
+                                {{ $team->name }}
+                            </h5>
+                            <p class="card-text">
+                                {{ $team->designation }}
+                            </p>
+                            <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
     </section>

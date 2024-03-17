@@ -216,5 +216,47 @@ $settings = array(
             'created_at'  => NULL,
             'updated_at'  => NULL,
         ),
+    7 =>
+        array(
+            'id'          => 8,
+            'key'         => 'teams',
+            'name'        => 'Teams',
+            'description' => 'Teams',
+            'value'       => '[{"name":"User 1","image":"uploads\/teams\/download.png","designation":"CEO"},{"name":"User 2","image":"uploads\/teams\/download.png","designation":"CTO"},{"name":"User 3","image":"uploads\/teams\/download.png","designation":"CTO"},{"name":"User 4","image":"uploads\/teams\/download.png","designation":"COO"}]',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Teams',
+                'type'      => 'repeatable',
+                'subfields' => [
+                    [
+                        'name'  => 'name',
+                        'label' => 'Name',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'name'  => 'image',
+                        'label' => 'Image',
+                        'type'  => 'browse',
+                        'hint'  => 'Image size should be 1:1 ratio',
+                    ],
+                    [
+                        'name'  => 'designation',
+                        'label' => 'Designation',
+                        'type'  => 'select_from_array',
+                        'options' => [
+                            'CEO' => 'CEO',
+                            'CTO' => 'CTO',
+                            'CFO' => 'CFO',
+                            'COO' => 'COO',
+                        ],
+                    ],
+                ],
+                'min_rows'  => 1,
+                'init_rows' => 1,
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
 );
 return $settings;
