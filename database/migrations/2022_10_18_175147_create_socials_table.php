@@ -23,6 +23,8 @@ return new class extends Migration {
             $table->string('og_image', 191)->nullable();
             $table->text('og_description')->nullable();
 
+            $table->enum('status', ['active', 'inactive'])->default('active');
+
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

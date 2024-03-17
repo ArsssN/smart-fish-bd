@@ -16,9 +16,7 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', \App\Http\Controllers\HomeController::class);
 
 // php info
 /*Route::get('/phpinfo', function () {
