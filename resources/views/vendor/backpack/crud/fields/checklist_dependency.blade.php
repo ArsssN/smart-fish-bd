@@ -8,7 +8,7 @@
 @endphp
 
 @include('crud::fields.inc.wrapper_start')
-@if(!isShellAdmin())
+@if(!isShellAdminOrSuperAdmin())
 <div class="d-none">
 @endif
     <label>{!! $field['label'] !!}</label>

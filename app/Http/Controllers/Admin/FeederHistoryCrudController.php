@@ -32,6 +32,8 @@ class FeederHistoryCrudController extends CrudController
         CRUD::setModel(\App\Models\FeederHistory::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/feeder-history');
         CRUD::setEntityNameStrings('feeder history', 'feeder histories');
+
+        CRUD::denyAccess(['create', 'update', 'delete', 'show']);
     }
 
     /**
@@ -46,8 +48,13 @@ class FeederHistoryCrudController extends CrudController
         CRUD::column('date');
         CRUD::column('time');
         CRUD::column('run_time');
-        CRUD::column('amount');
-        CRUD::column('unit');
+        CRUD::addColumn([
+            'name' => 'amount',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return $entry->amount . ' ' . $entry->unit;
+            }
+        ]);
 
         $this->createdByList();
         $this->createdAtList();
