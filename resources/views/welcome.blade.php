@@ -18,96 +18,18 @@
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link href="{{ asset('assets/css/pages/welcome.css') }}" rel="stylesheet">
 </head>
 <!-- Styles -->
 <style>
-    :root {
-        --primary: #0d6efd;
-        --icon-color: #7F57F1;
-        /*--icon-color: var(--primary);*/
-    }
-
-    .navbar-nav .nav-link.active,
-    .navbar-nav .nav-link.show {
-        color: var(--primary)
-    }
-
-    .title {
-        color: var(--primary);
-        font-weight: bold;
-        text-align: center;
-        text-transform: uppercase;
-        margin-bottom: 24px;
-    }
-
-    #heroCarousel .carousel-item {
-        height: 450px;
-    }
-
-    #heroCarousel .carousel-item img {
-        height: 100%;
-        object-fit: cover;
-    }
-
-    img.card-img-top {
-        height: 280px;
-        object-fit: cover
-    }
-
-    .owl-nav button {
-        position: absolute;
-        top: 50%;
-        background: #0a58ca !important;
-        width: 36px;
-        height: 36px;
-        border-radius: 50% !important;
-        color: #fff !important;
-        opacity: .5;
-        transition: all .4s;
-    }
-
-    .owl-nav button:hover {
-        opacity: 1;
-    }
-
-    .owl-nav .owl-prev {
-        left: 0;
-    }
-
-    .owl-nav .owl-next {
-        right: 0;
-    }
-
-    @media (max-width: 768) {
-        #heroCarousel .carousel-item {
-            height: 250px;
-        }
-    }
-
-    .mr-1 {
-        margin-right: 0.25rem !important;
-    }
-
-    .footer-brand {
-        text-decoration: none;
-    }
-
-    .navbar-brand .text,
-    .footer-brand .text {
-        color: var(--icon-color);
-    }
-
-    .navbar-brand .text b,
-    .footer-brand .text b {
-        margin-right: 0.25rem !important;
-    }
 </style>
 
 <body>
 {{-- MENU SECTION --}}
 <nav id="navbar-scroll-spy" class="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#welcome">
             {!! config('backpack.base.project_logo') !!}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -139,8 +61,8 @@
 
 <div data-bs-spy="scroll" data-bs-target="#navbar-scroll-spy" data-bs-smooth-scroll="true">
     {{-- HERO SLIDER SECTION --}}
-    <section id="welcome" class="main-banner">
-        <div id="heroCarousel" class="carousel slide">
+    <section id="welcome" class="main-banner bg-body-secondary">
+        <div id="heroCarousel" class="carousel slide mb-4">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
                         aria-current="true" aria-label="Slide 1"></button>
@@ -171,6 +93,16 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
+        <div class="container">
+            <h1 class="title">Welcome message</h1>
+            <p>
+                Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the
+                way
+                people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the
+                importance of creating a harmonious environment for both fish and their owners.
+            </p>
+        </div>
+
     </section>
 
     {{-- ABOUT SECTION --}}
@@ -178,7 +110,7 @@
         <div class="container">
             <h1 class="title">About Smart Fish</h1>
 
-            <div class=" row align-items-center gap-4 gap-lg-0">
+            <div class="row align-items-center gap-4 gap-lg-0">
                 <div class="col-lg-6">
                     <img src="https://picsum.photos/640/360" alt="Smart Fish" class="img-fluid rounded">
                 </div>
@@ -222,18 +154,19 @@
 
             <div class="row">
                 <div class="owl-carousel owl-theme">
-                    <?php
-                    for ($i = 0; $i < 4; $i++) {
-                        echo '<div class="card h-100">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <img src="https://picsum.photos/640/360" class="card-img-top" alt="Service 1">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="card-body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <h5 class="card-title">Automated Feeding Solutions</h5>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <p class="card-text">Experience hassle-free fish feeding with our smart automated feeding solutions. Set schedules and portions to keep your fish healthy and well-fed.</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <a href="" class="btn btn-primary mt-3">Details</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>';
-                    }
-                    ?>
+
+                    @for ($i = 0; $i < 4; $i++)
+                        <div class="card h-100">
+                            <img src="https://picsum.photos/640/360" class="card-img-top" alt="Service 1">
+                            <div class="card-body">
+                                <h5 class="card-title">Automated Feeding Solutions</h5>
+                                <p class="card-text">Experience hassle-free fish feeding with our smart automated
+                                    feeding solutions. Set schedules and portions to keep your fish healthy and
+                                    well-fed.</p>
+                                <a href="" class="btn btn-primary mt-3">Details</a>
+                            </div>
+                        </div>
+                    @endfor
                 </div>
             </div>
         </div>
@@ -244,19 +177,16 @@
         <div class="container">
             <h1 class="title">Our Team</h1>
             <div class="owl-carousel owl-theme">
-                <?php
-                for ($i = 0; $i < 4; $i++) {
-                    echo '
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <div class="card h-100">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <img src="https://i.pravatar.cc/150?img=56" class="card-img-top" alt="Team Member 1">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="card-body text-center">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <h5 class="card-title">John Doe</h5>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <p class="card-text">Marine Biologist</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <a href="#" class="btn btn-primary mt-3">Connect</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </div>';
-                }
-                ?>
+                @for ($i = 0; $i < 4; $i++)
+                    <div class="card h-100">
+                        <img src="https://i.pravatar.cc/150?img=56" class="card-img-top" alt="Team Member 1">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">John Doe</h5>
+                            <p class="card-text">Marine Biologist</p>
+                            <a href="#" class="btn btn-primary mt-3">Connect</a>
+                        </div>
+                    </div>
+                @endfor
             </div>
         </div>
     </section>
@@ -386,56 +316,9 @@
 <!-- Owl Carousel JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
+<script src="{{ asset('assets/js/pages/welcome.js') }}"></script>
+
 <script>
-    const navLink = document.querySelectorAll('.nav-link')
-    navLink.forEach((item) => {
-        item.addEventListener('click', (e) => {
-            navLink.forEach(data => {
-                data.classList.remove('active')
-            })
-            e.target.classList.add('active')
-        })
-    })
-
-    $(document).ready(function () {
-
-        $("#our-service .owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            nav: true,
-            dots: false,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                768: {
-                    items: 2
-                },
-                992: {
-                    items: 3
-                }
-            }
-        });
-        $("#our-team .owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            nav: true,
-            dots: false,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                768: {
-                    items: 2
-                },
-                992: {
-                    items: 3
-                }
-            }
-        });
-
-
-    });
 </script>
 </body>
 

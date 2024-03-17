@@ -1,0 +1,96 @@
+
+:root {
+    --primary: #0d6efd;
+    --icon-color: #7F57F1;
+    --navbar-scroll-height: 4.1875rem;
+    /*--icon-color: var(--primary);*/
+}
+
+/*#navbar-scroll-spy {
+    height: var(--navbar-scroll-height);
+}*/
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+    color: var(--primary)
+}
+
+.title {
+    color: var(--primary);
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+#heroCarousel .carousel-item {
+    height: 450px;
+}
+
+#heroCarousel .carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+img.card-img-top {
+    height: 280px;
+    object-fit: cover
+}
+
+.owl-nav button {
+    position: absolute;
+    top: 50%;
+    background: #0a58ca !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 50% !important;
+    color: #fff !important;
+    opacity: .5;
+    transition: all .4s;
+}
+
+.owl-nav button:hover {
+    opacity: 1;
+}
+
+.owl-nav .owl-prev {
+    left: 0;
+}
+
+.owl-nav .owl-next {
+    right: 0;
+}
+
+@media (max-width: 768) {
+    #heroCarousel .carousel-item {
+        height: 250px;
+    }
+}
+
+/*@media (max-width: 991.98px) {
+    #navbar-scroll-spy {
+        height: auto;
+    }
+}*/
+
+.mr-1 {
+    margin-right: 0.25rem !important;
+}
+
+.footer-brand {
+    text-decoration: none;
+}
+
+.navbar-brand .text,
+.footer-brand .text {
+    color: var(--icon-color);
+}
+
+.navbar-brand .text b,
+.footer-brand .text b {
+    margin-right: 0.25rem !important;
+}
+
+div[data-bs-spy="scroll"] section {
+    height: calc(100vh - var(--navbar-scroll-height));
+}
