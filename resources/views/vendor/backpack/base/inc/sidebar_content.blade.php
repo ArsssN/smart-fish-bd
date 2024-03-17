@@ -18,8 +18,13 @@
 <li class='nav-item mb-2'>Fish</li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish-weight') }}'><i class='nav-icon la la-weight-hanging'></i> Fish weights</a></li>
+
 <li class='nav-item mb-2'>Other</li>
 @if(!isCustomer())
+    <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
+@endif
+
+@if(isShellAdminOrSuperAdmin())
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Footer Link Management"><i class="nav-icon la la-link"></i> Footer Link Man.</a>
@@ -28,15 +33,13 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('footer-link') }}'><i class='nav-icon la la-external-link-square'></i> Link</a></li>
     </ul>
 </li>
+@endif
 
+@if(!isCustomer())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('contact-us') }}'><i class='nav-icon la la-envelope'></i> Contact us</a></li>
 {{--<li class="nav-item"><a class="nav-link" href="{{ getSettingsUrl('about') }}"><i class="la la-address-book nav-icon"></i> {{ trans('About') }}</a></li>--}}
 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('social') }}'><i class='nav-icon la la-share-alt'></i> Social</a></li>
-@endif
-
-@if(isShellAdminOrSuperAdmin())
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
 @endif
 
 @if(isShellAdminOrSuperAdmin())
