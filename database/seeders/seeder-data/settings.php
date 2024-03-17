@@ -58,20 +58,12 @@ $settings = array(
             'key'         => 'about',
             'name'        => 'About',
             'description' => 'Website about',
-            'value'       => '[{"title":"About","sub_title":null,"image":"uploads\/Jol Rong.jpg","description":"<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<\/p>"}]',
+            'value'       => '[{"image":"uploads\/about\/about.jpg","description":"<p>Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.<\/p>\r\n\r\n<p>At Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you&#39;re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.<\/p>\r\n\r\n<p>Our team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.<\/p>\r\n\r\n<p>Join us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living.<\/p>"}]',
             'field'       => json_encode([
                 "name"      => "value",
-                "label"     => "Setting",
+                "label"     => "About",
                 "type"      => "repeatable",
                 "subfields" => [
-                    [
-                        "name" => "title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "sub_title",
-                        "type" => "text",
-                    ],
                     [
                         "name" => "image",
                         "type" => "browse",

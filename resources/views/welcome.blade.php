@@ -112,36 +112,10 @@
 
             <div class="row align-items-center gap-4 gap-lg-0">
                 <div class="col-lg-6">
-                    <img src="https://picsum.photos/640/360" alt="Smart Fish" class="img-fluid rounded">
+                    <img src="{{ asset($about->image) }}" alt="Smart Fish about" class="img-fluid rounded">
                 </div>
                 <div class="col-lg-6">
-                    <p>Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to
-                        revolutionize
-                        the way
-                        people experience and interact with fishkeeping. As avid enthusiasts of marine life, we
-                        understand
-                        the importance of creating a harmonious environment for both fish and their owners.</p>
-
-                    <p>At Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for
-                        fish
-                        care. Whether you're a seasoned aquarist or just starting, our products are designed to make
-                        fish
-                        keeping not only enjoyable but also sustainable.</p>
-
-                    <p>Our team of marine biologists, engineers, and designers work collaboratively to develop
-                        state-of-the-art devices that monitor and optimize the conditions of your aquarium. From
-                        smart
-                        feeders to water quality sensors, we have everything you need to ensure the well-being of
-                        your
-                        aquatic companions.</p>
-
-                    <p>Join us on this journey as we strive to create a world where fishkeeping is not just a hobby
-                        but
-                        a
-                        seamless integration of nature and technology. Explore the Smart Fish experience and
-                        discover a
-                        new
-                        era in aquatic living.</p>
+                    {!! $about->description !!}
                 </div>
             </div>
         </div>

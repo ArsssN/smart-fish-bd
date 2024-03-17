@@ -101,5 +101,5 @@ img.card-img-top {
 }
 
 div[data-bs-spy="scroll"] section {
-    height: calc(100vh - var(--navbar-scroll-height));
+    min-height: calc(100vh - var(--navbar-scroll-height));
 }
