@@ -18,6 +18,7 @@
         "afzalsabbir/slug-generator": "^0.0.1@alpha",
         "afzalsabbir/sslaracommerz": "^0.0.1@alpha",
         "arsbs23/pro": "^1.1",
+        "biscolab/laravel-recaptcha": "^6.0",
         "guzzlehttp/guzzle": "^7.5",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

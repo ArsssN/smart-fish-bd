@@ -48,3 +48,53 @@ $(document).ready(function () {
         }
     });
 });
+
+const contactUsForm = document.querySelector('#contact-us-form');
+contactUsForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(contactUsForm);
+    const data = Object.fromEntries(formData);
+
+    const route = contactUsForm.getAttribute('action');
+
+    const successSelector = contactUsForm.querySelector(`.success.success-message`);
+    if (!successSelector.classList.contains('d-none')) {
+        successSelector.classList.add('d-none');
+    }
+
+    const errorSelectors = contactUsForm.querySelectorAll(`.error`);
+    errorSelectors.forEach((errorSelector) => {
+        if (!errorSelector.classList.contains('d-none')) {
+            errorSelector.classList.add('d-none');
+        }
+    });
+
+    await fetch(route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        grecaptcha.reset();
+
+        if (!response.ok) {
+            return response.json().then((error) => {
+                throw error;
+            });
+        }
+
+        return response.json();
+    }).then((data) => {
+        successSelector.classList.remove('d-none');
+        successSelector.querySelector('.message').innerHTML = data.message;
+        contactUsForm.reset();
+    }).catch((error) => {
+        Object.entries(error.errors).forEach(([name, messages]) => {
+            const errorSelector = document.querySelector(`.error.error-${name}`);
+            errorSelector.classList.toggle('d-none');
+            errorSelector.querySelector('.alert').innerHTML = messages.join('<br>');
+        });
+    });
+});

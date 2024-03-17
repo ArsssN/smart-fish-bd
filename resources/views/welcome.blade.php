@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
         {!! $contact_info->title !!}
@@ -26,6 +27,8 @@
 
     <link href="{{ asset('packages/bootstrap-iconpicker/icon-fonts/font-awesome-5.12.0-1/css/all.min.css') }}"
           rel="stylesheet">
+
+    {!! htmlScriptTagJsApi() !!}
 </head>
 <!-- Styles -->
 <style>
@@ -209,26 +212,56 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <form class="bg-white p-4 rounded-3 shadow-sm">
+                    <form id="contact-us-form" class="bg-white p-4 rounded-3 shadow-sm"
+                          action="{{ route('contact.submit') }}"
+                          method="POST">
+                        @csrf
+
+                        <div class="success success-message d-none mb-2">
+                            <div class="alert alert-success alert-dismissible py-1 px-2 rounded mb-0">
+                                <button type="button" class="btn-close p-0 translate-middle-y top-50 me-1"
+                                        data-bs-dismiss="alert" aria-label="Close"></button>
+                                <span class="message"></span>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="John Doe"
-                                   required>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="John Doe"
+                            >
+                            <div class="error error-name d-none mt-1">
+                                <div class="alert alert-danger py-0 px-1 rounded"></div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="email"
-                                   placeholder="john@example.com" required>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="john@example.com">
+                            <div class="error error-email d-none mt-1">
+                                <div class="alert alert-danger py-0 px-1 rounded"></div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="message" class="form-label">Your Message</label>
-                            <textarea class="form-control" id="message" rows="4" placeholder="Write your message here"
-                                      required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="4"
+                                      placeholder="Write your message here"
+                            ></textarea>
+                            <div class="error error-message d-none mt-1">
+                                <div class="alert alert-danger py-0 px-1 rounded"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 recaptcha">
+                            {!! htmlFormSnippet() !!}
+                            <div class="error error-{{recaptchaFieldName()}} d-none mt-1">
+                                <div class="alert alert-danger py-0 px-1 rounded"></div>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Send Message</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
                     </form>
                 </div>
 

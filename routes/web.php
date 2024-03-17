@@ -17,6 +17,10 @@ use Illuminate\Support\Str;
 */
 
 Route::get('/', \App\Http\Controllers\HomeController::class);
+Route::post(
+    '/contact/submit',
+    [\App\Http\Controllers\ContactUsController::class, 'submitContactUs']
+)->name('contact.submit');
 
 // php info
 /*Route::get('/phpinfo', function () {
