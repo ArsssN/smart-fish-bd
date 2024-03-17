@@ -14,7 +14,7 @@ class SettingCrudController extends BackpackSettingCrudController
     {
         parent::setup();
 
-        if (!isShellAdminOrSuperAdmin()) {
+        if (isCustomer()) {
             $this->crud->denyAccess(['list']);
         }
     }
