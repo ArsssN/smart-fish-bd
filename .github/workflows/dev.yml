@@ -20,6 +20,7 @@ jobs:
 #          passphrase: ${{ secrets.S_PASSWORD }}
           script: |
             cd /var/www/dev-smart-fish/
+            git reset --hard
             php artisan down
             git pull origin dev
             composer install
