@@ -39,7 +39,7 @@ class UserRequest extends FormRequest
             'userDetails.last_name' => 'required',
             'userDetails.farm_name' => 'required',
             'userDetails.phone' => 'required|unique:user_details'
-                . ',phone' . ($user ? ',' . $user->userDetails->id : ''),
+                . ',phone' . ($user && $user->userDetails ? ',' . $user->userDetails->id : ''),
             'userDetails.address' => 'required',
             'userDetails.photo' => 'required',
             'userDetails.n_id_photos' => 'required',
