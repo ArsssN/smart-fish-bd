@@ -4,18 +4,8 @@ $user_details = array (
   array (
     'id' => 1,
     'user_id' => 1,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    'first_name' => "User",
-    'last_name' => "Last 1",
-=======
     'first_name' => 'User',
     'last_name' => 'Last 1',
->>>>>>> origin/dev
-=======
-    'first_name' => 'User',
-    'last_name' => 'Last 1',
->>>>>>> origin/dev
     'farm_name' => 'Farm 1',
     'phone' => '01721571954',
     'phone_verified_at' => NULL,
@@ -31,18 +21,8 @@ $user_details = array (
   array (
     'id' => 2,
     'user_id' => 2,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    'first_name' => "User",
-    'last_name' => "Last 2",
-=======
     'first_name' => 'User',
     'last_name' => 'Last 2',
->>>>>>> origin/dev
-=======
-    'first_name' => 'User',
-    'last_name' => 'Last 2',
->>>>>>> origin/dev
     'farm_name' => 'Farm 2',
     'phone' => '01556616878',
     'phone_verified_at' => NULL,
@@ -58,18 +38,8 @@ $user_details = array (
   array (
     'id' => 3,
     'user_id' => 3,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    'first_name' => "User",
-    'last_name' => "Last 3",
-=======
     'first_name' => 'User',
     'last_name' => 'Last 3',
->>>>>>> origin/dev
-=======
-    'first_name' => 'User',
-    'last_name' => 'Last 3',
->>>>>>> origin/dev
     'farm_name' => 'Farm 3',
     'phone' => '01234567898',
     'phone_verified_at' => NULL,
@@ -85,18 +55,8 @@ $user_details = array (
   array (
     'id' => 4,
     'user_id' => 4,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    'first_name' => "User",
-    'last_name' => "Last 4",
-=======
     'first_name' => 'User',
     'last_name' => 'Last 4',
->>>>>>> origin/dev
-=======
-    'first_name' => 'User',
-    'last_name' => 'Last 4',
->>>>>>> origin/dev
     'farm_name' => 'Farm 4',
     'phone' => '03234567890',
     'phone_verified_at' => NULL,
