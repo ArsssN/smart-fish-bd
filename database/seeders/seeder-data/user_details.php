@@ -1,12 +1,12 @@
 <?php
 $user_details = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
     'user_id' => 1,
-    'first_name' => NULL,
-    'last_name' => NULL,
-    'farm_name' => NULL,
+    'first_name' => "User",
+    'last_name' => "Last 1",
+    'farm_name' => 'Farm 1',
     'phone' => '01721571954',
     'phone_verified_at' => NULL,
     'address' => 'Dhaka, Bangladesh',
@@ -17,13 +17,13 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2023-01-22 15:24:48',
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'user_id' => 2,
-    'first_name' => NULL,
-    'last_name' => NULL,
-    'farm_name' => NULL,
+    'first_name' => "User",
+    'last_name' => "Last 2",
+    'farm_name' => 'Farm 2',
     'phone' => '01556616878',
     'phone_verified_at' => NULL,
     'address' => 'Dhaka, Bangladesh',
@@ -34,13 +34,13 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'user_id' => 3,
-    'first_name' => NULL,
-    'last_name' => NULL,
-    'farm_name' => NULL,
+    'first_name' => "User",
+    'last_name' => "Last 3",
+    'farm_name' => 'Farm 3',
     'phone' => '01234567898',
     'phone_verified_at' => NULL,
     'address' => 'Dhaka, Bangladesh',
@@ -51,13 +51,13 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'user_id' => 4,
-    'first_name' => NULL,
-    'last_name' => NULL,
-    'farm_name' => NULL,
+    'first_name' => "User",
+    'last_name' => "Last 4",
+    'farm_name' => 'Farm 4',
     'phone' => '03234567890',
     'phone_verified_at' => NULL,
     'address' => 'Dhaka, Bangladesh',
