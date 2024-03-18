@@ -5,8 +5,13 @@ $user_details = array (
     'id' => 1,
     'user_id' => 1,
 <<<<<<< HEAD
+<<<<<<< HEAD
     'first_name' => "User",
     'last_name' => "Last 1",
+=======
+    'first_name' => 'User',
+    'last_name' => 'Last 1',
+>>>>>>> origin/dev
 =======
     'first_name' => 'User',
     'last_name' => 'Last 1',
@@ -27,8 +32,13 @@ $user_details = array (
     'id' => 2,
     'user_id' => 2,
 <<<<<<< HEAD
+<<<<<<< HEAD
     'first_name' => "User",
     'last_name' => "Last 2",
+=======
+    'first_name' => 'User',
+    'last_name' => 'Last 2',
+>>>>>>> origin/dev
 =======
     'first_name' => 'User',
     'last_name' => 'Last 2',
@@ -49,8 +59,13 @@ $user_details = array (
     'id' => 3,
     'user_id' => 3,
 <<<<<<< HEAD
+<<<<<<< HEAD
     'first_name' => "User",
     'last_name' => "Last 3",
+=======
+    'first_name' => 'User',
+    'last_name' => 'Last 3',
+>>>>>>> origin/dev
 =======
     'first_name' => 'User',
     'last_name' => 'Last 3',
@@ -71,8 +86,13 @@ $user_details = array (
     'id' => 4,
     'user_id' => 4,
 <<<<<<< HEAD
+<<<<<<< HEAD
     'first_name' => "User",
     'last_name' => "Last 4",
+=======
+    'first_name' => 'User',
+    'last_name' => 'Last 4',
+>>>>>>> origin/dev
 =======
     'first_name' => 'User',
     'last_name' => 'Last 4',
