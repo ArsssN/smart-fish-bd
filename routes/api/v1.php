@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ChangeController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
@@ -22,8 +23,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->prefix('/user')->group(function () {
+    Route::get('/', [AuthController::class, 'user']);
+    Route::match(['get', 'put'],'/change/user-details', [ChangeController::class, 'changeUserDetails']);
 });
 
 // Auth

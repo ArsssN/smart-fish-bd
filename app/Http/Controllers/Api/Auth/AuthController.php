@@ -3,10 +3,18 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer"
+ * )
+ */
 class AuthController extends Controller
 {
     public function login(Request $request): \Illuminate\Http\JsonResponse
@@ -47,8 +55,21 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user(Request $request): \Illuminate\Http\JsonResponse
+    /**
+     * @OA\Get(
+     *     path="/api/v1/user",
+     *     operationId="user",
+     *     summary="Get the authenticated User",
+     *     tags={"User"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *     ),
+     *  )
+     */
+    public function user(Request $request): UserResource
     {
-        return response()->json($request->user());
+        return UserResource::make($request->user());
     }
 }

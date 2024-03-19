@@ -10,9 +10,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use OpenApi\Annotations as OA;
 
 class LoginController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/v1/login",
+     *     operationId="login",
+     *     summary="Login",
+     *     tags={"Auth"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="query",
+     *         description="Username",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="Password",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AccessToken")
+     *     ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="Invalid username or password"
+     *     ),
+     *  )
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
