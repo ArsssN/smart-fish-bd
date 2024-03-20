@@ -1,3 +1,4 @@
+@php($logo_white = "<img src='/assets/images/logo-white.svg' alt='Smart Fish' class='mr-1'><span class='text text-white'><b>Smart</b><span>Fish</span></span>")
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -39,7 +40,7 @@
 <nav id="navbar-scroll-spy" class="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="#welcome">
-            {!! config('backpack.base.project_logo') !!}
+            {!! $logo_white !!}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
@@ -70,7 +71,7 @@
 
 <div data-bs-spy="scroll" data-bs-target="#navbar-scroll-spy" data-bs-smooth-scroll="true">
     {{-- HERO SLIDER SECTION --}}
-    <section id="welcome" class="main-banner bg-body-secondary">
+    <section id="welcome" class="main-banner bg-body-secondary bg-opacity-50">
         <div id="heroCarousel2" class="carousel slide mb-4">
             <div class="carousel-indicators">
                 @foreach($banner_images as $banner_image)
@@ -100,7 +101,7 @@
             </button>
         </div>
         <div class="container">
-            <h1 class="title">Welcome message</h1>
+            <h1 class="title">Welcome to Smart Fish BD</h1>
             <div>
                 {!! $welcome_message !!}
             </div>
@@ -184,20 +185,56 @@
     {{-- OUR TEAM SECTION --}}
     <section id="our-team" class="our-team-section py-3 py-md-5">
         <div class="container">
-            <h1 class="title">Our Team</h1>
-            <div class="owl-carousel owl-theme">
-                @foreach($teams as $team)
-                    <div class="card h-100">
-                        <img src="{{ asset($team->image) }}" class="card-img-top p-2"
-                             alt="Team Member {{ $loop->iteration }}">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                {{ $team->name }}
-                            </h5>
-                            <p class="card-text">
-                                {{ $team->designation }}
-                            </p>
-                            <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="title">Our Team</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="title">Consultants</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @foreach($teamsGroup->consultants as $team)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <div class="card consultant h-100">
+                            <img src="{{ asset($team->image) }}" class="card-img-top p-2"
+                                 alt="Team Member {{ $loop->iteration }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    {{ $team->name }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $team->designation }}
+                                </p>
+                                <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="title">Technicals</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @foreach($teamsGroup->technicals as $team)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <div class="card technical h-100">
+                            <img src="{{ asset($team->image) }}" class="card-img-top p-2"
+                                 alt="Team Member {{ $loop->iteration }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    {{ $team->name }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $team->designation }}
+                                </p>
+                                <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -291,12 +328,12 @@
 </div>
 
 {{-- FOOTER SECTION --}}
-<footer class="bg-white text-dark pt-4 pt-md-5">
+<footer class="text-dark pt-4 pt-md-5">
     <div class="container py-4">
         <div class="row">
             <div class="col-md-4 mb-3 mb-md-0">
                 <a href="#welcome" class="mb-3 d-block footer-brand">
-                    {!! config('backpack.base.project_logo') !!}
+                    {!! $logo_white !!}
                 </a>
                 <p>Contact Information:</p>
                 <p>

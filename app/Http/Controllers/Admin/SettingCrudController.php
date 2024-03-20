@@ -25,6 +25,25 @@ class SettingCrudController extends BackpackSettingCrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+    public function setupListOperation()
+    {
+        $this->crud->addColumn([
+            'name' => 'name',
+            'label' => 'Name',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'description',
+            'label' => 'Description',
+        ]);
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
     public function setupUpdateOperation()
     {
         parent::setupUpdateOperation();
