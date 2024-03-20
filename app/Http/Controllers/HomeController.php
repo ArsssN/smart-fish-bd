@@ -20,6 +20,7 @@ class HomeController extends Controller
         $welcome_message = Setting::get('welcome_message') ?? '';
         $about = json_decode(Setting::get('about'))[0] ?? new \stdClass();
         $services = json_decode(Setting::get('services')) ?? [];
+        $products = json_decode(Setting::get('products')) ?? [];
         $teams = json_decode(Setting::get('teams')) ?? [];
 
         $teamsGroup = (collect($teams))->reduce(function ($carry, $item) {
@@ -46,7 +47,8 @@ class HomeController extends Controller
                 'about',
                 'services',
                 'teams',
-                'teamsGroup'
+                'teamsGroup',
+                'products'
             )
         );
     }

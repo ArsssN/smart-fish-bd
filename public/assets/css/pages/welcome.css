@@ -54,7 +54,8 @@ body {
     object-fit: cover;
 }
 
-#our-service img.card-img-top {
+#our-service img.card-img-top,
+#our-product img.card-img-top {
     height: 280px;
     object-fit: cover;
 }

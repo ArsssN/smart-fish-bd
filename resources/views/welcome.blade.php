@@ -1,5 +1,5 @@
-@php($logo_white = "<img src='/assets/images/logo-white.svg' alt='Smart Fish' class='mr-1'><span class='text text-white'><b>Smart</b><span>Fish</span></span>")
 <!DOCTYPE html>
+@php($logo_white = "<img src='/assets/images/logo-white.svg' alt='Smart Fish' class='mr-1'><span class='text text-white'><b>Smart</b><span>Fish</span></span>")
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -57,6 +57,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#our-service">our services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#our-product">our products</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#our-team">our team</a>
@@ -162,7 +165,9 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">Modal title</h1>
+                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">
+                                        {{ $service->title }}
+                                    </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                 </div>
@@ -182,8 +187,66 @@
         </div>
     </section>
 
+    {{-- OUR PRODUCT SECTION --}}
+    <section id="our-product" class="our-product-section py-3 py-md-5">
+        <div class="container">
+            <h1 class="title">Our Products</h1>
+
+            <div class="row">
+                <div class="owl-carousel owl-theme">
+                    @foreach($products as $product)
+                        @php($short_description = \Illuminate\Support\Str::substr($product->description, 0, 100))
+                        <div class="card h-100">
+                            <img src="{{asset($product->image)}}" class="card-img-top" alt="Service {{ $loop->index }}">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ $product->title }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $short_description }}{{ strlen($product->description) > 100 ? '...' : ''}}
+                                </p>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{$loop->index}}">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @foreach($products as $product)
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModal{{$loop->index}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">
+                                        {{ $product->title }}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="white-space: pre-wrap">{!! $product->description !!}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
+    </section>
+
     {{-- OUR TEAM SECTION --}}
-    <section id="our-team" class="our-team-section py-3 py-md-5">
+    <section id="our-team" class="our-team-section py-3 py-md-5 bg-body-secondary bg-opacity-50">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -192,7 +255,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <h3 class="title">Consultants</h3>
+                    <h4 class="title">Consultants</h4>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -217,7 +280,7 @@
 
             <div class="row mt-4">
                 <div class="col-12">
-                    <h3 class="title">Technicals</h3>
+                    <h4 class="title">Technicals</h4>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -243,7 +306,7 @@
     </section>
 
     {{-- CONTACT SECTION --}}
-    <section id="contact" class="contact-section py-3 py-md-5 bg-body-secondary bg-opacity-50">
+    <section id="contact" class="contact-section py-3 py-md-5">
         <div class="container">
             <h1 class="title">Contact Us</h1>
 
@@ -306,18 +369,22 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <h5 class="card-title">Visit Us</h5>
-                            <p class="card-text">
-                                {!! $contact_info->address !!}
-                            </p>
+                            <p class="card-text" style="white-space: pre-wrap">{!! $contact_info->address !!}</p>
                         </div>
                     </div>
 
                     <div class="card border-0 mt-4">
                         <div class="card-body">
                             <h5 class="card-title">Contact Information</h5>
-                            <ul class="list-unstyled">
-                                <li><strong>Phone:</strong> {!! $contact_info->phone !!}</li>
-                                <li><strong>Email:</strong> {!! $contact_info->email !!}</li>
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <strong>Phone:</strong> <a
+                                        href="tel:{!! $contact_info->phone !!}">{!! $contact_info->phone !!}</a>
+                                </li>
+                                <li>
+                                    <strong>Email:</strong> <a
+                                        href="mailto:{!! $contact_info->email !!}">{!! $contact_info->email !!}</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -328,7 +395,7 @@
 </div>
 
 {{-- FOOTER SECTION --}}
-<footer class="text-dark pt-4 pt-md-5">
+<footer class="text-dark bg-body-secondary bg-opacity-50 pt-4 pt-md-5">
     <div class="container py-4">
         <div class="row">
             <div class="col-md-4 mb-3 mb-md-0">
@@ -336,15 +403,19 @@
                     {!! $logo_white !!}
                 </a>
                 <p>Contact Information:</p>
+                <p style="white-space: pre-wrap">{!! $contact_info->address !!}</p>
                 <p>
-                    {!! $contact_info->address !!}
+                    <strong>Phone:</strong> <a href="tel:{{ $contact_info->phone }}"
+                                               class="text-dark">{{ $contact_info->phone }}</a>
                 </p>
-                <p><strong>Phone:</strong> {!! $contact_info->phone !!}</p>
-                <p><strong>Email:</strong> {!! $contact_info->email !!}</p>
+                <p>
+                    <strong>Email:</strong> <a href="mailto:{{ $contact_info->email }}"
+                                               class="text-dark">{{ $contact_info->email }}</a>
+                </p>
             </div>
             <div class="col-md-4 mb-3 mb-md-0">
                 <h5 class="mb-3">Menu</h5>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled mb-0">
                     <li><a href="#welcome" class="text-dark">Home</a></li>
                     <li><a href="#about" class="text-dark">About Us</a></li>
                     <li><a href="#our-service" class="text-dark">Our Services</a></li>
