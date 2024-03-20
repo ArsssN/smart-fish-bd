@@ -57,9 +57,9 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/user",
+     *     path="/api/v1/user/profile",
      *     operationId="user",
-     *     summary="Get the authenticated User",
+     *     summary="Get the authenticated user profile",
      *     tags={"User"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
@@ -68,7 +68,7 @@ class AuthController extends Controller
      *     ),
      *  )
      */
-    public function user(Request $request): UserResource
+    public function userProfile(Request $request): UserResource
     {
         return UserResource::make($request->user());
     }

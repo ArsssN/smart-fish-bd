@@ -6,12 +6,12 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/v1/user": {
+        "/api/v1/user/profile": {
             "get": {
                 "tags": [
                     "User"
                 ],
-                "summary": "Get the authenticated User",
+                "summary": "Get the authenticated user profile",
                 "operationId": "user",
                 "responses": {
                     "200": {
