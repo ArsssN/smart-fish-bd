@@ -8,6 +8,33 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+/**
+ * @OA\Schema(
+ *  schema="AccessToken",
+ *  type="object",
+ *  @OA\Property(
+ *      property="access_token",
+ *      type="string",
+ *  ),
+ *  @OA\Property(
+ *      property="token_type",
+ *      type="string",
+ *  ),
+ *  @OA\Property(
+ *      property="expires_at",
+ *      type="string",
+ *  ),
+ *  @OA\Property(
+ *      property="user",
+ *      type="object",
+ *      ref="#/components/schemas/UserResource"
+ *  ),
+ *  @OA\Property(
+ *      property="isAuthenticated",
+ *      type="boolean",
+ *  )
+ * )
+ */
 class AuthHelper
 {
     /**
