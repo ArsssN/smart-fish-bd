@@ -150,7 +150,7 @@
 
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal{{$loop->index}}">
+                                        data-bs-target="#exampleModalServices{{$loop->index}}">
                                     Details
                                 </button>
                             </div>
@@ -160,12 +160,12 @@
 
                 @foreach($services as $service)
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal{{$loop->index}}" tabindex="-1"
-                         aria-labelledby="exampleModal{{$loop->index}}Label" aria-hidden="true">
+                    <div class="modal fade" id="exampleModalServices{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModalServices{{$loop->index}}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">
+                                    <h1 class="modal-title fs-5" id="exampleModalServices{{$loop->index}}Label">
                                         {{ $service->title }}
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -208,7 +208,7 @@
 
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal{{$loop->index}}">
+                                        data-bs-target="#exampleModalProducts{{$loop->index}}">
                                     Details
                                 </button>
                             </div>
@@ -218,12 +218,12 @@
 
                 @foreach($products as $product)
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal{{$loop->index}}" tabindex="-1"
-                         aria-labelledby="exampleModal{{$loop->index}}Label" aria-hidden="true">
+                    <div class="modal fade" id="exampleModalProducts{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModalProducts{{$loop->index}}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">
+                                    <h1 class="modal-title fs-5" id="exampleModalProducts{{$loop->index}}Label">
                                         {{ $product->title }}
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
