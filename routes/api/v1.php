@@ -25,7 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->prefix('/user')->group(function () {
     Route::get('/profile', [AuthController::class, 'userProfile']);
-    Route::match(['get', 'put'],'/change/user-details', [ChangeController::class, 'changeUserDetails']);
+    Route::put('/change/user-details', [ChangeController::class, 'changeUserDetails']);
+    Route::put('/change/photo', [ChangeController::class, 'changeProfilePicture']);
+    Route::put('/change/password', [ChangeController::class, 'changePassword']);
 });
 
 // Auth

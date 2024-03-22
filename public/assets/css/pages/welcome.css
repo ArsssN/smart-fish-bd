@@ -101,6 +101,16 @@ img.card-img-top {
     color: var(--icon-color);
 }
 
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+footer .footer-brand .text {
+    color: #fff;
+}
+
 .navbar-brand .text b,
 .footer-brand .text b {
     margin-right: 0.25rem !important;

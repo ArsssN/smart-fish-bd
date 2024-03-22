@@ -137,7 +137,7 @@
                         <div class="card h-100">
                             <img src="{{asset($service->image)}}" class="card-img-top" alt="Service {{ $loop->index }}">
                             <div class="card-body">
-                                <h5 class="card-title">
+                                <h5 class="card-title ellipsis">
                                     {{ $service->title }}
                                 </h5>
                                 <p class="card-text">
@@ -167,6 +167,65 @@
                                 </div>
                                 <div class="modal-body">
                                     <p style="white-space: pre-wrap">{!! $service->description !!}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
+    </section>
+
+    {{-- OUR PRODUCT SECTION --}}
+    <section id="our-product" class="our-product-section py-3 py-md-5">
+        <div class="container">
+            <h1 class="title">Our Products</h1>
+
+            <div class="row">
+                <div class="owl-carousel owl-theme">
+                    @foreach($products as $product)
+                        @php($short_description = \Illuminate\Support\Str::substr($product->description, 0, 100))
+                        <div class="card h-100">
+                            <img src="{{asset($product->image)}}" class="card-img-top" alt="Service {{ $loop->index }}">
+                            <div class="card-body">
+                                <h5 class="card-title ellipsis">
+                                    {{ $product->title }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $short_description }}{{ strlen($product->description) > 100 ? '...' : ''}}
+                                </p>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModalProducts{{$loop->index}}">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @foreach($products as $product)
+                    <!-- Modal -->
+                    <div class="modal modal-lg fade" id="exampleModalProducts{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModalProducts{{$loop->index}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalProducts{{$loop->index}}Label">
+                                        {{ $product->title }}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{asset($product->image)}}" class="img-fluid rounded w-100 mb-3" alt="Service {{ $loop->index }}">
+                                    <p style="white-space: pre-wrap">{!! $product->description !!}</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
