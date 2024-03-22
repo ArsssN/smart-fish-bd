@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@php($logo_white = "<img src='/assets/images/logo-white.svg' alt='Smart Fish' class='mr-1'><span class='text text-white'><b>Smart</b><span>Fish</span></span>")
+@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Smart Fish' class='mr-1 h-100'>")
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -160,7 +160,7 @@
 
                 @foreach($services as $service)
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModalServices{{$loop->index}}" tabindex="-1"
+                    <div class="modal modal-lg fade" id="exampleModalServices{{$loop->index}}" tabindex="-1"
                          aria-labelledby="exampleModalServices{{$loop->index}}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -172,6 +172,7 @@
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <img src="{{asset($service->image)}}" class="img-fluid rounded w-100 mb-3" alt="Service {{ $loop->index }}">
                                     <p style="white-space: pre-wrap">{!! $service->description !!}</p>
                                 </div>
                                 <div class="modal-footer">
@@ -218,7 +219,7 @@
 
                 @foreach($products as $product)
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModalProducts{{$loop->index}}" tabindex="-1"
+                    <div class="modal modal-lg fade" id="exampleModalProducts{{$loop->index}}" tabindex="-1"
                          aria-labelledby="exampleModalProducts{{$loop->index}}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -230,6 +231,7 @@
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <img src="{{asset($product->image)}}" class="img-fluid rounded w-100 mb-3" alt="Service {{ $loop->index }}">
                                     <p style="white-space: pre-wrap">{!! $product->description !!}</p>
                                 </div>
                                 <div class="modal-footer">

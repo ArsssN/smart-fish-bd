@@ -15,9 +15,17 @@ body {
     background-color: var(--primary-2) !important;
 }
 
-/*#navbar-scroll-spy {
+#navbar-scroll-spy {
     height: var(--navbar-scroll-height);
-}*/
+}
+
+#navbar-scroll-spy .navbar-brand {
+    padding: 0;
+}
+
+#navbar-scroll-spy .navbar-brand img {
+    max-height: 2.8125rem;
+}
 
 .navbar-nav .nav-link {
     color: #fff;
