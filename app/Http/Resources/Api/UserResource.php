@@ -79,7 +79,7 @@ class UserResource extends JsonResource
         if (!$userDetails->phone_verified_at) {
             $optionals['is_phone_verified'] = false;
         }
-        $optionals['photo'] = $userDetails->photo;
+        $optionals['photo'] = url($userDetails->photo);
         $optionals['n_id_photos'] = $userDetails->n_id_photos;
         $optionals['account_holder_id'] = $userDetails->account_holder_id;
         $optionals['first_name'] = $userDetails->first_name;

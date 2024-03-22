@@ -7,6 +7,7 @@ use App\Http\Requests\UserDetailsAPIRequest;
 use App\Http\Requests\UserPasswordAPIRequest;
 use App\Http\Requests\UserPictureAPIRequest;
 use App\Http\Resources\Api\UserResource;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -62,23 +63,23 @@ class ChangeController extends Controller
             $photo = $request->file('photo');
             $disk = 'uploads';
             $path = 'user/profile';
-            $name = md5($user->id) . '_' . $photo->hashName();
+            $name = md5($user->id) . '_' . time() . '_' . $photo->hashName();
 
             // upload photo
             $photo->storeAs($path, $name, ['disk' => $disk]);
 
             // delete old photo
             if ($user->userDetails->photo) {
-                // delete old photo
-                $oldPhoto = Str::after($user->userDetails->photo, url($disk) . '/');
+                $oldPhoto = Str::after($user->userDetails->photo, "$disk/");
                 Storage::disk($disk)->delete($oldPhoto);
             }
 
             // update user photo
             $user->userDetails()->update([
-                'photo' => url($disk, [...explode('/', $path), ...explode('/', $name)])
+                'photo' => "$disk/$path/$name"
             ]);
-            $user = $user->first();
+
+            $user = User::query()->with('userDetails')->find($user->id);
 
             return response()->json([
                 'success' => true,
@@ -130,39 +131,37 @@ class ChangeController extends Controller
     {
         // validate request
         try {
-            $request->validated();
-
-            $user = request()->user();
+            $user = $request->user();
             $userDetails = $user->userDetails()->first();
 
             $update = [];
 
-            if (request()->has('first_name')) {
-                $update['first_name'] = request()->input('first_name');
+            if ($request->has('first_name')) {
+                $update['first_name'] = $request->input('first_name');
             }
 
-            if (request()->has('last_name')) {
-                $update['last_name'] = request()->input('last_name');
+            if ($request->has('last_name')) {
+                $update['last_name'] = $request->input('last_name');
             }
 
-            if (request()->has('farm_name')) {
-                $update['farm_name'] = request()->input('farm_name');
+            if ($request->has('farm_name')) {
+                $update['farm_name'] = $request->input('farm_name');
             }
 
-            if (request()->has('phone')) {
-                $update['phone'] = request()->input('phone');
+            if ($request->has('phone')) {
+                $update['phone'] = $request->input('phone');
             }
 
-            if (request()->has('address')) {
-                $update['address'] = request()->input('address');
+            if ($request->has('address')) {
+                $update['address'] = $request->input('address');
             }
 
-            if (request()->has('n_id_photos')) {
-                $update['n_id_photos'] = request()->input('n_id_photos');
+            if ($request->has('n_id_photos')) {
+                $update['n_id_photos'] = $request->input('n_id_photos');
             }
 
-            if (request()->has('account_holder_id')) {
-                $update['account_holder_id'] = request()->input('account_holder_id');
+            if ($request->has('account_holder_id')) {
+                $update['account_holder_id'] = $request->input('account_holder_id');
             }
 
             $userDetails->update($update);
@@ -176,6 +175,8 @@ class ChangeController extends Controller
                     'password' => bcrypt(request()->input('password')),
                 ]);
             }
+
+            $user = User::query()->with('userDetails')->find($user->id);
 
             return response()->json([
                 'success' => true,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,11 @@ Route::middleware('auth:sanctum')->prefix('/user')->group(function () {
     Route::put('/change/user-details', [ChangeController::class, 'changeUserDetails']);
     Route::post('/change/photo', [ChangeController::class, 'changeProfilePicture']);
     Route::post('/change/password', [ChangeController::class, 'changePassword']);
+});
+
+Route::middleware('auth:sanctum')->prefix('/sensor')->group(function () {
+    Route::get('/list', [SensorController::class, 'list']);
+    Route::get('/feedback/{sensor}/{value}', [SensorController::class, 'sensorFeedback']);
 });
 
 // Auth

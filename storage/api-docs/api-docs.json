@@ -312,6 +312,104 @@
                     }
                 ]
             }
+        },
+        "/api/v1/sensor/list": {
+            "get": {
+                "tags": [
+                    "Sensor"
+                ],
+                "summary": "List of sensors",
+                "operationId": "list",
+                "responses": {
+                    "200": {
+                        "description": "List of sensors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sensors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SensorResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/sensor/feedback/{sensor}/{value}": {
+            "get": {
+                "tags": [
+                    "Sensor"
+                ],
+                "summary": "Sensor feedback",
+                "operationId": "sensorFeedback",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor - 1<br/>- 4: PH\n              Sensor - 1",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "1",
+                            "enum": [
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "description": "Sensor value",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sensor feedback",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -332,6 +430,54 @@
                     },
                     "isAuthenticated": {
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorResource": {
+                "title": "Sensor Resource",
+                "description": "Represents a sensor resource.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the sensor.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the sensor.",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the sensor.",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sensor_type": {
+                        "$ref": "#/components/schemas/SensorType"
+                    },
+                    "description": {
+                        "description": "A description of the sensor.",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SensorType": {
+                "title": "Sensor Type",
+                "description": "Represents a sensor type.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the sensor type.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the sensor type.",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "A description of the sensor type.",
+                        "type": "string",
+                        "nullable": true
                     }
                 },
                 "type": "object"
