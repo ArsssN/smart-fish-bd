@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Smart Fish' class='mr-1 h-100'>")
+@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Smart Fish' class='mr-1 h-100 rounded'>")
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
