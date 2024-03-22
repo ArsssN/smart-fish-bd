@@ -63,9 +63,16 @@ class AuthController extends Controller
      *     tags={"User"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
+     *         response=200,
+     *         description="User profile",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/UserResource")
+     *         )
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
      *  )
      */
     public function userProfile(Request $request): UserResource

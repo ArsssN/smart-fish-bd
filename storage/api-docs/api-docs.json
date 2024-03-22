@@ -15,7 +15,22 @@
                 "operationId": "user",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "User profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -313,6 +328,86 @@
                 ]
             }
         },
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "username",
+                                    "email",
+                                    "farm_name",
+                                    "password",
+                                    "phone",
+                                    "password_confirmation",
+                                    "account_holder_id"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "johndoe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "johndoe@smartfishbd.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "01700000000"
+                                    },
+                                    "farm_name": {
+                                        "type": "string",
+                                        "example": "Smart Fish BD"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "account_holder_id": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccessToken"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sensor/list": {
             "get": {
                 "tags": [
@@ -361,7 +456,7 @@
                     {
                         "name": "sensor",
                         "in": "path",
-                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor - 1<br/>- 4: PH\n              Sensor - 1",
+                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor - 1<br/>- 4: PH\r\n              Sensor - 1",
                         "required": true,
                         "schema": {
                             "type": "string",

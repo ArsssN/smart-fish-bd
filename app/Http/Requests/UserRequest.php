@@ -32,7 +32,9 @@ class UserRequest extends FormRequest
             'email' => 'required|unique:'
                 . config('permission.table_names.users', 'users')
                 . ',email' . ($user ? ',' . $user->id : ''),
-            'username' => 'required',
+            'username' => 'required|unique:'
+                . config('permission.table_names.users', 'users')
+                . ',username' . ($user ? ',' . $user->id : ''),
             'password' => 'nullable|min:6',
             'password_confirmation' => 'nullable|same:password',
             'userDetails.first_name' => 'required',
