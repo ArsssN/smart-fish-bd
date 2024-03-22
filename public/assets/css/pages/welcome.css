@@ -1,22 +1,43 @@
 
 :root {
-    --primary: #0d6efd;
-    --icon-color: #7F57F1;
+    --primary: #00b7e4;
+    --primary-2: #007895;
+    --icon-color: #00b7e4;
     --navbar-scroll-height: 4.1875rem;
     /*--icon-color: var(--primary);*/
 }
 
-/*#navbar-scroll-spy {
+body {
+    background-color: var(--primary) !important;
+}
+
+.navbar {
+    background-color: var(--primary-2) !important;
+}
+
+#navbar-scroll-spy {
     height: var(--navbar-scroll-height);
-}*/
+}
+
+#navbar-scroll-spy .navbar-brand {
+    padding: 0;
+}
+
+#navbar-scroll-spy .navbar-brand img {
+    max-height: 2.8125rem;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+}
 
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
-    color: var(--primary)
+    color: var(--primary);
 }
 
 .title {
-    color: var(--primary);
+    color: var(--dark);
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
@@ -41,7 +62,8 @@
     object-fit: cover;
 }
 
-#our-service img.card-img-top {
+#our-service img.card-img-top,
+#our-product img.card-img-top {
     height: 280px;
     object-fit: cover;
 }
@@ -93,6 +115,7 @@ img.card-img-top {
 }
 
 .footer-brand {
+    height: 2.8125rem;
     text-decoration: none;
 }
 

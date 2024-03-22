@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Smart Fish' class='mr-1 h-100 rounded'>")
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -39,7 +40,7 @@
 <nav id="navbar-scroll-spy" class="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="#welcome">
-            {!! config('backpack.base.project_logo') !!}
+            {!! $logo_white !!}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
@@ -58,6 +59,9 @@
                     <a class="nav-link" href="#our-service">our services</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#our-product">our products</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#our-team">our team</a>
                 </li>
                 <li class="nav-item">
@@ -70,7 +74,7 @@
 
 <div data-bs-spy="scroll" data-bs-target="#navbar-scroll-spy" data-bs-smooth-scroll="true">
     {{-- HERO SLIDER SECTION --}}
-    <section id="welcome" class="main-banner bg-body-secondary">
+    <section id="welcome" class="main-banner bg-body-secondary bg-opacity-50">
         <div id="heroCarousel2" class="carousel slide mb-4">
             <div class="carousel-indicators">
                 @foreach($banner_images as $banner_image)
@@ -100,7 +104,7 @@
             </button>
         </div>
         <div class="container">
-            <h1 class="title">Welcome message</h1>
+            <h1 class="title">Welcome to Smart Fish BD</h1>
             <div>
                 {!! $welcome_message !!}
             </div>
@@ -146,7 +150,7 @@
 
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal{{$loop->index}}">
+                                        data-bs-target="#exampleModalServices{{$loop->index}}">
                                     Details
                                 </button>
                             </div>
@@ -156,16 +160,19 @@
 
                 @foreach($services as $service)
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal{{$loop->index}}" tabindex="-1"
-                         aria-labelledby="exampleModal{{$loop->index}}Label" aria-hidden="true">
+                    <div class="modal modal-lg fade" id="exampleModalServices{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModalServices{{$loop->index}}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModal{{$loop->index}}Label">Modal title</h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalServices{{$loop->index}}Label">
+                                        {{ $service->title }}
+                                    </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <img src="{{asset($service->image)}}" class="img-fluid rounded w-100 mb-3" alt="Service {{ $loop->index }}">
                                     <p style="white-space: pre-wrap">{!! $service->description !!}</p>
                                 </div>
                                 <div class="modal-footer">
@@ -240,23 +247,118 @@
         </div>
     </section>
 
-    {{-- OUR TEAM SECTION --}}
-    <section id="our-team" class="our-team-section py-3 py-md-5">
+    {{-- OUR PRODUCT SECTION --}}
+    <section id="our-product" class="our-product-section py-3 py-md-5">
         <div class="container">
-            <h1 class="title">Our Team</h1>
-            <div class="owl-carousel owl-theme">
-                @foreach($teams as $team)
-                    <div class="card h-100">
-                        <img src="{{ asset($team->image) }}" class="card-img-top p-2"
-                             alt="Team Member {{ $loop->iteration }}">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                {{ $team->name }}
-                            </h5>
-                            <p class="card-text">
-                                {{ $team->designation }}
-                            </p>
-                            <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+            <h1 class="title">Our Products</h1>
+
+            <div class="row">
+                <div class="owl-carousel owl-theme">
+                    @foreach($products as $product)
+                        @php($short_description = \Illuminate\Support\Str::substr($product->description, 0, 100))
+                        <div class="card h-100">
+                            <img src="{{asset($product->image)}}" class="card-img-top" alt="Service {{ $loop->index }}">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ $product->title }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $short_description }}{{ strlen($product->description) > 100 ? '...' : ''}}
+                                </p>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModalProducts{{$loop->index}}">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @foreach($products as $product)
+                    <!-- Modal -->
+                    <div class="modal modal-lg fade" id="exampleModalProducts{{$loop->index}}" tabindex="-1"
+                         aria-labelledby="exampleModalProducts{{$loop->index}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalProducts{{$loop->index}}Label">
+                                        {{ $product->title }}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{asset($product->image)}}" class="img-fluid rounded w-100 mb-3" alt="Service {{ $loop->index }}">
+                                    <p style="white-space: pre-wrap">{!! $product->description !!}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
+    </section>
+
+    {{-- OUR TEAM SECTION --}}
+    <section id="our-team" class="our-team-section py-3 py-md-5 bg-body-secondary bg-opacity-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="title">Our Team</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="title">Consultants</h4>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @foreach($teamsGroup->consultants as $team)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <div class="card consultant h-100">
+                            <img src="{{ asset($team->image) }}" class="card-img-top p-2"
+                                 alt="Team Member {{ $loop->iteration }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    {{ $team->name }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $team->designation }}
+                                </p>
+                                <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4 class="title">Technicals</h4>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @foreach($teamsGroup->technicals as $team)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <div class="card technical h-100">
+                            <img src="{{ asset($team->image) }}" class="card-img-top p-2"
+                                 alt="Team Member {{ $loop->iteration }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    {{ $team->name }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $team->designation }}
+                                </p>
+                                <a href="#" class="btn btn-primary mt-3 d-none">Connect</a>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -265,7 +367,7 @@
     </section>
 
     {{-- CONTACT SECTION --}}
-    <section id="contact" class="contact-section py-3 py-md-5 bg-body-secondary bg-opacity-50">
+    <section id="contact" class="contact-section py-3 py-md-5">
         <div class="container">
             <h1 class="title">Contact Us</h1>
 
@@ -328,18 +430,22 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <h5 class="card-title">Visit Us</h5>
-                            <p class="card-text">
-                                {!! $contact_info->address !!}
-                            </p>
+                            <p class="card-text" style="white-space: pre-wrap">{!! $contact_info->address !!}</p>
                         </div>
                     </div>
 
                     <div class="card border-0 mt-4">
                         <div class="card-body">
                             <h5 class="card-title">Contact Information</h5>
-                            <ul class="list-unstyled">
-                                <li><strong>Phone:</strong> {!! $contact_info->phone !!}</li>
-                                <li><strong>Email:</strong> {!! $contact_info->email !!}</li>
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <strong>Phone:</strong> <a
+                                        href="tel:{!! $contact_info->phone !!}">{!! $contact_info->phone !!}</a>
+                                </li>
+                                <li>
+                                    <strong>Email:</strong> <a
+                                        href="mailto:{!! $contact_info->email !!}">{!! $contact_info->email !!}</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -350,23 +456,27 @@
 </div>
 
 {{-- FOOTER SECTION --}}
-<footer class="bg-white text-dark pt-4 pt-md-5">
+<footer class="text-dark bg-body-secondary bg-opacity-50 pt-4 pt-md-5">
     <div class="container py-4">
         <div class="row">
             <div class="col-md-4 mb-3 mb-md-0">
                 <a href="#welcome" class="mb-3 d-block footer-brand">
-                    {!! config('backpack.base.project_logo') !!}
+                    {!! $logo_white !!}
                 </a>
                 <p>Contact Information:</p>
+                <p style="white-space: pre-wrap">{!! $contact_info->address !!}</p>
                 <p>
-                    {!! $contact_info->address !!}
+                    <strong>Phone:</strong> <a href="tel:{{ $contact_info->phone }}"
+                                               class="text-dark">{{ $contact_info->phone }}</a>
                 </p>
-                <p><strong>Phone:</strong> {!! $contact_info->phone !!}</p>
-                <p><strong>Email:</strong> {!! $contact_info->email !!}</p>
+                <p>
+                    <strong>Email:</strong> <a href="mailto:{{ $contact_info->email }}"
+                                               class="text-dark">{{ $contact_info->email }}</a>
+                </p>
             </div>
             <div class="col-md-4 mb-3 mb-md-0">
                 <h5 class="mb-3">Menu</h5>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled mb-0">
                     <li><a href="#welcome" class="text-dark">Home</a></li>
                     <li><a href="#about" class="text-dark">About Us</a></li>
                     <li><a href="#our-service" class="text-dark">Our Services</a></li>

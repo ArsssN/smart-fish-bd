@@ -20,15 +20,36 @@ class HomeController extends Controller
         $welcome_message = Setting::get('welcome_message') ?? '';
         $about = json_decode(Setting::get('about'))[0] ?? new \stdClass();
         $services = json_decode(Setting::get('services')) ?? [];
+        $products = json_decode(Setting::get('products')) ?? [];
         $teams = json_decode(Setting::get('teams')) ?? [];
 
-        // dd($contact_info, $banner_images, $welcome_message, $about, $services, $teams);
+        $teamsGroup = (collect($teams))->reduce(function ($carry, $item) {
+            switch ($item->designation) {
+                case 'Consultant':
+                    $carry->consultants[] = $item;
+                    break;
+                default:
+                    $carry->technicals[] = $item;
+            }
+            return $carry;
+        }, new \stdClass());
+        //dd($contact_info, $banner_images, $welcome_message, $about, $services, $teams);
 
         $socials = Social::query()->where('status', '=', 'active')->get();
 
         return view(
             'welcome',
-            compact('socials', 'contact_info', 'banner_images', 'welcome_message', 'about', 'services', 'teams')
+            compact(
+                'socials',
+                'contact_info',
+                'banner_images',
+                'welcome_message',
+                'about',
+                'services',
+                'teams',
+                'teamsGroup',
+                'products'
+            )
         );
     }
 }
