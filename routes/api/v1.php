@@ -6,10 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
 use App\Http\Controllers\Api\Auth\RegisterController;
-use App\Http\Controllers\Api\LayoutController;
 use App\Http\Controllers\ContactUsController;
-use App\Http\Controllers\InvitationController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,8 +23,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->prefix('/user')->group(function () {
     Route::get('/profile', [AuthController::class, 'userProfile']);
     Route::put('/change/user-details', [ChangeController::class, 'changeUserDetails']);
-    Route::put('/change/photo', [ChangeController::class, 'changeProfilePicture']);
-    Route::put('/change/password', [ChangeController::class, 'changePassword']);
+    Route::post('/change/photo', [ChangeController::class, 'changeProfilePicture']);
+    Route::post('/change/password', [ChangeController::class, 'changePassword']);
 });
 
 // Auth

@@ -26,7 +26,7 @@
             }
         },
         "/api/v1/user/change/photo": {
-            "put": {
+            "post": {
                 "tags": [
                     "User"
                 ],
@@ -42,8 +42,8 @@
                                 ],
                                 "properties": {
                                     "photo": {
-                                        "type": "file",
-                                        "format": "file"
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -60,7 +60,7 @@
                                     "properties": {
                                         "photo": {
                                             "type": "string",
-                                            "example": "http://localhost:8000/uploads/user/profile/photo.jpg"
+                                            "example": "uploads/user/profile/photo.jpg"
                                         },
                                         "success": {
                                             "type": "boolean",
@@ -107,9 +107,7 @@
                                     "last_name",
                                     "farm_name",
                                     "phone",
-                                    "address",
-                                    "n_id_photos",
-                                    "account_holder_id"
+                                    "address"
                                 ],
                                 "properties": {
                                     "first_name": {
@@ -131,18 +129,6 @@
                                     "address": {
                                         "type": "string",
                                         "example": "Dhaka, Bangladesh"
-                                    },
-                                    "n_id_photos": {
-                                        "type": "string",
-                                        "example": "n_id_photos.jpg"
-                                    },
-                                    "account_holder_id": {
-                                        "type": "string",
-                                        "example": "John Doe"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "password"
                                     }
                                 },
                                 "type": "object"
@@ -186,7 +172,7 @@
             }
         },
         "/api/v1/user/change/password": {
-            "put": {
+            "post": {
                 "tags": [
                     "User"
                 ],

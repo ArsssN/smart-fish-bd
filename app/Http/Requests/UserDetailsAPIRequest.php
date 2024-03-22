@@ -35,10 +35,10 @@ class UserDetailsAPIRequest extends FormRequest
             'phone' => 'nullable|min:11|max:14|unique:user_details,phone,' . $user->id,
 //            'phone' => 'nullable|min:11|max:14',
             'address' => 'nullable|min:3|max:191',
-            'n_id_photos' => 'nullable|min:3|max:191',
-            'account_holder_id' => 'nullable|min:3|max:191',
-            'password' => 'nullable|password|confirmed|min:6',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'n_id_photos' => 'nullable|min:3|max:191',
+//            'account_holder_id' => 'nullable|min:3|max:191',
+//            'password' => 'nullable|password|confirmed|min:6',
+//            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

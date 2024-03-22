@@ -24,8 +24,7 @@ class UserPasswordAPIRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|password|confirmed|min:6',
-            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
         ];
     }
 }

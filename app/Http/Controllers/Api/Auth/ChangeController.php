@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserDetailsAPIRequest;
+use App\Http\Requests\UserPasswordAPIRequest;
 use App\Http\Requests\UserPictureAPIRequest;
+use App\Http\Resources\Api\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,27 +15,31 @@ use Illuminate\Support\Str;
 class ChangeController extends Controller
 {
     /**
-     * @OA\Put(
+     * @OA\Post(
      *     path="/api/v1/user/change/photo",
      *     operationId="changeProfilePicture",
      *     tags={"User"},
      *     summary="Change profile picture",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"photo"},
-     *                 @OA\Property(property="photo", type="file", format="file"),
-     *             )
-     *         )
-     *     ),
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  required={"photo"},
+     *                  @OA\Property(
+     *                      property="photo",
+     *                      type="string",
+     *                      format="binary",
+     *                  ),
+     *              )
+     *          )
+     *      ),
      *     @OA\Response(
      *         response=200,
      *         description="Profile picture updated successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="photo", type="string", example="http://localhost:8000/uploads/user/profile/photo.jpg"),
+     *             @OA\Property(property="photo", type="string", example="uploads/user/profile/photo.jpg"),
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Profile picture updated successfully"),
      *             @OA\Property(property="user", type="object", ref="#/components/schemas/UserResource"),
@@ -44,14 +50,16 @@ class ChangeController extends Controller
      *         description="Unauthorized"
      *     )
      * )
+     * @param UserPictureAPIRequest $request
+     *
      * @return JsonResponse
      */
-    public function changeProfilePicture()
+    public function changeProfilePicture(UserPictureAPIRequest $request): JsonResponse
     {
         $user = request()->user();
 
         try {
-            $photo = request()->file('photo');
+            $photo = $request->file('photo');
             $disk = 'uploads';
             $path = 'user/profile';
             $name = md5($user->id) . '_' . $photo->hashName();
@@ -61,7 +69,9 @@ class ChangeController extends Controller
 
             // delete old photo
             if ($user->userDetails->photo) {
-                Storage::disk('uploads')->delete("{$user->userDetails->photo}");
+                // delete old photo
+                $oldPhoto = Str::after($user->userDetails->photo, url($disk) . '/');
+                Storage::disk($disk)->delete($oldPhoto);
             }
 
             // update user photo
@@ -71,10 +81,9 @@ class ChangeController extends Controller
             $user = $user->first();
 
             return response()->json([
-                'photo' => $user->userDetails->photo,
                 'success' => true,
                 'message' => 'Profile picture updated successfully',
-                'user' => $user,
+                'user' => UserResource::make($user),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -94,15 +103,12 @@ class ChangeController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *              required={"first_name", "last_name", "farm_name", "phone", "address", "n_id_photos", "account_holder_id"},
+     *              required={"first_name", "last_name", "farm_name", "phone", "address"},
      *              @OA\Property(property="first_name", type="string", example="John"),
      *              @OA\Property(property="last_name", type="string", example="Doe"),
      *              @OA\Property(property="farm_name", type="string", example="Doe Farm"),
      *              @OA\Property(property="phone", type="string", example="1234567890"),
      *              @OA\Property(property="address", type="string", example="Dhaka, Bangladesh"),
-     *              @OA\Property(property="n_id_photos", type="string", example="n_id_photos.jpg"),
-     *              @OA\Property(property="account_holder_id", type="string", example="John Doe"),
-     *              @OA\Property(property="password", type="string", example="password"),
      *         )
      *     ),
      *     @OA\Response(
@@ -174,7 +180,7 @@ class ChangeController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User details updated successfully',
-                'user' => [$request, $user, $userDetails],
+                'user' => UserResource::make($user),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -185,7 +191,7 @@ class ChangeController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *     path="/api/v1/user/change/password",
      *     operationId="changePassword",
      *     tags={"User"},
@@ -212,17 +218,17 @@ class ChangeController extends Controller
      *         description="Unauthorized"
      *     )
      * )
-     * @param UserPictureAPIRequest $request
+     * @param UserPasswordAPIRequest $request
      *
      * @return JsonResponse
      */
-    public function changePassword(UserPictureAPIRequest $request)
+    public function changePassword(UserPasswordAPIRequest $request): JsonResponse
     {
-        $user = request()->user();
+        $user = $request->user();
 
         try {
             $user->update([
-                'password' => bcrypt(request()->input('password')),
+                'password' => bcrypt($request->input('password')),
             ]);
 
             return response()->json([
