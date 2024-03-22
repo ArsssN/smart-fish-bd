@@ -408,28 +408,52 @@
                 }
             }
         },
+        "/api/v1/project/list": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get all projects",
+                "operationId": "projectList",
+                "responses": {
+                    "200": {
+                        "description": "List of projects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProjectResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/sensor/list": {
             "get": {
                 "tags": [
                     "Sensor"
                 ],
                 "summary": "List of sensors",
-                "operationId": "list",
+                "operationId": "sensorList",
                 "responses": {
                     "200": {
                         "description": "List of sensors",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "sensors": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/SensorResource"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorResource"
+                                    }
                                 }
                             }
                         }
@@ -525,6 +549,40 @@
                     },
                     "isAuthenticated": {
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "ProjectResource": {
+                "title": "Project Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Project Name"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 191,
+                        "example": "project-name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Project description"
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
                     }
                 },
                 "type": "object"

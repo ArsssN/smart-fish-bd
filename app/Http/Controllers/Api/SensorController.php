@@ -12,7 +12,7 @@ class SensorController extends Controller
     /**
      * @OA\Get(
      *     path="/api/v1/sensor/list",
-     *     operationId="list",
+     *     operationId="sensorList",
      *     tags={"Sensor"},
      *     summary="List of sensors",
      *     security={{"bearerAuth": {}}},
@@ -20,7 +20,8 @@ class SensorController extends Controller
      *         response=200,
      *         description="List of sensors",
      *         @OA\JsonContent(
-     *             @OA\Property(property="sensors", type="array", @OA\Items(ref="#/components/schemas/SensorResource")),
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SensorResource"),
      *         )
      *     ),
      *     @OA\Response(
