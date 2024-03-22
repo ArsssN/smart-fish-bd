@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Models\User;
 use App\Notifications\UserRegisterNotification;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -83,11 +84,11 @@ class RegisterController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/AccessToken")
      *     ),
      * )
-     * @param Request $request
+     * @param RegisterRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function __invoke(RegisterRequest $request): \Illuminate\Http\JsonResponse
+    public function __invoke(RegisterRequest $request): JsonResponse
     {
         request()->merge([
             'userDetails' => [
