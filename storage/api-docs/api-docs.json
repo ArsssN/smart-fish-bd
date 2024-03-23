@@ -106,7 +106,7 @@
             }
         },
         "/api/v1/user/change/user-details": {
-            "put": {
+            "patch": {
                 "tags": [
                     "User"
                 ],
@@ -480,7 +480,7 @@
                     {
                         "name": "sensor",
                         "in": "path",
-                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor - 1<br/>- 4: PH\r\n              Sensor - 1",
+                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor\r\n     *         - 1<br/>- 4: PH\r\n    Sensor - 1",
                         "required": true,
                         "schema": {
                             "type": "string",

@@ -34,15 +34,6 @@ class SensorController extends Controller
      */
     public function list(): JsonResponse
     {
-        /*$sensors = Sensor::query()->whereHas(
-            'sensorType',
-            function ($query) {
-                $query->where('status', 'active');
-            }
-        )->where(
-            'status',
-            'active'
-        )->get();*/
         $sensors = auth()->user()->sensors()->get();
 
         return response()->json(

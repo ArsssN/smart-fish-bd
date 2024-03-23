@@ -95,7 +95,7 @@ class ChangeController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Patch(
      *     path="/api/v1/user/change/user-details",
      *     operationId="changeUserDetails",
      *     tags={"User"},

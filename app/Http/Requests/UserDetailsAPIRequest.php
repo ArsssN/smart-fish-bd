@@ -32,7 +32,7 @@ class UserDetailsAPIRequest extends FormRequest
             'first_name' => 'nullable|min:3|max:191',
             'last_name' => 'nullable|min:3|max:191',
             'farm_name' => 'nullable|min:3|max:191',
-            'phone' => 'nullable|min:11|max:14|unique:user_details,phone,' . $user->id,
+            'phone' => 'nullable|min:11|max:14|unique:user_details,phone,' . $user->id . ',user_id',
 //            'phone' => 'nullable|min:11|max:14',
             'address' => 'nullable|min:3|max:191',
 //            'n_id_photos' => 'nullable|min:3|max:191',
