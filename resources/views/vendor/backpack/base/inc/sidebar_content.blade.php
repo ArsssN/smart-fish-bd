@@ -161,3 +161,5 @@
 @if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>
 @endif
+
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-model') }}'><i class='nav-icon la la-question'></i> Switch models</a></li>
