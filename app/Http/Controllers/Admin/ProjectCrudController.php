@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Aerator;
 use App\Models\Feeder;
+use App\Models\Pond;
 use App\Models\Sensor;
 use App\Models\User;
 use App\Traits\Crud\CreatedAt;
@@ -73,11 +74,6 @@ class ProjectCrudController extends CrudController
             'type' => 'select2',
             'label' => 'Status'
         ], ['active' => 'Active', 'inactive' => 'Inactive']);
-        $this->crud->addFilter([
-            'name' => 'customer',
-            'type' => 'select2',
-            'label' => 'Status'
-        ], ['active' => 'Active', 'inactive' => 'Inactive']);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -134,52 +130,14 @@ class ProjectCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name' => 'sensors',
-            'label' => 'Sensors',
+            'name' => 'ponds',
+            'label' => 'Ponds',
             'type' => 'relationship',
-            'entity' => 'sensors',
+            'entity' => 'ponds',
             'pivot' => true,
             'ajax' => true,
             'inline_create' => [
-                'entity' => 'sensor',
-                'field' => 'name',
-            ],
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
-        CRUD::addField([
-            'name' => 'aerators',
-            'label' => 'Aerators',
-            'type' => 'relationship',
-            'entity' => 'aerators',
-            'pivot' => true,
-            'ajax' => true,
-            'inline_create' => [
-                'entity' => 'aerator',
-                'field' => 'name',
-            ],
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
-        CRUD::addField([
-            'name' => 'feeders',
-            'label' => 'Feeders',
-            'type' => 'relationship',
-            'entity' => 'feeders',
-            'pivot' => true,
-            'ajax' => true,
-            'inline_create' => [
-                'entity' => 'feeder',
+                'entity' => 'pond',
                 'field' => 'name',
             ],
             'wrapperAttributes' => [
@@ -267,6 +225,11 @@ class ProjectCrudController extends CrudController
     public function fetchFeeders()
     {
         return $this->fetch(Feeder::class);
+    }
+
+    public function fetchPonds()
+    {
+        return $this->fetch(Pond::class);
     }
 
     public function fetchUsers()
