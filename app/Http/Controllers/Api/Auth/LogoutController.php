@@ -41,7 +41,7 @@ class LogoutController extends Controller
         Log::info('User logged out', ['user' => $request->user()->id]);
 
         $request->user()->currentAccessToken()->delete();
-        Auth::guard('web')->logout();
+        Auth::guard('api')->logout();
 
         return response()->json([
             'message' => 'Successfully logged out'
