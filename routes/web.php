@@ -49,3 +49,9 @@ Route::get('/test/sensors', function () {
 
     return view('test.sensors', compact('sensors', 'sensor_message'));
 });
+
+
+// home redirect to /
+Route::get('/home', function () {
+    return redirect('/');
+});
