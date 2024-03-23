@@ -34,7 +34,7 @@ class SensorController extends Controller
      */
     public function list(): JsonResponse
     {
-        $sensors = Sensor::query()->whereHas(
+        /*$sensors = Sensor::query()->whereHas(
             'sensorType',
             function ($query) {
                 $query->where('status', 'active');
@@ -42,11 +42,12 @@ class SensorController extends Controller
         )->where(
             'status',
             'active'
-        )->get();
+        )->get();*/
+        $sensors = auth()->user()->sensors()->get();
 
-        return response()->json([
-            'sensors' => SensorResource::collection($sensors),
-        ]);
+        return response()->json(
+            SensorResource::collection($sensors)
+        );
     }
 
     /**
@@ -59,8 +60,9 @@ class SensorController extends Controller
      *     @OA\Parameter(
      *         name="sensor",
      *         in="path",
-     *         description="Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor - 1<br/>- 4: PH
-              Sensor - 1", required=true,
+     *         description="Sensor ID: <br/>- 1: Oxygen Sensor - 1<br/>- 2: TDS Sensor - 1<br/>- 3: Temperature Sensor
+     *         - 1<br/>- 4: PH
+    Sensor - 1", required=true,
      *         @OA\Schema(
      *             type="string",
      *             enum={"1", "2", "3", "4"},

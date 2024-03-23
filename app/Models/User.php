@@ -92,6 +92,14 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function sensors(): HasMany
+    {
+        return $this->hasMany(Sensor::class, 'created_by', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
