@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SensorRequest;
+use App\Http\Requests\FishWeightRequest;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
- * Class SensorCrudController
+ * Class FishWeightCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class SensorCrudController extends CrudController
+class FishWeightCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use InlineCreateOperation;
     use CreatedAt, CreatedBy;
 
     /**
@@ -31,13 +29,9 @@ class SensorCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Sensor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
-        CRUD::setEntityNameStrings('sensor', 'sensors');
-
-        if (isCustomer()) {
-            CRUD::denyAccess(['list', 'update', 'delete', 'create']);
-        }
+        CRUD::setModel(\App\Models\FishWeight::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/fish-weight');
+        CRUD::setEntityNameStrings('fish weight', 'fish weights');
     }
 
     /**
@@ -48,9 +42,11 @@ class SensorCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('serial_number');
-        CRUD::column('status');
+        CRUD::column('date');
+        CRUD::column('time');
+        CRUD::column('fish_id');
+        CRUD::column('weight');
+        CRUD::column('weight_in_24_hours');
 
         $this->createdByList();
         $this->createdAtList();
@@ -70,36 +66,35 @@ class SensorCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SensorRequest::class);
+        CRUD::setValidation(FishWeightRequest::class);
 
-        CRUD::field('name')->wrapperAttributes([
-            'class' => 'form-group col-md-6'
+        CRUD::addField([
+            'name' => 'fish_id',
+            'type' => 'relationship',
+            'ajax' => true,
+            'inline_create' => true,
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
-            ]
-        ]);
-        CRUD::addField([
-            'name' => 'sensorType',
-            'label' => 'Sensor Type',
-            'type' => 'select2',
-            'entity' => 'sensorType',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
             ],
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
         ]);
-        CRUD::addField([
-            'name' => 'serial_number',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ],
+        CRUD::field('date')->default(date('Y-m-d'))->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
+        CRUD::field('time')->default(date('H:i'))->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
+        CRUD::field('weight')->type('number')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
+        CRUD::field('weight_in_24_hours')->type('number')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
         ]);
         CRUD::field('description')->type('tinymce');
 
@@ -121,6 +116,7 @@ class SensorCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+
     /**
      * Define what happens when the Update operation is loaded.
      *
@@ -129,25 +125,20 @@ class SensorCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
-
-        CRUD::column('name');
-        CRUD::column('serial_number');
+        CRUD::column('date');
+        CRUD::column('time');
+        CRUD::column('fish_id');
+        CRUD::column('weight');
+        CRUD::column('weight_in_24_hours');
         CRUD::addColumn([
-            'name'     => 'controllers',
-        ]);
-        CRUD::addColumn([
-            'name'     => 'projects',
-        ]);
-        CRUD::addColumn([
-            'name'     => 'description',
-            'label'    => 'Description',
-            'type'     => 'closure',
-            'escaped'   => false, // allow HTML in this column
+            'name' => 'description',
+            'label' => 'Description',
+            'type' => 'closure',
+            'escaped' => false, // allow HTML in this column
             'function' => function ($entry) {
                 return $entry->description;
             },
         ]);
-        CRUD::column('status');
 
         $this->createdByList();
         $this->createdAtList();

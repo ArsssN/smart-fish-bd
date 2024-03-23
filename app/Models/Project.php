@@ -67,13 +67,33 @@ class Project extends Model
     }
 
     /**
-     * Get the project that owns the Controller
+     * Get the project that owns the Feeder
      *
      * @return BelongsToMany
      */
     public function sensors(): BelongsToMany
     {
         return $this->belongsToMany(Sensor::class, 'project_sensor', 'project_id', 'sensor_id');
+    }
+
+    /**
+     * Get the project that owns the Aerator
+     *
+     * @return BelongsToMany
+     */
+    public function aerators(): BelongsToMany
+    {
+        return $this->belongsToMany(Aerator::class, 'aerator_project');
+    }
+
+    /**
+     * Get the project that owns the Feeder
+     *
+     * @return BelongsToMany
+     */
+    public function feeders(): BelongsToMany
+    {
+        return $this->belongsToMany(Feeder::class, 'feeder_project');
     }
 
     /*

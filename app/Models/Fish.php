@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserDetail extends Model
+class Fish extends Model
 {
-    use CrudTrait, CreatedByTrait;
+    use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
     /*
     |--------------------------------------------------------------------------
@@ -17,15 +19,19 @@ class UserDetail extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'user_details';
+    protected $table = 'fishes';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    protected $casts = [
-        'n_id_photos' => 'array',
+    protected array $slugGenerator = [
+        "set-on-create" => true, // Whether to set the slug when the model is created
+        "set-on-update" => false, // Whether to update the slug when the target field is updated
+        "target-field"  => "name", // The field that will be used to generate the slug
+        "separator"     => "-", // The separator that will be used to separate the words
+        "slug-field"    => "slug", // The field that will be used to store the slug
     ];
 
     /*
@@ -41,13 +47,13 @@ class UserDetail extends Model
     */
 
     /**
-     * Get the user that owns the UserDetail
+     * Get all of the fishWeights for the Fish
      *
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function user(): BelongsTo
+    public function fishWeights(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(FishWeight::class);
     }
 
     /*

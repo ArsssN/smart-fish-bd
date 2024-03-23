@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SensorRequest;
+use App\Http\Requests\FishRequest;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -10,11 +10,11 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
- * Class SensorCrudController
+ * Class FishCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class SensorCrudController extends CrudController
+class FishCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -31,13 +31,9 @@ class SensorCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Sensor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
-        CRUD::setEntityNameStrings('sensor', 'sensors');
-
-        if (isCustomer()) {
-            CRUD::denyAccess(['list', 'update', 'delete', 'create']);
-        }
+        CRUD::setModel(\App\Models\Fish::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/fish');
+        CRUD::setEntityNameStrings('fish', 'fish');
     }
 
     /**
@@ -49,7 +45,6 @@ class SensorCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
-        CRUD::column('serial_number');
         CRUD::column('status');
 
         $this->createdByList();
@@ -70,7 +65,7 @@ class SensorCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SensorRequest::class);
+        CRUD::setValidation(FishRequest::class);
 
         CRUD::field('name')->wrapperAttributes([
             'class' => 'form-group col-md-6'
@@ -82,25 +77,7 @@ class SensorCrudController extends CrudController
                 'class' => 'form-group col-md-6'
             ]
         ]);
-        CRUD::addField([
-            'name' => 'sensorType',
-            'label' => 'Sensor Type',
-            'type' => 'select2',
-            'entity' => 'sensorType',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ],
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
-        CRUD::addField([
-            'name' => 'serial_number',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ],
-        ]);
+        CRUD::field('image')->type('browse')->hint('Image size 1920x899');
         CRUD::field('description')->type('tinymce');
 
         /**
@@ -121,6 +98,7 @@ class SensorCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+
     /**
      * Define what happens when the Update operation is loaded.
      *
@@ -129,25 +107,18 @@ class SensorCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
-
         CRUD::column('name');
-        CRUD::column('serial_number');
-        CRUD::addColumn([
-            'name'     => 'controllers',
-        ]);
-        CRUD::addColumn([
-            'name'     => 'projects',
-        ]);
+        CRUD::column('status');
         CRUD::addColumn([
             'name'     => 'description',
             'label'    => 'Description',
             'type'     => 'closure',
-            'escaped'   => false, // allow HTML in this column
+            'escaped'  => false, // allow HTML in this column
             'function' => function ($entry) {
                 return $entry->description;
             },
         ]);
-        CRUD::column('status');
+        CRUD::column('image')->type('image');
 
         $this->createdByList();
         $this->createdAtList();

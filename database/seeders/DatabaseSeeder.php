@@ -37,6 +37,13 @@ class DatabaseSeeder extends Seeder
             SensorControllerSeeder::class,
             ControllerProjectSeeder::class,
             ProjectSensorSeeder::class,
+            FishSeeder::class,
+            FishWeightSeeder::class,
+            FeederSeeder::class,
+            AeratorSeeder::class,
+            FeederProjectSeeder::class,
+            AeratorProjectSeeder::class,
+            FeederHistorySeeder::class,
         ]);
     }
 }

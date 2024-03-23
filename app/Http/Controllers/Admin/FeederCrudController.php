@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SensorRequest;
+use App\Http\Requests\FeederRequest;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -10,11 +10,11 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
- * Class SensorCrudController
+ * Class FeederCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class SensorCrudController extends CrudController
+class FeederCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -31,13 +31,9 @@ class SensorCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Sensor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/sensor');
-        CRUD::setEntityNameStrings('sensor', 'sensors');
-
-        if (isCustomer()) {
-            CRUD::denyAccess(['list', 'update', 'delete', 'create']);
-        }
+        CRUD::setModel(\App\Models\Feeder::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/feeder');
+        CRUD::setEntityNameStrings('feeder', 'feeders');
     }
 
     /**
@@ -50,6 +46,7 @@ class SensorCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('serial_number');
+        CRUD::column('run_status');
         CRUD::column('status');
 
         $this->createdByList();
@@ -70,7 +67,7 @@ class SensorCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SensorRequest::class);
+        CRUD::setValidation(FeederRequest::class);
 
         CRUD::field('name')->wrapperAttributes([
             'class' => 'form-group col-md-6'
@@ -80,23 +77,17 @@ class SensorCrudController extends CrudController
             'type' => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
-            ]
-        ]);
-        CRUD::addField([
-            'name' => 'sensorType',
-            'label' => 'Sensor Type',
-            'type' => 'select2',
-            'entity' => 'sensorType',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
             ],
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
         ]);
         CRUD::addField([
             'name' => 'serial_number',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
+        ]);
+        CRUD::addField([
+            'name' => 'run_status',
+            'type' => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ],
@@ -119,37 +110,5 @@ class SensorCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
-    }
-
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    protected function setupShowOperation()
-    {
-
-        CRUD::column('name');
-        CRUD::column('serial_number');
-        CRUD::addColumn([
-            'name'     => 'controllers',
-        ]);
-        CRUD::addColumn([
-            'name'     => 'projects',
-        ]);
-        CRUD::addColumn([
-            'name'     => 'description',
-            'label'    => 'Description',
-            'type'     => 'closure',
-            'escaped'   => false, // allow HTML in this column
-            'function' => function ($entry) {
-                return $entry->description;
-            },
-        ]);
-        CRUD::column('status');
-
-        $this->createdByList();
-        $this->createdAtList();
     }
 }

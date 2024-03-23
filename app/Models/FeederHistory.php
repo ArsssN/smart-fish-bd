@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserDetail extends Model
+class FeederHistory extends Model
 {
-    use CrudTrait, CreatedByTrait;
+    use HasFactory, CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
     /*
     |--------------------------------------------------------------------------
@@ -17,16 +20,13 @@ class UserDetail extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'user_details';
+    protected $table = 'feeder_histories';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    protected $casts = [
-        'n_id_photos' => 'array',
-    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -39,15 +39,14 @@ class UserDetail extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
     /**
-     * Get the user that owns the UserDetail
+     * Get the feeder that owns the FeederHistory
      *
      * @return BelongsTo
      */
-    public function user(): BelongsTo
+    public function feeder(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Feeder::class);
     }
 
     /*
