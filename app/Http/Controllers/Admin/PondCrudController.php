@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\PondRequest;
 use App\Models\Project;
 use App\Models\SensorUnit;
+use App\Models\SwitchUnit;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -79,13 +80,6 @@ class PondCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
-        ]);
-        CRUD::addField([
             'name' => 'project_id',
             'type' => 'relationship',
             'entity' => 'project',
@@ -100,6 +94,7 @@ class PondCrudController extends CrudController
         ]);
         CRUD::addField([
             'name' => 'sensorUnits',
+            'label' => 'Sensor units',
             'type' => 'relationship',
             'entity' => 'sensorUnits',
             'ajax' => true,
@@ -109,6 +104,27 @@ class PondCrudController extends CrudController
             ],*/
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
+            ]
+        ]);
+        CRUD::addField([
+            'name' => 'switchUnits',
+            'label' => 'Switch units',
+            'type' => 'relationship',
+            'entity' => 'switchUnits',
+            'ajax' => true,
+            /*'inline_create' => [
+                'entity' => 'switchUnit',
+                'field' => 'name',
+            ],*/
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+        CRUD::addField([
+            'name' => 'status',
+            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-12'
             ]
         ]);
         CRUD::field('address')->type('textarea');
@@ -140,5 +156,10 @@ class PondCrudController extends CrudController
     public function fetchSensorUnits()
     {
         return $this->fetch(SensorUnit::class);
+    }
+
+    public function fetchSwitchUnits()
+    {
+        return $this->fetch(SwitchUnit::class);
     }
 }

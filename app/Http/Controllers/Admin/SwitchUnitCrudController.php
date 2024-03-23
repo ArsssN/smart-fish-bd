@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SwitchUnitRequest;
+use App\Models\SwitchType;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -11,6 +12,7 @@ use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class SwitchUnitCrudController
+ *
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
@@ -72,31 +74,62 @@ class SwitchUnitCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
-        ]);
-        CRUD::addField([
-            'name' => 'switchTypes',
-            'label' => 'Sensor Type',
-            'type' => 'relationship',
-            'entity' => 'switchTypes',
-            'pivot'     => true,
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ],
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
-        CRUD::addField([
             'name' => 'serial_number',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ],
+        ]);
+        $switchType = SwitchType::pluck('name', 'id')->toArray();
+        CRUD::addField([
+            'name' => 'switches',
+            'type' => 'repeatable',
+            'fields' => [
+                [
+                    'name' => 'number',
+                    'label' => 'Switch number',
+                    'type' => 'text',
+                    'wrapperAttributes' => [
+                        'class' => 'form-group col-md-2'
+                    ],
+                ],
+                [
+                    'name' => 'switchType',
+                    'label' => 'Switch type',
+                    'type' => 'select_from_array',
+                    'options' => $switchType,
+                    'default' => array_keys($switchType)[0] ?? null,
+                    'wrapperAttributes' => [
+                        'class' => 'form-group col-md-2'
+                    ],
+                ],
+                [
+                    'name' => 'status',
+                    'label' => 'Status',
+                    'type' => 'select_from_array',
+                    'options' => ['on' => 'On', 'off' => 'Off'],
+                    'default' => 'on',
+                    'wrapperAttributes' => [
+                        'class' => 'form-group col-md-2'
+                    ],
+                ],
+                [
+                    'name' => 'comment',
+                    'label' => 'Comment',
+                    'type' => 'text',
+                    'wrapperAttributes' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ],
+            ],
+            // options
+            'new_item_label' => 'Add switch', // customize the text of the button
+            'init_rows' => 12, // number of empty rows to be initialized, by default 1
+            'min_rows' => 1, // minimum rows allowed, when reached the "delete" buttons will be hidden
+            //'max_rows' => 12, // maximum rows allowed, when reached the "new item" button will be hidden
+        ]);
+        CRUD::addField([
+            'name' => 'status',
+            'type' => 'enum'
         ]);
         CRUD::field('description')->type('tinymce');
 

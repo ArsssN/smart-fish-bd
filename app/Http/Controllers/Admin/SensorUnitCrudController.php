@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SensorUnitRequest;
+use App\Models\SensorType;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -11,6 +12,7 @@ use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class SensorUnitCrudController
+ *
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
@@ -72,31 +74,32 @@ class SensorUnitCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
-        ]);
-        CRUD::addField([
-            'name' => 'sensorTypes',
-            'label' => 'Sensor Type',
-            'type' => 'relationship',
-            'entity' => 'sensorTypes',
-            'pivot'     => true,
+            'name' => 'serial_number',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ],
+        ]);
+        CRUD::addField([
+            'name' => 'sensorTypes',
+            'label' => 'Sensor types',
+            'type' => 'relationship',
+            'entity' => 'sensorTypes',
+            'pivot' => true,
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-12'
+            ],
+            'default' => SensorType::query()->get()->pluck('id')->toArray(),
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
             }),*/
         ]);
         CRUD::addField([
-            'name' => 'serial_number',
+            'name' => 'status',
+            'type' => 'enum',
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ],
+                'class' => 'form-group col-md-12'
+            ]
         ]);
         CRUD::field('description')->type('tinymce');
 

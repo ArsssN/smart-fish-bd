@@ -32,6 +32,14 @@ class SwitchTypeCrudController extends CrudController
         CRUD::setModel(\App\Models\SwitchType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/switch-type');
         CRUD::setEntityNameStrings('switch type', 'switch types');
+
+        if (!isShellAdmin()) {
+            CRUD::denyAccess(['update', 'delete', 'create']);
+        }
+
+        if (isCustomer()) {
+            CRUD::denyAccess(['list', 'update', 'delete', 'create', 'show']);
+        }
     }
 
     /**

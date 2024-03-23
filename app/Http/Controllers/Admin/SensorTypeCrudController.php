@@ -75,17 +75,6 @@ class SensorTypeCrudController extends CrudController
         CRUD::setValidation(SensorRequest::class);
 
         CRUD::field('name');
-//        CRUD::addField([
-//            'name' => 'Controllers',
-//            'label' => "Controller",
-//            'type' => 'select2_multiple',
-//            'entity' => 'Controllers',
-//            'pivot' => true,
-//
-//            /*'options' => (function ($query) {
-//                return $query->where('created_by', backpack_user()->id)->get();
-//            }),*/
-//        ]);
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',

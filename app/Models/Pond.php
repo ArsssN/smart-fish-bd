@@ -62,6 +62,14 @@ class Pond extends Model
         return $this->belongsToMany(SensorUnit::class, 'pond_sensor_unit');
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function switchUnits(): BelongsToMany
+    {
+        return $this->belongsToMany(SwitchUnit::class, 'pond_switch_unit');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
