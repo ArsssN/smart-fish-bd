@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Helpers\AuthHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserResource;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Annotations as OA;
 
@@ -56,14 +58,16 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $usernameCredentials = request(['username', 'password']);
+        $user = User::query()->where('username', $request->username)
+            ->orWhere('email', $request->username)
+            ->first();
 
-        if (!Auth::attempt($usernameCredentials, true)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Invalid username or password',
             ], 401);
         }
 
-        return response()->json(AuthHelper::getAccessToken($request->user()));
+        return response()->json(AuthHelper::getAccessToken($user));
     }
 }
