@@ -27,9 +27,10 @@ class ProjectRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
-            'sensors' => 'required|array',
+            /*'sensors' => 'required|array',
             'aerators' => 'required|array',
-            'feeders' => 'required|array',
+            'feeders' => 'required|array',*/
+            'ponds' => 'required|array',
             /*'sensors.*' => 'required|exists:sensors,id',
             'aerators.*' => 'required|exists:aerators,id',
             'feeders.*' => 'required|exists:feeders,id',*/
