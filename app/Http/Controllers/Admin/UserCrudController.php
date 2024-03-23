@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
+use App\Traits\CrudPermissionTrait;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
@@ -19,6 +20,7 @@ class UserCrudController extends CrudController
         update as traitUpdate;
     }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use CrudPermissionTrait;
 
     public function setup()
     {
@@ -33,14 +35,16 @@ class UserCrudController extends CrudController
         $this->crud->setEntityNameStrings($singular, $plural);
         $this->crud->setRoute(backpack_url('user'));
 
+        $this->setAccessUsingPermissions();
+
         // admin only can't access
-        if (isCustomer()) {
+        /*if (isCustomer()) {
             CRUD::denyAccess(['list', 'create', 'delete', 'update', 'show', 'reorder']);
         }
 
         if (!backpack_auth()->user()->can('user.index')) {
             abort(403);
-        }
+        }*/
     }
 
     public function setupListOperation()

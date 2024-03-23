@@ -530,6 +530,31 @@ if (!function_exists('userHasPermission')) {
     }
 }
 
+if (!function_exists('getAccessOperators')) {
+    /**
+     * @return array
+     */
+    function getAccessOperators(): array
+    {
+        return [
+            'create' => ['create'],
+            'store' => ['create'],
+            'destroy' => ['delete'],
+            'edit' => ['update'],
+            'info' => ['show'],
+            'update' => ['update'],
+            'index' => ['list'],
+            'search' => ['list'],
+            'show' => ['show'],
+            'showDetailsRow' => ['show'],
+            'reorder' => ['update'],
+            'popup' => ['show'],
+            'theme' => ['show'],
+            'connector' => ['show'],
+        ];
+    }
+}
+
 if (!function_exists('getFirstImage')) {
     /**
      * @param array $images
