@@ -12,6 +12,8 @@
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>--}}
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-unit') }}'><i class='nav-icon la la-circle'></i> Sensor Units</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-unit') }}'><i class='nav-icon la la-circle-notch'></i> Switch Units</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-type') }}'><i class='nav-icon la la-tape'></i> Switch Types</a></li>
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>--}}
 {{--<li class='nav-item mb-2'>Feeder</li>--}}
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>--}}
