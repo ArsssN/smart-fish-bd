@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->prefix('/user')->group(function () {
     Route::get('/profile', [AuthController::class, 'userProfile']);
     Route::patch('/change/user-details', [ChangeController::class, 'changeUserDetails']);
     Route::post('/change/photo', [ChangeController::class, 'changeProfilePicture']);
-    Route::post('/change/password', [ChangeController::class, 'changePassword']);
+    Route::patch('/change/password', [ChangeController::class, 'changePassword']);
 });
 
 Route::middleware('auth:sanctum')->prefix('/sensor')->group(function () {

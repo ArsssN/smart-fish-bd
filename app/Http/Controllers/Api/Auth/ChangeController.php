@@ -57,7 +57,7 @@ class ChangeController extends Controller
      */
     public function changeProfilePicture(UserPictureAPIRequest $request): JsonResponse
     {
-        $user = request()->user();
+        $user = $request->user();
 
         try {
             $photo = $request->file('photo');
@@ -192,7 +192,7 @@ class ChangeController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * @OA\Patch(
      *     path="/api/v1/user/change/password",
      *     operationId="changePassword",
      *     tags={"User"},
