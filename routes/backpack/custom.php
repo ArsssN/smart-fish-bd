@@ -38,5 +38,5 @@ Route::group([
     Route::crud('sensor-unit', 'SensorUnitCrudController');
     Route::crud('switch-unit', 'SwitchUnitCrudController');
     Route::crud('switch-type', 'SwitchTypeCrudController');
-    Route::crud('switch-model', 'SwitchModelCrudController');
+    Route::crud('switch', 'SwitchCrudController');
 }); // this should be the absolute last line of this file

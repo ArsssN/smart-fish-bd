@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             SocialSeeder::class,
             SensorTypeSeeder::class,
             SensorSeeder::class,
+            SensorUnitSeeder::class,
             ControllerSeeder::class,
             ProjectSeeder::class,
             SensorControllerSeeder::class,
@@ -45,9 +46,11 @@ class DatabaseSeeder extends Seeder
             AeratorProjectSeeder::class,
             FeederHistorySeeder::class,
             PondSeeder::class,
-            SensorUnitSeeder::class,
             PondSensorUnitSeeder::class,
             SensorTypeSensorUnitSeeder::class,
+            SwitchTypeSeeder::class,
+            SwitchSeeder::class,
+            SwitchUnitSeeder::class,
         ]);
     }
 }

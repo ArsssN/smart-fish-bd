@@ -1,6 +1,6 @@
 <?php
 $projects = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'name' => 'Project 1',
@@ -13,7 +13,7 @@ $projects = array (
     'updated_at' => '2024-03-06 02:03:32',
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'name' => 'Project 2',

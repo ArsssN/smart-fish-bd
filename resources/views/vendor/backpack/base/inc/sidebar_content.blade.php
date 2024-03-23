@@ -9,9 +9,10 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pond') }}'><i class='nav-icon la la-water'></i> Ponds</a></li>
 @if(!isCustomer())
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>--}}
-{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>--}}
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-unit') }}'><i class='nav-icon la la-circle'></i> Sensor Units</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch') }}'><i class='nav-icon la la-cogs'></i> Switches</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-unit') }}'><i class='nav-icon la la-circle-notch'></i> Switch Units</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-type') }}'><i class='nav-icon la la-tape'></i> Switch Types</a></li>
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>--}}
@@ -161,5 +162,3 @@
 @if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>
 @endif
-
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-model') }}'><i class='nav-icon la la-question'></i> Switch models</a></li>

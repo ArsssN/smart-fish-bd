@@ -1,6 +1,6 @@
 <?php
 $sensor_units = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'name' => 'Sensor Unit 1',
@@ -13,7 +13,7 @@ $sensor_units = array (
     'updated_at' => '2024-03-23 19:56:39',
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'name' => 'Sensor Unit 2',
