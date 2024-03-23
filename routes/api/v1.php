@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\ContactUsController;
@@ -35,14 +36,23 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('/project')->group(function () {
-        Route::get('/list', [ProjectController::class, 'list']);
+        Route::get('/list', [ProjectController::class, 'list'])->name("api.v1.project.list");
+        Route::get('/{project}', [ProjectController::class, 'show'])->name("api.v1.project.show");
+
+        Route::prefix('/{project}/pond')->group(function () {
+            Route::get('/list', [PondController::class, 'list'])->name("api.v1.pond.list");
+            Route::get('/{pond}', [PondController::class, 'show'])->name("api.v1.pond.show");
+        });
     });
+
+
+
 });
 
 // Auth
 Route::prefix('/')->group(function () {
     Route::post('login', LoginController::class);
-    Route::post('register', RegisterController::class);
+    // Route::post('register', RegisterController::class);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', LogoutController::class);

@@ -18,59 +18,59 @@ use Illuminate\Support\Str;
 class RegisterController extends Controller
 {
     /**
-     * @OA\Post(
+     * @O-A\Post(
      *     path="/api/v1/register",
      *     operationId="register",
      *     tags={"Auth"},
      *     summary="Register",
-     *     @OA\RequestBody(
+     *     @O-A\RequestBody(
      *         required=true,
-     *         @OA\MediaType(
+     *         @O-A\MediaType(
      *             mediaType="application/json",
-     *             @OA\Schema(
+     *             @O-A\Schema(
      *                 required={"first_name", "last_name", "username", "email", "farm_name", "password", "phone",
                        "password_confirmation", "account_holder_id"},
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="first_name",
      *                     type="string",
      *                     example="John",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="last_name",
      *                     type="string",
      *                     example="Doe",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="username",
      *                     type="string",
      *                     example="johndoe",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="email",
      *                     type="string",
      *                     example="johndoe@smartfishbd.com",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="phone",
      *                     type="string",
      *                     example="01700000000",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="farm_name",
      *                     type="string",
      *                     example="Smart Fish BD",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="password",
      *                     type="string",
      *                     example="password",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="password_confirmation",
      *                     type="string",
      *                     example="password",
      *                 ),
-     *                 @OA\Property(
+     *                 @O-A\Property(
      *                     property="account_holder_id",
      *                     type="string",
      *                     example="123456789",
@@ -78,10 +78,10 @@ class RegisterController extends Controller
      *             )
      *         )
      *      ),
-     *     @OA\Response(
+     *     @O-A\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/AccessToken")
+     *         @O-A\JsonContent(ref="#/components/schemas/AccessToken")
      *     ),
      * )
      * @param RegisterRequest $request

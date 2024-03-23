@@ -34,4 +34,40 @@ class ProjectController extends Controller
 
         return response()->json(ProjectResource::collection($projects));
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/project/{project}",
+     *     operationId="projectShow",
+     *     tags={"Project"},
+     *     summary="Get project",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="project",
+     *         in="path",
+     *         description="Project ID",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Project",
+     *         @OA\JsonContent(ref="#/components/schemas/ProjectResource"),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Project not found",
+     *     )
+     * )
+     * @param Project $project
+     *
+     * @return JsonResponse
+     */
+    public function show(Project $project): JsonResponse
+    {
+        return response()->json(new ProjectResource($project));
+    }
 }

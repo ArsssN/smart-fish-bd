@@ -6,8 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="SensorType",
- *     title="Sensor Type",
+ *     schema="SwitchType",
+ *     title="Switch Type",
  *     type="object",
  *     description="Represents a sensor type.",
  *     @OA\Property(
@@ -28,7 +28,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     ),
  * )
  */
-class SensorTypeResource extends JsonResource
+class SwitchTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
