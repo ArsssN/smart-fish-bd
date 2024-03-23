@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
@@ -30,9 +31,9 @@ class Project extends Model
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
-        "target-field"  => "name", // The field that will be used to generate the slug
-        "separator"     => "-", // The separator that will be used to separate the words
-        "slug-field"    => "slug", // The field that will be used to store the slug
+        "target-field" => "name", // The field that will be used to generate the slug
+        "separator" => "-", // The separator that will be used to separate the words
+        "slug-field" => "slug", // The field that will be used to store the slug
     ];
 
     /*
@@ -53,7 +54,7 @@ class Project extends Model
      */
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'customer_id');
     }
 
     /**
@@ -94,6 +95,14 @@ class Project extends Model
     public function feeders(): BelongsToMany
     {
         return $this->belongsToMany(Feeder::class, 'feeder_project');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function ponds(): HasMany
+    {
+        return $this->hasMany(Pond::class);
     }
 
     /*

@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name', 180);
             $table->string('slug', 191)->unique();
+            $table->string('address', 191)->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('project_id')->nullable()->constrained('projects')->references('id')->cascadeOnDelete();
 
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
             $table->timestamps();

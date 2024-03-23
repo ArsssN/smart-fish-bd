@@ -7,11 +7,9 @@ use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SensorType extends Model
+class SensorUnit extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
 
@@ -21,7 +19,7 @@ class SensorType extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'sensor_types';
+    protected $table = 'sensor_units';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -31,9 +29,9 @@ class SensorType extends Model
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
-        "target-field"  => "name", // The field that will be used to generate the slug
-        "separator"     => "-", // The separator that will be used to separate the words
-        "slug-field"    => "slug", // The field that will be used to store the slug
+        "target-field" => "name", // The field that will be used to generate the slug
+        "separator" => "-", // The separator that will be used to separate the words
+        "slug-field" => "slug", // The field that will be used to store the slug
     ];
 
     /*
@@ -51,33 +49,20 @@ class SensorType extends Model
     /**
      * Get the project that owns the Controller
      *
-     * @return HasMany
-     */
-    public function sensors(): HasMany
-    {
-        return $this->hasMany(Sensor::class);
-    }
-
-    /**
-     * Get the project that owns the Controller
-     *
      * @return BelongsToMany
      */
-    public function sensorUnits(): BelongsToMany
+    public function sensorTypes(): BelongsToMany
     {
-        return $this->belongsToMany(SensorUnit::class, 'sensor_type_sensor_unit');
+        return $this->belongsToMany(SensorType::class, 'sensor_type_sensor_unit');
     }
 
     /**
-     * Get the project that owns the Controller
-     *
-     * @return HasManyThrough
+     * @return BelongsToMany
      */
-    public function projects(): HasManyThrough
+    public function ponds(): BelongsToMany
     {
-        return $this->hasManyThrough(Project::class, Sensor::class);
+        return $this->belongsToMany(Pond::class, 'pond_sensor_unit');
     }
-
 
     /*
     |--------------------------------------------------------------------------

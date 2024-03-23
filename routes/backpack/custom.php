@@ -34,4 +34,6 @@ Route::group([
     Route::crud('feeder', 'FeederCrudController');
     Route::crud('aerator', 'AeratorCrudController');
     Route::crud('feeder-history', 'FeederHistoryCrudController');
+    Route::crud('pond', 'PondCrudController');
+    Route::crud('sensor-unit', 'SensorUnitCrudController');
 }); // this should be the absolute last line of this file

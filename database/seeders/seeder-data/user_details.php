@@ -1,6 +1,6 @@
 <?php
 $user_details = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'user_id' => 1,
@@ -17,7 +17,7 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2023-01-22 15:24:48',
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'user_id' => 2,
@@ -34,7 +34,7 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
     'user_id' => 3,
@@ -51,7 +51,7 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
-  3 =>
+  3 => 
   array (
     'id' => 4,
     'user_id' => 4,
@@ -68,7 +68,7 @@ $user_details = array (
     'created_at' => '2021-01-01 00:00:00',
     'updated_at' => '2021-01-01 00:00:00',
   ),
-  4 =>
+  4 => 
   array (
     'id' => 5,
     'user_id' => 7,
@@ -85,7 +85,7 @@ $user_details = array (
     'created_at' => '2024-03-19 00:51:56',
     'updated_at' => '2024-03-19 00:51:56',
   ),
-  5 =>
+  5 => 
   array (
     'id' => 6,
     'user_id' => 6,
@@ -102,7 +102,7 @@ $user_details = array (
     'created_at' => '2024-03-19 00:51:56',
     'updated_at' => '2024-03-19 00:51:56',
   ),
-  6 =>
+  6 => 
   array (
     'id' => 7,
     'user_id' => 5,

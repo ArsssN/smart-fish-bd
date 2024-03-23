@@ -44,6 +44,10 @@ class DatabaseSeeder extends Seeder
             FeederProjectSeeder::class,
             AeratorProjectSeeder::class,
             FeederHistorySeeder::class,
+            PondSeeder::class,
+            SensorUnitSeeder::class,
+            PondSensorUnitSeeder::class,
+            SensorTypeSensorUnitSeeder::class,
         ]);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sensor_units', function (Blueprint $table) {
+        Schema::create('switch_units', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
             $table->string('serial_number', 100)->nullable();
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensor_units');
+        Schema::dropIfExists('switch_units');
     }
 };
