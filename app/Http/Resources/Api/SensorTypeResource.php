@@ -21,11 +21,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The name of the sensor type."
  *     ),
  *     @OA\Property(
+ *         property="slug",
+ *         type="string",
+ *         description="The slug of the sensor type."
+ *     ),
+ *     @OA\Property(
  *         property="description",
  *         type="string",
  *         nullable=true,
  *         description="A description of the sensor type."
  *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         enum={"active", "inactive"},
+ *         default="active",
+ *         description="The status of the sensor type."
+ *     )
  * )
  */
 class SensorTypeResource extends JsonResource
@@ -44,6 +56,7 @@ class SensorTypeResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug, // Add this line
             'description' => $this->description,
+            'status' => $this->status,
         ];
     }
 }

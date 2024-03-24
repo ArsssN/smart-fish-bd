@@ -582,6 +582,100 @@
                     }
                 ]
             }
+        },
+        "/api/v1/sensor-type/list": {
+            "get": {
+                "tags": [
+                    "Sensor Type"
+                ],
+                "summary": "List of sensor types",
+                "operationId": "sensorTypeList",
+                "responses": {
+                    "200": {
+                        "description": "List of sensors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/sensor-type/feedback/{sensor}/{value}": {
+            "get": {
+                "tags": [
+                    "Sensor Type"
+                ],
+                "summary": "Sensor type feedback",
+                "operationId": "sensorTypeFeedback",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor<br/>- 2: TDS Sensor<br/>- 3: Temperature Sensor <br/>-\r\n              4: PH Sensor",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "1",
+                            "enum": [
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "description": "Sensor value",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sensor feedback",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Response from sensor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -768,10 +862,23 @@
                         "description": "The name of the sensor type.",
                         "type": "string"
                     },
+                    "slug": {
+                        "description": "The slug of the sensor type.",
+                        "type": "string"
+                    },
                     "description": {
                         "description": "A description of the sensor type.",
                         "type": "string",
                         "nullable": true
+                    },
+                    "status": {
+                        "description": "The status of the sensor type.",
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ]
                     }
                 },
                 "type": "object"

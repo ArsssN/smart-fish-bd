@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SensorController;
+use App\Http\Controllers\Api\SensorTypeController;
 use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/sensor')->group(function () {
         Route::get('/list', [SensorController::class, 'list']);
         Route::get('/feedback/{sensor}/{value}', [SensorController::class, 'sensorFeedback']);
+    });
+
+    Route::prefix('/sensor-type')->group(function () {
+        Route::get('/list', [SensorTypeController::class, 'list']);
+        Route::get('/feedback/{sensor}/{value}', [SensorTypeController::class, 'sensorFeedback']);
     });
 
     Route::prefix('/project')->group(function () {
