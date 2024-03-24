@@ -36,6 +36,8 @@ class ProjectRequest extends FormRequest
             'feeders.*' => 'required|exists:feeders,id',*/
             'user_id' => 'required|exists:users,id',
             'description' => 'nullable|string|max:500',
+            'gateway_name' => 'required|string|max:180',
+            'gateway_serial_number' => 'required|string|max:180',
         ];
     }
 
