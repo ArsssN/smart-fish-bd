@@ -51,6 +51,7 @@ class DatabaseSeeder extends Seeder
             SwitchTypeSeeder::class,
             SwitchSeeder::class,
             SwitchUnitSeeder::class,
+            PondSwitchUnitSeeder::class,
         ]);
     }
 }
