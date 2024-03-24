@@ -78,7 +78,7 @@ class PondController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Pond",
-     *         @OA\JsonContent(ref="#/components/schemas/PondResource"),
+     *         @OA\JsonContent(ref="#/components/schemas/PondWithUnitResource"),
      *     ),
      *     @OA\Response(
      *         response=404,

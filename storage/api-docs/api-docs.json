@@ -404,7 +404,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/PondResource"
+                                    "$ref": "#/components/schemas/PondWithUnitResource"
                                 }
                             }
                         }
@@ -634,6 +634,38 @@
                     },
                     "description": {
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "PondWithUnitResource": {
+                "title": "Pond Unit Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 180
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 191
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
                     },
                     "sensor_units": {
                         "type": "array",
@@ -745,6 +777,7 @@
                 "type": "object"
             },
             "SensorUnitResource": {
+                "title": "Sensor Unit Resource",
                 "required": [
                     "id",
                     "name",
@@ -803,6 +836,7 @@
                 "type": "object"
             },
             "SwitchUnitResource": {
+                "title": "Switch Unit Resource",
                 "required": [
                     "id",
                     "name",

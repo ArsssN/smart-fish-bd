@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @OA\Schema(
  *     schema="SwitchUnitResource",
+ *     title="Switch Unit Resource",
  *     required={"id", "name", "slug", "description", "status", "switches"},
  *     @OA\Property(property="id", type="integer", format="int64", description="The unique identifier of the resource"),
  *     @OA\Property(property="name", type="string", description="The name of the resource"),

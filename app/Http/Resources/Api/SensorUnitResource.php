@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @OA\Schema(
  *     schema="SensorUnitResource",
+ *     title="Sensor Unit Resource",
  *     required={"id", "name", "serial_number", "slug", "description", "status"},
  *     @OA\Property(property="id", type="integer", format="int64", description="The unique identifier of the resource"),
  *     @OA\Property(property="name", type="string", description="The name of the resource"),
