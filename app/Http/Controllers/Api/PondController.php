@@ -86,12 +86,29 @@ class PondController extends Controller
      *     )
      * )
      * @param Project $project
-     * @param Pond $pond
+     * @param Pond    $pond
      *
      * @return JsonResponse
      */
     public function show(Project $project, Pond $pond): JsonResponse
     {
+        if (!$project || !$pond) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        $pond = $pond->project_id === $project->id && $pond->project->customer_id === auth()->id() ? $pond : null;
+
+        /*$pond1 = Pond::query()
+            ->where('project_id', $project->id)
+            ->where('id', $pond->id)
+            ->whereHas('project', function ($query) {
+                $query->where('customer_id', auth()->id());
+            })
+            ->first();
+        $pond2 = auth()->user()
+            ->projects()->where('id', $project->id)->first()
+            ->ponds()->where('id', $pond->id)->first();*/
+
         return response()->json(new PondResource($pond));
     }
 }
