@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SensorRequest;
+use App\Http\Requests\SensorTypeRequest;
 use App\Models\SensorType;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
@@ -53,6 +53,7 @@ class SensorTypeCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('status');
+        CRUD::column('remote_name');
 
         $this->createdByList();
         $this->createdAtList();
@@ -72,13 +73,14 @@ class SensorTypeCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SensorRequest::class);
+        CRUD::setValidation(SensorTypeRequest::class);
 
         CRUD::field('name');
         CRUD::addField([
             'name' => 'status',
             'type' => 'enum',
         ]);
+        CRUD::field('remote_name');
         CRUD::field('description')->type('tinymce');
 
         /**

@@ -20,8 +20,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('customer_id')->comment(
-                'Customer who is assigned to this project'
+                'Customer who is assigned to this switch type'
             )->nullable()->constrained('users')->references('id')->cascadeOnDelete();
+            $table->string('remote_name', 180)->nullable();
 
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
             $table->timestamps();

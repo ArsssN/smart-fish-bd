@@ -52,6 +52,7 @@ class SwitchTypeCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('status');
+        CRUD::column('remote_name');
 
         $this->createdByList();
         $this->createdAtList();
@@ -78,6 +79,7 @@ class SwitchTypeCrudController extends CrudController
             'name' => 'status',
             'type' => 'enum',
         ]);
+        CRUD::field('remote_name');
         CRUD::field('description')->type('tinymce');
 
         /**
