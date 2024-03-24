@@ -37,10 +37,7 @@ class SensorTypeController extends Controller
     {
         $sensorTypes = SensorType::query()->get();
 
-        return response()->json(
-            [SensorTypeResource::collection($sensorTypes),
-            $sensorTypes]
-        );
+        return response()->json(SensorTypeResource::collection($sensorTypes));
     }
 
     /**

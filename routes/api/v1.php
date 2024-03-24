@@ -31,11 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/change/password', [ChangeController::class, 'changePassword']);
     });
 
-    Route::prefix('/sensor')->group(function () {
-        Route::get('/list', [SensorController::class, 'list']);
-        Route::get('/feedback/{sensor}/{value}', [SensorController::class, 'sensorFeedback']);
-    });
-
     Route::prefix('/sensor-type')->group(function () {
         Route::get('/list', [SensorTypeController::class, 'list']);
         Route::get('/feedback/{sensor}/{value}', [SensorTypeController::class, 'sensorFeedback']);
