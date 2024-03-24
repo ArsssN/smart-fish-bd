@@ -725,6 +725,16 @@
                             "inactive"
                         ],
                         "example": "active"
+                    },
+                    "gateway_name": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Gateway Name"
+                    },
+                    "gateway_serial_number": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Gateway Serial Number"
                     }
                 },
                 "type": "object"

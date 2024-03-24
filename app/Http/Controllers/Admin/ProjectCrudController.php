@@ -148,6 +148,18 @@ class ProjectCrudController extends CrudController
                 return $query->where('created_by', backpack_user()->id)->get();
             }),*/
         ]);
+        CRUD::addField([
+            'name' => 'gateway_name',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+        CRUD::addField([
+            'name' => 'gateway_serial_number',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
         CRUD::field('description')->type('tinymce');
 
         /**

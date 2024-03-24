@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->comment(
                 'Customer who is assigned to this project'
             )->nullable()->constrained('users')->references('id')->cascadeOnDelete();
+            $table->string('gateway_name', 180)->nullable();
+            $table->string('gateway_serial_number', 180)->nullable();
 
             $table->foreignId('created_by')->comment(
                 'User who created this project'

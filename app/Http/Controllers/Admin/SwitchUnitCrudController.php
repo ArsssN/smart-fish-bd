@@ -8,6 +8,7 @@ use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
@@ -69,6 +70,8 @@ class SwitchUnitCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(SwitchUnitRequest::class);
+
+        Widget::add()->type('script')->content('assets/js/switch-unit.js');
 
         CRUD::field('name')->wrapperAttributes([
             'class' => 'form-group col-md-6'
