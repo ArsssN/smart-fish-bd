@@ -611,18 +611,15 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "format": "int64",
-                        "example": "1"
+                        "format": "int64"
                     },
                     "name": {
                         "type": "string",
-                        "maxLength": 180,
-                        "example": "Pond Name"
+                        "maxLength": 180
                     },
                     "slug": {
                         "type": "string",
-                        "maxLength": 191,
-                        "example": "pond-name"
+                        "maxLength": 191
                     },
                     "status": {
                         "type": "string",
@@ -630,16 +627,37 @@
                         "enum": [
                             "active",
                             "inactive"
-                        ],
-                        "example": "active"
+                        ]
                     },
                     "address": {
-                        "type": "string",
-                        "example": "Pond address"
+                        "type": "string"
                     },
                     "description": {
-                        "type": "string",
-                        "example": "Pond description"
+                        "type": "string"
+                    },
+                    "sensor_units": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SensorUnitResource"
+                        }
+                    },
+                    "switch_units": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SwitchUnitResource"
+                        }
+                    },
+                    "sensor_types": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SensorType"
+                        }
+                    },
+                    "switch_types": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SwitchType"
+                        }
                     }
                 },
                 "type": "object"
@@ -726,6 +744,44 @@
                 },
                 "type": "object"
             },
+            "SensorUnitResource": {
+                "required": [
+                    "id",
+                    "name",
+                    "serial_number",
+                    "slug",
+                    "description",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the resource",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the resource",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the resource",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "The slug of the resource",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the resource",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the resource",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "SwitchType": {
                 "title": "Switch Type",
                 "description": "Represents a sensor type.",
@@ -740,6 +796,74 @@
                     },
                     "description": {
                         "description": "A description of the sensor type.",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SwitchUnitResource": {
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "description",
+                    "status",
+                    "switches"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the resource",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the resource",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "The slug of the resource",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the resource",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the resource",
+                        "type": "string"
+                    },
+                    "switches": {
+                        "description": "Array of switches",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Switch"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Switch": {
+                "required": [
+                    "number",
+                    "switchType",
+                    "status"
+                ],
+                "properties": {
+                    "number": {
+                        "description": "The number of the switch",
+                        "type": "string"
+                    },
+                    "switchType": {
+                        "description": "The type of the switch",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the switch (e.g., on/off)",
+                        "type": "string"
+                    },
+                    "comment": {
+                        "description": "Additional comment about the switch",
                         "type": "string",
                         "nullable": true
                     }
