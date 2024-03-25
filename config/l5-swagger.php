@@ -61,7 +61,10 @@ return [
              * Middleware allows to prevent unexpected access to API documentation
             */
             'middleware' => [
-                'api' => [],
+                'api' => [
+                    config('backpack.base.web_middleware', 'web'),
+                    config('backpack.base.middleware_key', 'admin')
+                ],
                 'asset' => [],
                 'docs' => [],
                 'oauth2_callback' => [],
