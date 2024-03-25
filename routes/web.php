@@ -20,7 +20,16 @@ use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
 Route::get('/', function () {
 
-    MQTT::publish('some/topic1', 'Hello World!');
+    // Create an MQTT client instance
+    $mqtt = MQTT::connection();
+
+    // Subscribe to the topic
+    $mqtt->subscribe('some/topic1', function (string $topic, string $message) {
+        // Handle the received message
+        Log::info(sprintf('Received message on topic [%s]: %s', $topic, $message));
+    }, 1);
+
+    MQTT::publish('some/topic1', 'Hello World! 1111111');
     return view('welcome');
 });
 
@@ -29,7 +38,7 @@ Route::get('/some/topic1', function () {
     $mqtt = MQTT::connection();
 
     // Subscribe to the topic
-    $mqtt->subscribe('some/topic1', function (string $topic, string $message) {
+    $mqtt->subscribe('some/topic2', function (string $topic, string $message) {
         // Handle the received message
         Log::info(sprintf('Received message on topic [%s]: %s', $topic, $message));
     }, 1);
