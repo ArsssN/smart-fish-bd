@@ -53,7 +53,7 @@ class ProjectCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::addColumn([
-            'name' => 'user_id',
+            'name' => 'customer_id',
             'label' => 'Customer',
             'entity' => 'customer',
             'model' => User::class,
@@ -62,7 +62,7 @@ class ProjectCrudController extends CrudController
 
         // only project owner can see the project
         if (isCustomer()) {
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
+            $this->crud->addClause('where', 'customer_id', backpack_user()->id);
         }
 
         $this->createdByList();
@@ -105,7 +105,7 @@ class ProjectCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name' => 'user_id',
+            'name' => 'customer_id',
             'type' => $isCustomer
                 ? 'hidden'
                 : 'select2',
@@ -193,7 +193,7 @@ class ProjectCrudController extends CrudController
 
         CRUD::column('name');
         CRUD::addColumn([
-            'name' => 'user_id',
+            'name' => 'customer_id',
             'label' => 'Customer',
             'entity' => 'customer',
             'model' => User::class,
