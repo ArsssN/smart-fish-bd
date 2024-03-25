@@ -72,8 +72,8 @@ $user_details = array (
   array (
     'id' => 5,
     'user_id' => 7,
-    'first_name' => 'Amethyst',
-    'last_name' => 'Perkins',
+    'first_name' => 'Customer-3',
+    'last_name' => 'Yopmail',
     'farm_name' => 'Oprah Adkins',
     'phone' => '017215719541',
     'phone_verified_at' => NULL,
@@ -83,14 +83,14 @@ $user_details = array (
     'account_holder_id' => 'Expedita et soluta s',
     'created_by' => 4,
     'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-19 00:51:56',
+    'updated_at' => '2024-03-25 14:28:26',
   ),
   5 => 
   array (
     'id' => 6,
     'user_id' => 6,
-    'first_name' => 'Amethyst',
-    'last_name' => 'Perkins',
+    'first_name' => 'Customer-2',
+    'last_name' => 'Yopmail',
     'farm_name' => 'Oprah Adkins',
     'phone' => '017215719542',
     'phone_verified_at' => NULL,
@@ -100,14 +100,14 @@ $user_details = array (
     'account_holder_id' => 'Expedita et soluta s',
     'created_by' => 4,
     'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-19 00:51:56',
+    'updated_at' => '2024-03-25 14:29:36',
   ),
   6 => 
   array (
     'id' => 7,
     'user_id' => 5,
-    'first_name' => 'Amethyst',
-    'last_name' => 'Perkins',
+    'first_name' => 'Customer-1',
+    'last_name' => 'Yopmail',
     'farm_name' => 'Oprah Adkins',
     'phone' => '017215719543',
     'phone_verified_at' => NULL,
@@ -117,7 +117,7 @@ $user_details = array (
     'account_holder_id' => 'Expedita et soluta',
     'created_by' => 4,
     'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-19 00:51:56',
+    'updated_at' => '2024-03-25 14:29:22',
   ),
 );
 return $user_details;

@@ -59,7 +59,7 @@ $users = array (
   4 => 
   array (
     'id' => 5,
-    'name' => 'Customer 1',
+    'name' => 'Customer-1 Yopmail',
     'email' => 'customer-1@yopmail.com',
     'username' => 'customer-1',
     'email_verified_at' => NULL,
@@ -67,13 +67,13 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:12:38',
-    'updated_at' => '2024-03-06 02:12:38',
+    'updated_at' => '2024-03-25 14:29:22',
     'deleted_at' => NULL,
   ),
   5 => 
   array (
     'id' => 6,
-    'name' => 'Customer 2',
+    'name' => 'Customer-2 Yopmail',
     'email' => 'customer-2@yopmail.com',
     'username' => 'customer-2',
     'email_verified_at' => NULL,
@@ -81,13 +81,13 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:13:02',
-    'updated_at' => '2024-03-06 02:13:02',
+    'updated_at' => '2024-03-25 14:29:36',
     'deleted_at' => NULL,
   ),
   6 => 
   array (
     'id' => 7,
-    'name' => 'Amethyst Perkins',
+    'name' => 'Customer-3 Yopmail',
     'email' => 'customer-3@yopmail.com',
     'username' => 'customer-3',
     'email_verified_at' => NULL,
@@ -95,7 +95,7 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:13:20',
-    'updated_at' => '2024-03-19 00:51:56',
+    'updated_at' => '2024-03-25 14:28:26',
     'deleted_at' => NULL,
   ),
 );
