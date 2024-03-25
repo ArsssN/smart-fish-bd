@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sensor_units', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
-            $table->string('serial_number', 100)->nullable();
+            $table->string('serial_number', 100);
             $table->string('slug', 191)->unique();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

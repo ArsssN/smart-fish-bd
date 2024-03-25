@@ -45,18 +45,15 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{pond}', [PondController::class, 'show'])->name("api.v1.pond.show");
         });
     });
-
-
-
 });
 
 // Auth
 Route::prefix('/')->group(function () {
-    Route::post('login', LoginController::class);
-    // Route::post('register', RegisterController::class);
+    Route::post('login', LoginController::class)->name('api.v1.login');
+    // Route::post('register', RegisterController::class)->name('api.v1.register');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('logout', LogoutController::class);
+        Route::post('logout', LogoutController::class)->name('api.v1.logout');
     });
 });
 

@@ -89,10 +89,6 @@ class SensorUnitCrudController extends CrudController
                 'class' => 'form-group col-md-12'
             ],
             'default' => SensorType::query()->get()->pluck('id')->toArray(),
-
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
         ]);
         CRUD::addField([
             'name' => 'status',

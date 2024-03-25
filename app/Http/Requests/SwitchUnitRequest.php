@@ -25,7 +25,15 @@ class SwitchUnitRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|string|max:180',
+            'serial_number' => 'nullable|string',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'switches' => 'required|array',
+            'switches.*.number' => 'required|integer',
+            'switches.*.switchType' => 'required|exists:switch_types,id',
+            'switches.*.status' => 'required|in:on,off',
+            'switches.*.comment' => 'nullable|string',
         ];
     }
 

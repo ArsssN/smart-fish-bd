@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 180);
             $table->string('serial_number', 100)->nullable();
             $table->string('slug', 191)->unique();
-            $table->text('switches')->nullable();
+            $table->text('switches');
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 

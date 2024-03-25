@@ -25,7 +25,10 @@ class SwitchTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|string|max:180',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'remote_name' => 'nullable|string|max:180',
         ];
     }
 

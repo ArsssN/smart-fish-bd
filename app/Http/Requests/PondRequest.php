@@ -25,7 +25,11 @@ class PondRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|string|max:180',
+            'address' => 'nullable|string|max:191',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'project_id' => 'nullable|exists:projects,id',
         ];
     }
 

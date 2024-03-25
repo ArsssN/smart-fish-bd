@@ -25,7 +25,11 @@ class SensorUnitRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|string|max:180',
+            'serial_number' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'sensorTypes' => 'required|array',
         ];
     }
 
