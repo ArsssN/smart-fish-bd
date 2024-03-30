@@ -3,10 +3,18 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer"
+ * )
+ */
 class AuthController extends Controller
 {
     public function login(Request $request): \Illuminate\Http\JsonResponse
@@ -47,8 +55,28 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user(Request $request): \Illuminate\Http\JsonResponse
+    /**
+     * @OA\Get(
+     *     path="/api/v1/user/profile",
+     *     operationId="user",
+     *     summary="Get the authenticated user profile",
+     *     tags={"User"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User profile",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/UserResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     *  )
+     */
+    public function userProfile(Request $request): UserResource
     {
-        return response()->json($request->user());
+        return UserResource::make($request->user());
     }
 }

@@ -16,13 +16,11 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function () {
-    $jsoDec = json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","food":42,"tds":123.45,"rain":17,"temp":25.7,"o2":7.8,"ph":6}');
-    if ($jsoDec->type == 'sen') {
-
-    }
-    return view('welcome');
-});
+Route::get('/', \App\Http\Controllers\HomeController::class);
+Route::post(
+    '/contact/submit',
+    [\App\Http\Controllers\ContactUsController::class, 'submitContactUs']
+)->name('contact.submit');
 
 // php info
 /*Route::get('/phpinfo', function () {
@@ -50,4 +48,10 @@ Route::get('/test/sensors', function () {
     }
 
     return view('test.sensors', compact('sensors', 'sensor_message'));
+});
+
+
+// home redirect to /
+Route::get('/home', function () {
+    return redirect('/');
 });

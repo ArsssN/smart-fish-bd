@@ -6,6 +6,7 @@ use AfzalSabbir\SlugGenerator\Traits\SlugGenerator;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +56,16 @@ class SensorType extends Model
     public function sensors(): HasMany
     {
         return $this->hasMany(Sensor::class);
+    }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return BelongsToMany
+     */
+    public function sensorUnits(): BelongsToMany
+    {
+        return $this->belongsToMany(SensorUnit::class, 'sensor_type_sensor_unit');
     }
 
     /**

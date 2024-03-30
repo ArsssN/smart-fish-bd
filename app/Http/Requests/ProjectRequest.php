@@ -27,9 +27,17 @@ class ProjectRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
-            'sensors' => 'required|array',
-            'user_id' => 'required|exists:users,id',
+            /*'sensors' => 'required|array',
+            'aerators' => 'required|array',
+            'feeders' => 'required|array',*/
+            'ponds' => 'required|array',
+            /*'sensors.*' => 'required|exists:sensors,id',
+            'aerators.*' => 'required|exists:aerators,id',
+            'feeders.*' => 'required|exists:feeders,id',*/
+            'customer_id' => 'required|exists:users,id',
             'description' => 'nullable|string|max:500',
+            'gateway_name' => 'required|string|max:180',
+            'gateway_serial_number' => 'required|string|max:180',
         ];
     }
 

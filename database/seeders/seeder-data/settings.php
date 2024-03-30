@@ -3,10 +3,10 @@ $settings = array(
     0 =>
         array(
             'id'          => 1,
-            'key'         => 'smart-fish-bd_info',
-            'name'        => 'smart-fish-bd Info',
-            'description' => 'smart-fish-bd Info',
-            'value'       => '[{"title":"smart-fish-bd","sub_title":"This is smart-fish-bd subtitle","banner":"uploads\/event\/tools\/bg-default.jpg","favicon":"uploads\/smart-fish-bd\/favicon.png","logo":"uploads\/smart-fish-bd\/favicon.png","address":"Sylhet Zonal Office, Deptt. of  Printing & Publications House No-16, Road no-22, Block-D, Upashahor ,Sylhet","phone":"+880-3120002354","description":"<p>The&nbsp;<em>nock-bay<\/em>&nbsp;description<\/p>"}]',
+            'key'         => 'contact_info',
+            'name'        => 'Contact Info',
+            'description' => 'Contact Information of Smart Fish BD',
+            'value'       => '[{"title":"Smart Fish - Manage and Monitor Your Aquarium with Smart Fish","favicon":"uploads\/favicon.png","address":"Calash, Dhanbari, Tangail, 1997 Bangladesh\r\nMohammadpur, Dhaka","phone":"+880 1710-011072","email":"smartfishbd2024@gmail.com","description":null}]',
             'field'       => json_encode([
                 "name"      => "value",
                 "label"     => "Setting",
@@ -18,33 +18,23 @@ $settings = array(
                         "tab"  => "basic"
                     ],
                     [
-                        "name" => "sub_title",
-                        "type" => "text",
-                        "tab"  => "basic"
-                    ],
-                    [
-                        "name" => "banner",
-                        "type" => "browse",
-                        "tab"  => "media"
-                    ],
-                    [
                         "name" => "favicon",
                         "type" => "browse",
                         "tab"  => "media"
                     ],
                     [
-                        "name" => "logo",
-                        "type" => "browse",
-                        "tab"  => "media"
-                    ],
-                    [
                         "name" => "address",
-                        "type" => "address",
+                        "type" => "textarea",
                         "tab"  => "basic"
                     ],
                     [
                         "name" => "phone",
                         "type" => "text",
+                        "tab"  => "basic"
+                    ],
+                    [
+                        "name" => "email",
+                        "type" => "email",
                         "tab"  => "basic"
                     ],
                     [
@@ -65,23 +55,15 @@ $settings = array(
     1 =>
         array(
             'id'          => 2,
-            'key'         => 'invitation',
-            'name'        => 'Invitation',
-            'description' => 'Invitation',
-            'value'       => '[{"title":"What it does?","sub_title":null,"image":null,"description":"<p>This page allows you to check if you have been invited to an event.<\/p>"}]',
+            'key'         => 'about',
+            'name'        => 'About',
+            'description' => 'Website About Information',
+            'value'       => '[{"image":"uploads\/abouts\/about.jpg","description":"<p>Welcome to Smart Fish BD, a pioneering initiative established in 2024 by a team of exceptional individuals comprising scientists, engineers, software developers, and mobile app developers. Our mission is clear: to spearhead the development of a smart fishery system that spans across our entire nation.<\/p>\r\n\r\n<p>At Smart Fish BD, we recognize the critical importance of sustainable fisheries management for the well-being of our ecosystems, communities, and future generations. Through the integration of cutting-edge technology and interdisciplinary expertise, we aim to revolutionize the way fisheries are managed, monitored, and sustained.<\/p>\r\n\r\n<p>With a focus on innovation, efficiency, and environmental stewardship, our platform endeavors to empower fishermen, policymakers, and stakeholders with intelligent tools and insights. By harnessing the power of data analytics, IoT devices, and mobile applications, we strive to optimize fishing practices, mitigate risks, and promote responsible resource utilization.<\/p>\r\n\r\n<p>Join us on this transformative journey as we work tirelessly to build a smarter, more resilient fishery network that ensures the long-term viability of our aquatic ecosystems while supporting the livelihoods of fishing communities nationwide. Together, let&#39;s shape a future where technology and sustainability converge to foster thriving marine environments and prosperous societies.<\/p>"}]',
             'field'       => json_encode([
                 "name"      => "value",
-                "label"     => "Setting",
+                "label"     => "About",
                 "type"      => "repeatable",
                 "subfields" => [
-                    [
-                        "name" => "title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "sub_title",
-                        "type" => "text",
-                    ],
                     [
                         "name" => "image",
                         "type" => "browse",
@@ -103,193 +85,6 @@ $settings = array(
     2 =>
         array(
             'id'          => 3,
-            'key'         => 'contact_info',
-            'name'        => 'Contact Info',
-            'description' => 'Contact Info',
-            'value'       => '[{"title":"Contact Info","sub_title":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.","image":null,"description":"<ul>\r\n\t<li><strong>ADDRESS:&nbsp;<\/strong>1234 Street Name, City Name, United States<\/li>\r\n\t<li><strong>PHONE:&nbsp;<\/strong>+1 234 567 890<\/li>\r\n\t<li><strong>EMAIL:&nbsp;<\/strong><a href=\"mailto:abc@c.c\" target=\"_blank\">abc@c.c<\/a><\/li>\r\n<\/ul>"}]',
-            'field'       => json_encode([
-                "name"      => "value",
-                "label"     => "Setting",
-                "type"      => "repeatable",
-                "subfields" => [
-                    [
-                        "name" => "title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "sub_title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "image",
-                        "type" => "browse",
-                    ],
-                    [
-                        "name" => "description",
-                        "type" => "ckeditor",
-                    ],
-                ],
-                'init_rows' => 1, // number of empty rows to be initialized, by default 1
-                'min_rows'  => 1, // minimum rows allowed, when reached the "delete" buttons will be hidden
-                'max_rows'  => 1, // maximum rows allowed, when reached the "new item" button will be hidden
-
-            ]),
-            'active'      => 1,
-            'created_at'  => NULL,
-            'updated_at'  => NULL,
-        ),
-    3 =>
-        array(
-            'id'          => 4,
-            'key'         => 'sms_service',
-            'name'        => 'SMS Service',
-            'description' => 'The SMS service to use.',
-            'value'       => '[{"api_key":"gA1TaiQ8Q59T8Xeh3fHC7iyk7DidSeN824P3kyoe","sender_id":null,"url":"http:\/\/api.sms.net.bd","otp_length":"6","send_sms":"Yes","max_sms_number":"4","max_sms_time":"30"}]',
-            'field'       => json_encode([
-                'name'      => 'value',
-                'label'     => 'Setting',
-                'type'      => 'repeatable',
-                'subfields' => [
-                    [
-                        'name'  => 'api_key',
-                        'label' => 'API Key',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'name'  => 'sender_id',
-                        'label' => 'Sender ID',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'name'  => 'url',
-                        'label' => 'URL',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'name'    => 'otp_length',
-                        'label'   => 'OTP Length',
-                        'type'    => 'number',
-                        'default' => 6,
-                    ],
-                    [
-                        'name'    => 'send_sms',
-                        'label'   => 'Send SMS',
-                        'type'    => 'select2_from_array',
-                        'options' => [
-                            'Yes' => 'Yes',
-                            'No'  => 'No',
-                        ],
-                    ],
-                    // max_sms_number
-                    [
-                        'name'    => 'max_sms_number',
-                        'label'   => 'Max SMS Number',
-                        'type'    => 'number',
-                        'default' => 4,
-                    ],
-                    // max_sms_time
-                    [
-                        'name'    => 'max_sms_time',
-                        'label'   => 'Max SMS Time',
-                        'hint'    => 'In minutes',
-                        'type'    => 'number',
-                        'default' => 30,
-                    ],
-                ],
-                'min_rows'  => 1,
-                'max_rows'  => 1,
-                'init_rows' => 1,
-            ]),
-            'active'      => 1,
-            'created_at'  => NULL,
-            'updated_at'  => NULL,
-        ),
-    4 =>
-        array(
-            'id'          => 5,
-            'key'         => 'about',
-            'name'        => 'About',
-            'description' => 'Website about',
-            'value'       => '[{"title":"About","sub_title":null,"image":"uploads\/Jol Rong.jpg","description":"<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<\/p>"}]',
-            'field'       => json_encode([
-                "name"      => "value",
-                "label"     => "Setting",
-                "type"      => "repeatable",
-                "subfields" => [
-                    [
-                        "name" => "title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "sub_title",
-                        "type" => "text",
-                    ],
-                    [
-                        "name" => "image",
-                        "type" => "browse",
-                    ],
-                    [
-                        "name" => "description",
-                        "type" => "ckeditor",
-                    ],
-                ],
-                'init_rows' => 1, // number of empty rows to be initialized, by default 1
-                'min_rows'  => 1, // minimum rows allowed, when reached the "delete" buttons will be hidden
-                'max_rows'  => 1, // maximum rows allowed, when reached the "new item" button will be hidden
-
-            ]),
-            'active'      => 1,
-            'created_at'  => NULL,
-            'updated_at'  => NULL,
-        ),
-    5 =>
-        array(
-            'id'          => 6,
-            'key'         => 'email_service',
-            'name'        => 'Email Service',
-            'description' => 'The Email service to use.',
-            'value'       => '[{"send_email":"Yes","max_email_number":"8"}]',
-            'field'       => json_encode([
-                'name'      => 'value',
-                'label'     => 'Setting',
-                'type'      => 'repeatable',
-                'subfields' => [
-                    [
-                        'name'    => 'send_email',
-                        'label'   => 'Send Email',
-                        'type'    => 'select2_from_array',
-                        'options' => [
-                            'Yes' => 'Yes',
-                            'No'  => 'No',
-                        ],
-                    ],
-                    // max_email_number
-                    [
-                        'name'    => 'max_email_number',
-                        'label'   => 'Max Email Number',
-                        'type'    => 'number',
-                        'default' => 8,
-                    ],
-                    // max_email_time
-                    /*[
-                        'name'    => 'max_email_time',
-                        'label'   => 'Max Email Time',
-                        'hint'    => 'In minutes',
-                        'type'    => 'number',
-                        'default' => 30,
-                    ],*/
-                ],
-                'min_rows'  => 1,
-                'max_rows'  => 1,
-                'init_rows' => 1,
-            ]),
-            'active'      => 1,
-            'created_at'  => NULL,
-            'updated_at'  => NULL,
-        ),
-    6 =>
-        array(
-            'id'          => 7,
             'key'         => 'privacy_policy',
             'name'        => 'Privacy Policy',
             'description' => 'Privacy Policy',
@@ -318,9 +113,9 @@ $settings = array(
             'created_at'  => NULL,
             'updated_at'  => NULL,
         ),
-    7 =>
+    3 =>
         array(
-            'id'          => 8,
+            'id'          => 4,
             'key'         => 'terms_of_condition',
             'name'        => 'Terms of Condition',
             'description' => 'Terms of Condition',
@@ -349,16 +144,50 @@ $settings = array(
             'created_at'  => NULL,
             'updated_at'  => NULL,
         ),
-    8 =>
+    4 =>
         array(
-            'id'          => 9,
-            'key'         => 'terms_and_condition',
-            'name'        => 'Terms and Condition',
-            'description' => 'Terms and Condition',
-            'value'       => '[{"title":"Terms and Conditions","description":"<p>Welcome to smart-fish-bd!<\/p>\r\n\r\n<p>These terms and conditions outline the rules and regulations for the use of smart-fish-bd&#39;s Website, located at https:\/\/www.smart-fish-bd.com.<\/p>\r\n\r\n<p>By accessing this website we assume you accept these terms and conditions. Do not continue to use smart-fish-bd if you do not agree to take all of the terms and conditions stated on this page.<\/p>\r\n\r\n<p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: &quot;Client&quot;, &quot;You&quot; and &quot;Your&quot; refers to you, the person log on this website and compliant to the Company&rsquo;s terms and conditions. &quot;The Company&quot;, &quot;Ourselves&quot;, &quot;We&quot;, &quot;Our&quot; and &quot;Us&quot;, refers to our Company. &quot;Party&quot;, &quot;Parties&quot;, or &quot;Us&quot;, refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client&rsquo;s needs in respect of provision of the Company&rsquo;s stated services, in accordance with and subject to, prevailing law of Netherlands. Any use of the above terminology or other words in the singular, plural, capitalization and\/or he\/she or they, are taken as interchangeable and therefore as referring to same.<\/p>\r\n\r\n<h3><strong>Cookies<\/strong><\/h3>\r\n\r\n<p>We employ the use of cookies. By accessing smart-fish-bd, you agreed to use cookies in agreement with the smart-fish-bd&#39;s Privacy Policy.<\/p>\r\n\r\n<p>Most interactive websites use cookies to let us retrieve the user&rsquo;s details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate\/advertising partners may also use cookies.<\/p>\r\n\r\n<h3><strong>License<\/strong><\/h3>\r\n\r\n<p>Unless otherwise stated, smart-fish-bd and\/or its licensors own the intellectual property rights for all material on smart-fish-bd. All intellectual property rights are reserved. You may access this from smart-fish-bd for your own personal use subjected to restrictions set in these terms and conditions.<\/p>\r\n\r\n<p>You must not:<\/p>\r\n\r\n<ul>\r\n\t<li>Republish material from smart-fish-bd<\/li>\r\n\t<li>Sell, rent or sub-license material from smart-fish-bd<\/li>\r\n\t<li>Reproduce, duplicate or copy material from smart-fish-bd<\/li>\r\n\t<li>Redistribute content from smart-fish-bd<\/li>\r\n<\/ul>\r\n\r\n<p>This Agreement shall begin on the date hereof. Our Terms and Conditions were created with the help of the <a href=\"https:\/\/www.termsandconditionsgenerator.com\/\">Free Terms and Conditions Generator<\/a>.<\/p>\r\n\r\n<p>Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. smart-fish-bd does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of smart-fish-bd,its agents and\/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, smart-fish-bd shall not be liable for the Comments or for any liability, damages or expenses caused and\/or suffered as a result of any use of and\/or posting of and\/or appearance of the Comments on this website.<\/p>\r\n\r\n<p>smart-fish-bd reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.<\/p>\r\n\r\n<p>You warrant and represent that:<\/p>\r\n\r\n<ul>\r\n\t<li>You are entitled to post the Comments on our website and have all necessary licenses and consents to do so;<\/li>\r\n\t<li>The Comments do not invade any intellectual property right, including without limitation copyright, patent or trademark of any third party;<\/li>\r\n\t<li>The Comments do not contain any defamatory, libelous, offensive, indecent or otherwise unlawful material which is an invasion of privacy<\/li>\r\n\t<li>The Comments will not be used to solicit or promote business or custom or present commercial activities or unlawful activity.<\/li>\r\n<\/ul>\r\n\r\n<p>You hereby grant smart-fish-bd a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.<\/p>\r\n\r\n<h3><strong>Hyperlinking to our Content<\/strong><\/h3>\r\n\r\n<p>The following organizations may link to our Website without prior written approval:<\/p>\r\n\r\n<ul>\r\n\t<li>Government agencies;<\/li>\r\n\t<li>Search engines;<\/li>\r\n\t<li>News organizations;<\/li>\r\n\t<li>Online directory distributors may link to our Website in the same manner as they hyperlink to the Websites of other listed businesses; and<\/li>\r\n\t<li>System wide Accredited Businesses except soliciting non-profit organizations, charity shopping malls, and charity fundraising groups which may not hyperlink to our Web site.<\/li>\r\n<\/ul>\r\n\r\n<p>These organizations may link to our home page, to publications or to other Website information so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement or approval of the linking party and its products and\/or services; and (c) fits within the context of the linking party&rsquo;s site.<\/p>\r\n\r\n<p>We may consider and approve other link requests from the following types of organizations:<\/p>\r\n\r\n<ul>\r\n\t<li>commonly-known consumer and\/or business information sources;<\/li>\r\n\t<li>dot.com community sites;<\/li>\r\n\t<li>associations or other groups representing charities;<\/li>\r\n\t<li>online directory distributors;<\/li>\r\n\t<li>internet portals;<\/li>\r\n\t<li>accounting, law and consulting firms; and<\/li>\r\n\t<li>educational institutions and trade associations.<\/li>\r\n<\/ul>\r\n\r\n<p>We will approve link requests from these organizations if we decide that: (a) the link would not make us look unfavorably to ourselves or to our accredited businesses; (b) the organization does not have any negative records with us; (c) the benefit to us from the visibility of the hyperlink compensates the absence of smart-fish-bd; and (d) the link is in the context of general resource information.<\/p>\r\n\r\n<p>These organizations may link to our home page so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement or approval of the linking party and its products or services; and (c) fits within the context of the linking party&rsquo;s site.<\/p>\r\n\r\n<p>If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website, you must inform us by sending an e-mail to smart-fish-bd. Please include your name, your organization name, contact information as well as the URL of your site, a list of any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would like to link. Wait 2-3 weeks for a response.<\/p>\r\n\r\n<p>Approved organizations may hyperlink to our Website as follows:<\/p>\r\n\r\n<ul>\r\n\t<li>By use of our corporate name; or<\/li>\r\n\t<li>By use of the uniform resource locator being linked to; or<\/li>\r\n\t<li>By use of any other description of our Website being linked to that makes sense within the context and format of content on the linking party&rsquo;s site.<\/li>\r\n<\/ul>\r\n\r\n<p>No use of smart-fish-bd&#39;s logo or other artwork will be allowed for linking absent a trademark license agreement.<\/p>\r\n\r\n<h3><strong>iFrames<\/strong><\/h3>\r\n\r\n<p>Without prior approval and written permission, you may not create frames around our Webpages that alter in any way the visual presentation or appearance of our Website.<\/p>\r\n\r\n<h3><strong>Content Liability<\/strong><\/h3>\r\n\r\n<p>We shall not be hold responsible for any content that appears on your Website. You agree to protect and defend us against all claims that is rising on your Website. No link(s) should appear on any Website that may be interpreted as libelous, obscene or criminal, or which infringes, otherwise violates, or advocates the infringement or other violation of, any third party rights.<\/p>\r\n\r\n<h3><strong>Your Privacy<\/strong><\/h3>\r\n\r\n<p>Please read Privacy Policy<\/p>\r\n\r\n<h3><strong>Reservation of Rights<\/strong><\/h3>\r\n\r\n<p>We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it&rsquo;s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions.<\/p>\r\n\r\n<h3><strong>Removal of links from our website<\/strong><\/h3>\r\n\r\n<p>If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.<\/p>\r\n\r\n<p>We do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date.<\/p>\r\n\r\n<h3><strong>Disclaimer<\/strong><\/h3>\r\n\r\n<p>To the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:<\/p>\r\n\r\n<ul>\r\n\t<li>limit or exclude our or your liability for death or personal injury;<\/li>\r\n\t<li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;<\/li>\r\n\t<li>limit any of our or your liabilities in any way that is not permitted under applicable law; or<\/li>\r\n\t<li>exclude any of our or your liabilities that may not be excluded under applicable law.<\/li>\r\n<\/ul>\r\n\r\n<p>The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.<\/p>\r\n\r\n<p>As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.<\/p>"}]',
+            'id'          => 5,
+            'key'         => 'banner_images',
+            'name'        => 'Banner Images',
+            'description' => 'Top Banner Images of Smart Fish BD',
+            'value'       => "[\"uploads\\\\banners\\\\banner-1.jpg\",\"uploads\\\\banners\\\\banner-2.jpg\",\"uploads\\\\banners\\\\banner-3.jpg\",\"uploads\\\\banners\\\\banner-4.jpg\"]",
             'field'       => json_encode([
                 'name'      => 'value',
-                'label'     => 'Terms and Condition',
+                'label'     => 'Banner Images',
+                'type'      => 'browse_multiple',
+                'min_rows'  => 1,
+                'init_rows' => 1,
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
+    5 =>
+        array(
+            'id'          => 6,
+            'key'         => 'welcome_message',
+            'name'        => 'Welcome Message',
+            'description' => 'Welcome Message of Smart Fish BD',
+            'value'       => '<p>Welcome to Smart Fish BD, where innovation swims with purpose! Established in 2024, we are a team of brilliant minds, including scientists, engineers, software, and mobile app developers, dedicated to revolutionizing the fisheries industry across our country. Dive into our platform to discover cutting-edge solutions aimed at creating a smarter, more sustainable future for fishery management. Join us in our mission to harness technology and expertise to ensure the prosperity of our aquatic resources. Together, let&#39;s pave the way for a brighter tomorrow for both fishermen and fish alike.</p>',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Welcome Message',
+                'type'      => 'ckeditor',
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
+    6 =>
+        array(
+            'id'          => 7,
+            'key'         => 'services',
+            'name'        => 'Services',
+            'description' => 'Services',
+            'value'       => '[{"title":"Fishery Automation","image":"uploads\/services\/banner-1.jpg","description":"Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Full System Automation","image":"uploads\/services\/banner-2.jpg","description":"Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Software Solution","image":"uploads\/services\/banner-3.jpg","description":"Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Mobile Application","image":"uploads\/services\/banner-4.jpg","description":"Welcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."}]',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Services',
                 'type'      => 'repeatable',
                 'subfields' => [
                     [
@@ -367,39 +196,101 @@ $settings = array(
                         'type'  => 'text',
                     ],
                     [
+                        'name'  => 'image',
+                        'label' => 'Image',
+                        'type'  => 'browse',
+                    ],
+                    [
                         'name'  => 'description',
                         'label' => 'Description',
-                        'type'  => 'ckeditor',
+                        'type'  => 'textarea',
+                        'attributes' => [
+                            'rows' => '4'
+                        ],
                     ],
                 ],
                 'min_rows'  => 1,
-                'max_rows'  => 1,
                 'init_rows' => 1,
             ]),
             'active'      => 1,
             'created_at'  => NULL,
             'updated_at'  => NULL,
         ),
-    9 =>
+    7 =>
         array(
-            'id'          => 10,
-            'key'         => 'super_admin_settings',
-            'name'        => 'Super Admin Settings',
-            'description' => 'Super Admin Settings',
-            'value'       => '[{"can_user_be_created_from_invitee":"1"}]',
+            'id'          => 8,
+            'key'         => 'teams',
+            'name'        => 'Teams',
+            'description' => 'Our Team',
+            'value'       => '[{"name":"Mr. Juwel Ahmed","image":"uploads\/teams\/download.png","designation":"Consultant"},{"name":"Mr. Roni Saha","image":"uploads\/teams\/download.png","designation":"Consultant"},{"name":"Engr. Mehedi Hasan","image":"uploads\/teams\/download.png","designation":"Team Coordinator"},{"name":"Engr. Erfan Mahmud Tushar","image":"uploads\/teams\/download.png","designation":"IOT Engineer"},{"name":"Engr. Ekramul Islam Sumon","image":"uploads\/teams\/download.png","designation":"Software Developer"},{"name":"Engr. Haraprashad Bishwas Niloy","image":"uploads\/teams\/download.png","designation":"Mobile App Developer"}]',
             'field'       => json_encode([
                 'name'      => 'value',
-                'label'     => 'Terms and Condition',
+                'label'     => 'Teams',
                 'type'      => 'repeatable',
                 'subfields' => [
                     [
-                        'name'  => 'can_user_be_created_from_invitee',
-                        'label' => 'Can User be created from Invitee',
-                        'type'  => 'checkbox',
+                        'name'  => 'name',
+                        'label' => 'Name',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'name'  => 'image',
+                        'label' => 'Image',
+                        'type'  => 'browse',
+                        'hint'  => 'Image size should be 1:1 ratio',
+                    ],
+                    [
+                        'name'  => 'designation',
+                        'label' => 'Designation',
+                        'type'  => 'select_from_array',
+                        'options' => [
+                            'Consultant' => 'Consultant',
+                            'Team Coordinator' => 'Team Coordinator',
+                            'IOT Engineer' => 'IOT Engineer',
+                            'Software Developer' => 'Software Developer',
+                            'Mobile App Developer' => 'Mobile App Developer',
+                        ],
                     ],
                 ],
                 'min_rows'  => 1,
-                'max_rows'  => 1,
+                'init_rows' => 1,
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
+    8 =>
+        array(
+            'id'          => 9,
+            'key'         => 'products',
+            'name'        => 'Products',
+            'description' => 'Product List',
+            'value'       => '[{"title":"Automated Feeding Solutions - 1","image":"uploads\/products\/product-1.jpg","description":"Automated Feeding Solutions - 1\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 2","image":"uploads\/products\/product-2.jpg","description":"Automated Feeding Solutions - 2\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 3","image":"uploads\/products\/product-3.jpg","description":"Automated Feeding Solutions - 3\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions - 4","image":"uploads\/products\/product-4.jpg","description":"Automated Feeding Solutions - 4\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions-5","image":"uploads\/products\/product-5.jpg","description":"Automated Feeding Solutions-5\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions-6","image":"uploads\/products\/product-6.jpg","description":"Automated Feeding Solutions-6\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions-7","image":"uploads\/products\/product-7.jpg","description":"Automated Feeding Solutions-7\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."},{"title":"Automated Feeding Solutions-8","image":"uploads\/products\/product-8.jpg","description":"Automated Feeding Solutions-8\r\n\r\nWelcome to Smart Fish, where innovation meets aquatic excellence. Our mission is to revolutionize the way people experience and interact with fishkeeping. As avid enthusiasts of marine life, we understand the importance of creating a harmonious environment for both fish and their owners.\r\n\r\nAt Smart Fish, we leverage cutting-edge technology to bring you intelligent solutions for fish care. Whether you\'re a seasoned aquarist or just starting, our products are designed to make fish keeping not only enjoyable but also sustainable.\r\n\r\nOur team of marine biologists, engineers, and designers work collaboratively to develop state-of-the-art devices that monitor and optimize the conditions of your aquarium. From smart feeders to water quality sensors, we have everything you need to ensure the well-being of your aquatic companions.\r\n\r\nJoin us on this journey as we strive to create a world where fishkeeping is not just a hobby but a seamless integration of nature and technology. Explore the Smart Fish experience and discover a new era in aquatic living."}]',
+            'field'       => json_encode([
+                'name'      => 'value',
+                'label'     => 'Services',
+                'type'      => 'repeatable',
+                'subfields' => [
+                    [
+                        'name'  => 'title',
+                        'label' => 'Title',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'name'  => 'image',
+                        'label' => 'Image',
+                        'type'  => 'browse',
+                    ],
+                    [
+                        'name'  => 'description',
+                        'label' => 'Description',
+                        'type'  => 'textarea',
+                        'attributes' => [
+                            'rows' => '4'
+                        ],
+                    ],
+                ],
+                'min_rows'  => 1,
                 'init_rows' => 1,
             ]),
             'active'      => 1,

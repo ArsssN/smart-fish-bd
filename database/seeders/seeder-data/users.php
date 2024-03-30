@@ -1,6 +1,6 @@
 <?php
 $users = array (
-  0 =>
+  0 => 
   array (
     'id' => 1,
     'name' => 'Afzalur Rahman Sabbir',
@@ -14,21 +14,21 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  1 =>
+  1 => 
   array (
     'id' => 2,
     'name' => 'Admin',
-    'email' => 'admin@yopmail.com',
-    'username' => 'admin',
+    'email' => 'admin@gmail.com',
+    'username' => 'admin@gmail.com',
     'email_verified_at' => NULL,
-    'password' => '$2y$10$qXLHzXgR2MwIsxeyyDgFEOonsN0m1ET29JRht6NBVQ8Rim21jhF.u',
+    'password' => '$2y$10$5XPBl1lMO1rSQIGPPcx.Ku27E4BaRCZ658OmE02w8DNLV801w10HC',
     'is_admin' => 1,
     'remember_token' => NULL,
     'created_at' => NULL,
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  2 =>
+  2 => 
   array (
     'id' => 3,
     'name' => 'User',
@@ -42,7 +42,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  3 =>
+  3 => 
   array (
     'id' => 4,
     'name' => 'Super Admin',
@@ -51,15 +51,15 @@ $users = array (
     'email_verified_at' => NULL,
     'password' => '$2a$12$NMYqJXW3s8.LSURNY9lhfuXwDccCLPrZxQ.G81KL3M45J93KBrzXy',
     'is_admin' => 1,
-    'remember_token' => 'NUkcqw6GdE7qyf8T6Gqkaafg60Pl8hJuJh0kqEn3m5I2hf7P8DI94pv9Rcw8',
+    'remember_token' => 'qh0I7pcSMCQVXvDczMALStOUPW8pPZsrOtwDanvPhMddDY59TDoNeCS6nBJn',
     'created_at' => NULL,
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  4 =>
+  4 => 
   array (
     'id' => 5,
-    'name' => 'Customer 1',
+    'name' => 'Customer-1 Yopmail',
     'email' => 'customer-1@yopmail.com',
     'username' => 'customer-1',
     'email_verified_at' => NULL,
@@ -67,13 +67,13 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:12:38',
-    'updated_at' => '2024-03-06 02:12:38',
+    'updated_at' => '2024-03-25 14:29:22',
     'deleted_at' => NULL,
   ),
-  5 =>
+  5 => 
   array (
     'id' => 6,
-    'name' => 'Customer 2',
+    'name' => 'Customer-2 Yopmail',
     'email' => 'customer-2@yopmail.com',
     'username' => 'customer-2',
     'email_verified_at' => NULL,
@@ -81,13 +81,13 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:13:02',
-    'updated_at' => '2024-03-06 02:13:02',
+    'updated_at' => '2024-03-25 14:29:36',
     'deleted_at' => NULL,
   ),
-  6 =>
+  6 => 
   array (
     'id' => 7,
-    'name' => 'Customer 3',
+    'name' => 'Customer-3 Yopmail',
     'email' => 'customer-3@yopmail.com',
     'username' => 'customer-3',
     'email_verified_at' => NULL,
@@ -95,7 +95,7 @@ $users = array (
     'is_admin' => 0,
     'remember_token' => NULL,
     'created_at' => '2024-03-06 02:13:20',
-    'updated_at' => '2024-03-06 02:13:20',
+    'updated_at' => '2024-03-25 14:28:26',
     'deleted_at' => NULL,
   ),
 );

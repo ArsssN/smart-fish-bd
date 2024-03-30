@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProjectRequest;
+use App\Models\Aerator;
+use App\Models\Feeder;
+use App\Models\Pond;
+use App\Models\Sensor;
 use App\Models\User;
 use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class ProjectCrudController
@@ -21,6 +27,8 @@ class ProjectCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use InlineCreateOperation;
+    use FetchOperation;
     use CreatedAt, CreatedBy;
 
     /**
@@ -45,16 +53,16 @@ class ProjectCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::addColumn([
-            'name'   => 'user_id',
-            'label'  => 'Customer',
+            'name' => 'customer_id',
+            'label' => 'Customer',
             'entity' => 'customer',
-            'model'  => User::class,
+            'model' => User::class,
         ]);
         CRUD::column('status');
 
         // only project owner can see the project
         if (isCustomer()) {
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
+            $this->crud->addClause('where', 'customer_id', backpack_user()->id);
         }
 
         $this->createdByList();
@@ -62,13 +70,8 @@ class ProjectCrudController extends CrudController
 
         // filter
         $this->crud->addFilter([
-            'name'  => 'status',
-            'type'  => 'select2',
-            'label' => 'Status'
-        ], ['active' => 'Active', 'inactive' => 'Inactive']);
-        $this->crud->addFilter([
-            'name'  => 'customer',
-            'type'  => 'select2',
+            'name' => 'status',
+            'type' => 'select2',
             'label' => 'Status'
         ], ['active' => 'Active', 'inactive' => 'Inactive']);
 
@@ -91,14 +94,23 @@ class ProjectCrudController extends CrudController
 
         $isCustomer = isCustomer();
 
-        CRUD::field('name');
+        CRUD::field('name')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
         CRUD::addField([
-            'name'    => 'user_id',
-            'type'    => $isCustomer
+            'name' => 'status',
+            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+        CRUD::addField([
+            'name' => 'customer_id',
+            'type' => $isCustomer
                 ? 'hidden'
                 : 'select2',
-            'label'   => 'Customer',
-            'entity'  => 'customer',
+            'label' => 'Customer',
+            'entity' => 'customer',
             'options' => (function ($query) use ($isCustomer) {
                 if ($isCustomer) {
                     $user = $query->where('id', backpack_user()->id)->get();
@@ -113,32 +125,40 @@ class ProjectCrudController extends CrudController
             'default' => $isCustomer
                 ? backpack_user()->id
                 : null,
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
         ]);
-        /*CRUD::addField([
-            'name' => 'controllers',
-            'label' => 'Controllers',
-            'type' => 'select2_multiple',
-            'entity' => 'controllers',
-            'pivot' => true,
-
-            'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),
-        ]);*/
         CRUD::addField([
-            'name'   => 'sensors',
-            'label'  => 'Sensors',
-            'type'   => 'select2_multiple',
-            'entity' => 'sensors',
-            'pivot'  => true,
+            'name' => 'ponds',
+            'label' => 'Ponds',
+            'type' => 'relationship',
+            'entity' => 'ponds',
+            'pivot' => true,
+            'ajax' => true,
+            'inline_create' => [
+                'entity' => 'pond',
+                'field' => 'name',
+            ],
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
             }),*/
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'name' => 'gateway_name',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+        CRUD::addField([
+            'name' => 'gateway_serial_number',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
         ]);
         CRUD::field('description')->type('tinymce');
 
@@ -168,24 +188,33 @@ class ProjectCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
+        $this->crud->setShowView('backpack::crud.custom.show.product-show');
+        $this->crud->setShowContentClass('col-md-12');
+
         CRUD::column('name');
         CRUD::addColumn([
-            'name'   => 'user_id',
-            'label'  => 'Customer',
+            'name' => 'customer_id',
+            'label' => 'Customer',
             'entity' => 'customer',
-            'model'  => User::class,
+            'model' => User::class,
         ]);
         CRUD::addColumn([
-            'name'     => 'description',
-            'label'    => 'Description',
-            'type'     => 'closure',
-            'escaped'   => false, // allow HTML in this column
+            'name' => 'description',
+            'label' => 'Description',
+            'type' => 'closure',
+            'escaped' => false, // allow HTML in this column
             'function' => function ($entry) {
                 return $entry->description;
             },
         ]);
         CRUD::addColumn([
-            'name'     => 'sensors',
+            'name' => 'sensors',
+        ]);
+        CRUD::addColumn([
+            'name' => 'aerators',
+        ]);
+        CRUD::addColumn([
+            'name' => 'feeders',
         ]);
 
         CRUD::column('status');
@@ -193,5 +222,30 @@ class ProjectCrudController extends CrudController
         $this->createdByList();
         $this->createdAtList();
         $this->createdAtList('updated_at');
+    }
+
+    public function fetchSensors()
+    {
+        return $this->fetch(Sensor::class);
+    }
+
+    public function fetchAerators()
+    {
+        return $this->fetch(Aerator::class);
+    }
+
+    public function fetchFeeders()
+    {
+        return $this->fetch(Feeder::class);
+    }
+
+    public function fetchPonds()
+    {
+        return $this->fetch(Pond::class);
+    }
+
+    public function fetchUsers()
+    {
+        return $this->fetch(User::class);
     }
 }

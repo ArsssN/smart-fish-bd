@@ -13,11 +13,33 @@ use Illuminate\Support\Facades\Log;
 class LogoutController extends Controller
 {
     /**
+     * @OA\Post(
+     *     path="/api/v1/logout",
+     *     operationId="logout",
+     *     summary="Logout",
+     *     tags={"Auth"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Successfully logged out")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
     {
+        Log::info('User logged out', ['user' => $request->user()->id]);
+
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([

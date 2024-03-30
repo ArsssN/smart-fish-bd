@@ -18,6 +18,9 @@
         "afzalsabbir/slug-generator": "^0.0.1@alpha",
         "afzalsabbir/sslaracommerz": "^0.0.1@alpha",
         "arsbs23/pro": "^1.1",
+        "biscolab/laravel-recaptcha": "^6.0",
+        "darkaonline/l5-swagger": "^8.6",
+        "doctrine/annotations": "^2.0",
         "guzzlehttp/guzzle": "^7.5",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
@@ -27,7 +30,8 @@
         "php-mqtt/laravel-client": "^1.5",
         "psr/simple-cache": "2.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/laravel-responsecache": "^7.4"
+        "spatie/laravel-responsecache": "^7.4",
+        "zircote/swagger-php": "^4.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

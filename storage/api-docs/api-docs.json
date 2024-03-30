@@ -1,0 +1,978 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "API for mobile app",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/user/profile": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get the authenticated user profile",
+                "operationId": "user",
+                "responses": {
+                    "200": {
+                        "description": "User profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/change/photo": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change profile picture",
+                "operationId": "changeProfilePicture",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "photo"
+                                ],
+                                "properties": {
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile picture updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "photo": {
+                                            "type": "string",
+                                            "example": "uploads/user/profile/photo.jpg"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile picture updated successfully"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/change/user-details": {
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change user details",
+                "operationId": "changeUserDetails",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "farm_name",
+                                    "phone",
+                                    "address"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "farm_name": {
+                                        "type": "string",
+                                        "example": "Doe Farm"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Dhaka, Bangladesh"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User details updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User details updated successfully"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/change/password": {
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change password",
+                "operationId": "changePassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "Username",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Password",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccessToken"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username or password"
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/project/{project}/pond/list": {
+            "get": {
+                "tags": [
+                    "Pond"
+                ],
+                "summary": "Get all ponds",
+                "operationId": "pondList",
+                "parameters": [
+                    {
+                        "name": "project",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of ponds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PondResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/project/{project}/pond/{pond}": {
+            "get": {
+                "tags": [
+                    "Pond"
+                ],
+                "summary": "Get pond",
+                "operationId": "pondShow",
+                "parameters": [
+                    {
+                        "name": "project",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "pond",
+                        "in": "path",
+                        "description": "Pond ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pond",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PondWithUnitResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pond not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/project/list": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get all projects",
+                "operationId": "projectList",
+                "responses": {
+                    "200": {
+                        "description": "List of projects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProjectResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/project/{project}": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get project",
+                "operationId": "projectShow",
+                "parameters": [
+                    {
+                        "name": "project",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/sensor-type/list": {
+            "get": {
+                "tags": [
+                    "Sensor Type"
+                ],
+                "summary": "List of sensor types",
+                "operationId": "sensorTypeList",
+                "responses": {
+                    "200": {
+                        "description": "List of sensors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/sensor-type/feedback/{sensor}/{value}": {
+            "get": {
+                "tags": [
+                    "Sensor Type"
+                ],
+                "summary": "Sensor type feedback",
+                "operationId": "sensorTypeFeedback",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor ID: <br/>- 1: Oxygen Sensor<br/>- 2: TDS Sensor<br/>- 3: Temperature Sensor <br/>-\r\n              4: PH Sensor",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "1",
+                            "enum": [
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "description": "Sensor value",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sensor feedback",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Response from sensor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AccessToken": {
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string"
+                    },
+                    "expires_at": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "isAuthenticated": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "PondResource": {
+                "title": "Pond Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 180
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 191
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "PondWithUnitResource": {
+                "title": "Pond Unit Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 180
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 191
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "sensor_units": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SensorUnitResource"
+                        }
+                    },
+                    "switch_units": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SwitchUnitResource"
+                        }
+                    },
+                    "sensor_types": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SensorType"
+                        }
+                    },
+                    "switch_types": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SwitchType"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ProjectResource": {
+                "title": "Project Resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Project Name"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 191,
+                        "example": "project-name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Project description"
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
+                    },
+                    "gateway_name": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Gateway Name"
+                    },
+                    "gateway_serial_number": {
+                        "type": "string",
+                        "maxLength": 180,
+                        "example": "Gateway Serial Number"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorResource": {
+                "title": "Sensor Resource",
+                "description": "Represents a sensor resource.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the sensor.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the sensor.",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the sensor.",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sensor_type": {
+                        "$ref": "#/components/schemas/SensorType"
+                    },
+                    "description": {
+                        "description": "A description of the sensor.",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SensorType": {
+                "title": "Sensor Type",
+                "description": "Represents a sensor type.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the sensor type.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the sensor type.",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "The slug of the sensor type.",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "A description of the sensor type.",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "The status of the sensor type.",
+                        "type": "string",
+                        "default": "active",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "SensorUnitResource": {
+                "title": "Sensor Unit Resource",
+                "required": [
+                    "id",
+                    "name",
+                    "serial_number",
+                    "slug",
+                    "description",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the resource",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the resource",
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "description": "The serial number of the resource",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "The slug of the resource",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the resource",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the resource",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SwitchType": {
+                "title": "Switch Type",
+                "description": "Represents a sensor type.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the sensor type.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the sensor type.",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "A description of the sensor type.",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SwitchUnitResource": {
+                "title": "Switch Unit Resource",
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "description",
+                    "status",
+                    "switches"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the resource",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the resource",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "The slug of the resource",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the resource",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the resource",
+                        "type": "string"
+                    },
+                    "switches": {
+                        "description": "Array of switches",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Switch"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Switch": {
+                "required": [
+                    "number",
+                    "switchType",
+                    "status"
+                ],
+                "properties": {
+                    "number": {
+                        "description": "The number of the switch",
+                        "type": "string"
+                    },
+                    "switchType": {
+                        "description": "The type of the switch",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the switch (e.g., on/off)",
+                        "type": "string"
+                    },
+                    "comment": {
+                        "description": "Additional comment about the switch",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "is_email_verified": {
+                        "type": "boolean"
+                    },
+                    "is_phone_verified": {
+                        "type": "boolean"
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "n_id_photos": {
+                        "type": "string"
+                    },
+                    "account_holder_id": {
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    },
+                    "farm_name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "is_admin": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

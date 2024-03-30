@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserDetail extends Model
 {
@@ -23,6 +24,9 @@ class UserDetail extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $casts = [
+        'n_id_photos' => 'array',
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -35,6 +39,16 @@ class UserDetail extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Get the user that owns the UserDetail
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

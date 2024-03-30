@@ -1,0 +1,31 @@
+name: Deploy website on push in dev server
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          debug: true
+          host: ${{ secrets.S_HOST }}
+          username: ${{ secrets.S_USERNAME }}
+#          port: 21098
+          key: ${{ secrets.S_SSH_KEY }}
+#          passphrase: ${{ secrets.S_PASSWORD }}
+          script: |
+            cd /var/www/dev-smart-fish/
+            git reset --hard
+            php artisan down
+            git pull origin dev
+            composer install
+            php artisan o:c
+            php artisan migrate:fresh --seed
+            php artisan up
+            chmod -R 777 storage/framework/*
+            chmod -R 777 public/uploads/*

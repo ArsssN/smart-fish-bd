@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -84,6 +84,22 @@ class User extends Authenticatable
         return $this->hasOne(PasswordReset::class, 'email', 'email');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'customer_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function sensors(): HasMany
+    {
+        return $this->hasMany(Sensor::class, 'created_by', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -101,4 +117,9 @@ class User extends Authenticatable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function setNameAttribute($value): void
+    {
+        $userDetails = request()->userDetails;
+        $this->attributes['name'] = $userDetails['first_name'] . ' ' . $userDetails['last_name'];
+    }
 }

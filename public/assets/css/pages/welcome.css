@@ -1,0 +1,153 @@
+
+:root {
+    --primary: #00b7e4;
+    --primary-2: #007895;
+    --icon-color: #00b7e4;
+    --navbar-scroll-height: 4.1875rem;
+    /*--icon-color: var(--primary);*/
+}
+
+body {
+    background-color: var(--primary) !important;
+}
+
+.navbar {
+    background-color: var(--primary-2) !important;
+}
+
+#navbar-scroll-spy {
+    height: var(--navbar-scroll-height);
+}
+
+#navbar-scroll-spy .navbar-brand {
+    padding: 0;
+}
+
+#navbar-scroll-spy .navbar-brand img {
+    max-height: 2.8125rem;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+    color: var(--primary);
+}
+
+.title {
+    color: var(--dark);
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+#heroCarousel .carousel-item {
+    height: 450px;
+}
+
+#heroCarousel .carousel-item img {
+    height: 100%;
+    object-fit: contain;
+}
+
+#heroCarousel2 .carousel-item {
+    height: 450px;
+}
+
+#heroCarousel2 .carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+#our-service img.card-img-top,
+#our-product img.card-img-top {
+    height: 280px;
+    object-fit: cover;
+}
+
+img.card-img-top {
+    height: 280px;
+    object-fit: contain;
+}
+
+.owl-nav button {
+    position: absolute;
+    top: 50%;
+    background: #0a58ca !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 50% !important;
+    color: #fff !important;
+    opacity: .5;
+    transition: all .4s;
+    transform: translateY(-50%);
+}
+
+.owl-nav button:hover {
+    opacity: 1;
+}
+
+.owl-nav .owl-prev {
+    left: 0;
+}
+
+.owl-nav .owl-next {
+    right: 0;
+}
+
+@media (max-width: 768) {
+    #heroCarousel .carousel-item {
+        height: 250px;
+    }
+}
+
+/*@media (max-width: 991.98px) {
+    #navbar-scroll-spy {
+        height: auto;
+    }
+}*/
+
+.mr-1 {
+    margin-right: 0.25rem !important;
+}
+
+.footer-brand {
+    height: 2.8125rem;
+    text-decoration: none;
+}
+
+.navbar-brand .text,
+.footer-brand .text {
+    color: var(--icon-color);
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+footer .footer-brand .text {
+    color: #fff;
+}
+
+.navbar-brand .text b,
+.footer-brand .text b {
+    margin-right: 0.25rem !important;
+}
+
+div[data-bs-spy="scroll"] > section {
+    min-height: calc(100vh - var(--navbar-scroll-height));
+}
+
+div[data-bs-spy="scroll"] > section:not(:first-child) {
+    display: flex;
+    margin: auto;
+}
+
+div[data-bs-spy="scroll"] > section > div {
+    margin: auto;
+}

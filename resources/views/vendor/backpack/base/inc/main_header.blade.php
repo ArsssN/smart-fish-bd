@@ -6,7 +6,7 @@
             aria-label="{{ trans('backpack::base.toggle_navigation')}}">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand"
+    <a class="navbar-brand text-dark"
        style="opacity: 100"
        target="_blank"
        href="{{ url(config('backpack.base.home_link')) }}"

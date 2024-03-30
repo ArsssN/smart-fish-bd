@@ -7,6 +7,7 @@ use App\Traits\Crud\CreatedAt;
 use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class SensorCrudController
@@ -20,6 +21,7 @@ class SensorCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use InlineCreateOperation;
     use CreatedAt, CreatedBy;
 
     /**
@@ -70,12 +72,24 @@ class SensorCrudController extends CrudController
     {
         CRUD::setValidation(SensorRequest::class);
 
-        CRUD::field('name');
+        CRUD::field('name')->wrapperAttributes([
+            'class' => 'form-group col-md-6'
+        ]);
+        CRUD::addField([
+            'name' => 'status',
+            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
         CRUD::addField([
             'name' => 'sensorType',
             'label' => 'Sensor Type',
             'type' => 'select2',
             'entity' => 'sensorType',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
 
             /*'options' => (function ($query) {
                 return $query->where('created_by', backpack_user()->id)->get();
@@ -83,10 +97,9 @@ class SensorCrudController extends CrudController
         ]);
         CRUD::addField([
             'name' => 'serial_number',
-        ]);
-        CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
         CRUD::field('description')->type('tinymce');
 

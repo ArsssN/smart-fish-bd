@@ -1,18 +1,41 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
-<li class='nav-item mb-2'></li>
+<li class='nav-item mb-2'>Project</li>
 @if(!isCustomer())
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>Customers</span></a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-users"></i> <span>Customers</span></a></li>
 @endif
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-home'></i> Projects</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('project') }}'><i class='nav-icon la la-boxes'></i> Projects</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('pond') }}'><i class='nav-icon la la-water'></i> Ponds</a></li>
 @if(!isCustomer())
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('controller') }}'><i class='nav-icon la la-cogs'></i> Controllers</a></li>--}}
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor') }}'><i class='nav-icon la la-project-diagram'></i> Sensors</a></li>--}}
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-unit') }}'><i class='nav-icon la la-circle'></i> Sensor Units</a></li>
+
+@if(isShellAdminOrSuperAdmin())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sensor-type') }}'><i class='nav-icon la la-bullhorn'></i> Sensor Types</a></li>
 @endif
-<li class='nav-item mb-2'></li>
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch') }}'><i class='nav-icon la la-cogs'></i> Switches</a></li>--}}
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-unit') }}'><i class='nav-icon la la-circle-notch'></i> Switch Units</a></li>
+
+@if(isShellAdminOrSuperAdmin())
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-type') }}'><i class='nav-icon la la-tape'></i> Switch Types</a></li>
+@endif
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>--}}
+{{--<li class='nav-item mb-2'>Feeder</li>--}}
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>--}}
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder-history') }}'><i class='nav-icon la la-bacon'></i> Feeder histories</a></li>--}}
+@endif
+{{--<li class='nav-item mb-2'>Fish</li>--}}
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>--}}
+{{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish-weight') }}'><i class='nav-icon la la-weight-hanging'></i> Fish weights</a></li>--}}
+
+<li class='nav-item mb-2'>Other</li>
 @if(!isCustomer())
+    <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
+@endif
+
+@if(isShellAdminOrSuperAdmin())
 <!-- Footer Management -->
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#" title="Footer Link Management"><i class="nav-icon la la-link"></i> Footer Link Man.</a>
@@ -21,15 +44,13 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('footer-link') }}'><i class='nav-icon la la-external-link-square'></i> Link</a></li>
     </ul>
 </li>
+@endif
 
+@if(!isCustomer())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('contact-us') }}'><i class='nav-icon la la-envelope'></i> Contact us</a></li>
 {{--<li class="nav-item"><a class="nav-link" href="{{ getSettingsUrl('about') }}"><i class="la la-address-book nav-icon"></i> {{ trans('About') }}</a></li>--}}
 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('social') }}'><i class='nav-icon la la-share-alt'></i> Social</a></li>
-@endif
-
-@if(isShellAdminOrSuperAdmin())
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
 @endif
 
 @if(isShellAdminOrSuperAdmin())
