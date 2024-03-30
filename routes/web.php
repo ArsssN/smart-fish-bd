@@ -23,9 +23,21 @@ Route::post(
 )->name('contact.submit');
 
 // php info
-/*Route::get('/phpinfo', function () {
+Route::get('/test', function () {
+    $jsonDec = json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":25.7,"o2":2.8,"ph":6}}');
+    if ($jsonDec->type == 'sen') {
+        $serialNumber = hexdec($jsonDec->addr);
+        $serialNumber = '13423223';
+        $findSenUnit = \App\Models\SensorUnit::whereSerialNumber($serialNumber);
+        foreach ($jsonDec->data as $key=> $datum) {
+            if ($key == 'o2'){
+               return getOxygenSensorUpdate($datum);
+                dd($key, $datum);
+            }
+        }
+    }
     return phpinfo();
-});*/
+});
 
 Route::get('/test/sensors', function () {
     $sensors = Sensor::all();
