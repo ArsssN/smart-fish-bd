@@ -24,6 +24,7 @@
         "laravel/tinker": "^2.7",
         "laravel/vonage-notification-channel": "^3.0",
         "maatwebsite/excel": "^3.1",
+        "php-mqtt/laravel-client": "^1.5",
         "psr/simple-cache": "2.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-responsecache": "^7.4"
