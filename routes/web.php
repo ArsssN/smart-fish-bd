@@ -30,9 +30,10 @@ Route::get('/test', function () {
         $serialNumber = '13423223';
         $findSenUnit = \App\Models\SensorUnit::whereSerialNumber($serialNumber);
         foreach ($jsonDec->data as $key=> $datum) {
-            if ($key == 'o2'){
-               return getOxygenSensorUpdate($datum);
-                dd($key, $datum);
+            if ($key == 'o21'){
+                getOxygenSensorUpdate($datum);
+            }elseif ($key == 'temp'){
+                getTemperatureSensorUpdate($datum);
             }
         }
     }
