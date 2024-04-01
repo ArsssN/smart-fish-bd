@@ -60,7 +60,7 @@ $switch_units = array (
   array (
     'id' => 5,
     'name' => 'Switch Unit 5',
-    'serial_number' => 'switch-unit-5',
+    'serial_number' => '27',
     'slug' => 'switch-unit-5',
     'switches' => '[{"number":"1","switchType":"1","status":"on","comment":"C1"},{"number":"2","switchType":"2","status":"on","comment":null},{"number":"3","switchType":"1","status":"on","comment":null},{"number":"4","switchType":"2","status":"on","comment":null},{"number":"5","switchType":"1","status":"on","comment":null},{"number":"6","switchType":"1","status":"on","comment":null},{"number":"7","switchType":"2","status":"on","comment":null},{"number":"8","switchType":"1","status":"on","comment":"C8"},{"number":"9","switchType":"1","status":"on","comment":null},{"number":"10","switchType":"1","status":"on","comment":"C10"},{"number":"11","switchType":"1","status":"on","comment":null},{"number":"12","switchType":"2","status":"on","comment":"C12"}]',
     'description' => NULL,
@@ -160,12 +160,12 @@ $switch_units = array (
     'name' => 'Switch Unit 12',
     'serial_number' => 'switch-unit-12',
     'slug' => 'switch-unit-12',
-    'switches' => '[{"number":"1","switchType":"1","status":"on","comment":"C1"},{"number":"2","switchType":"2","status":"on","comment":null},{"number":"3","switchType":"1","status":"on","comment":null},{"number":"4","switchType":"2","status":"on","comment":null},{"number":"5","switchType":"1","status":"on","comment":null},{"number":"6","switchType":"1","status":"on","comment":null},{"number":"7","switchType":"2","status":"on","comment":null},{"number":"8","switchType":"1","status":"on","comment":"C8"},{"number":"9","switchType":"1","status":"on","comment":null},{"number":"10","switchType":"1","status":"on","comment":"C10"},{"number":"11","switchType":"1","status":"on","comment":null},{"number":"12","switchType":"2","status":"on","comment":"C12"}]',
+    'switches' => '[{"number":"1","switchType":"1","status":"on","comment":"C1"},{"number":"2","switchType":"2","status":"off","comment":null},{"number":"3","switchType":"1","status":"on","comment":null},{"number":"4","switchType":"2","status":"on","comment":null},{"number":"5","switchType":"1","status":"on","comment":null},{"number":"6","switchType":"1","status":"on","comment":null},{"number":"7","switchType":"2","status":"on","comment":null},{"number":"8","switchType":"1","status":"on","comment":"C8"},{"number":"9","switchType":"1","status":"on","comment":null},{"number":"10","switchType":"1","status":"on","comment":"C10"},{"number":"11","switchType":"1","status":"on","comment":null},{"number":"12","switchType":"2","status":"on","comment":"C12"}]',
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
     'created_at' => '2024-03-24 00:13:19',
-    'updated_at' => '2024-03-24 01:03:35',
+    'updated_at' => '2024-04-02 02:54:22',
     'deleted_at' => NULL,
   ),
 );
