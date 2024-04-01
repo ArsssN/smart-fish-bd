@@ -165,7 +165,7 @@ $switch_units = array (
     'status' => 'active',
     'created_by' => 4,
     'created_at' => '2024-03-24 00:13:19',
-    'updated_at' => '2024-03-30 16:36:19',
+    'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
 );
