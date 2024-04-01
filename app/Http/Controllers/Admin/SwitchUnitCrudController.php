@@ -77,49 +77,49 @@ class SwitchUnitCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'serial_number',
+            'name'              => 'serial_number',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ],
         ]);
         $switchType = SwitchType::pluck('name', 'id')->toArray();
         CRUD::addField([
-            'name' => 'switches',
-            'label' => 'Switches',
-            'type' => 'repeatable',
-            'fields' => [
+            'name'           => 'switches',
+            'label'          => 'Switches',
+            'type'           => 'repeatable',
+            'fields'         => [
                 [
-                    'name' => 'number',
-                    'label' => 'Switch number',
-                    'type' => 'text',
+                    'name'              => 'number',
+                    'label'             => 'Switch number',
+                    'type'              => 'text',
                     'wrapperAttributes' => [
                         'class' => 'form-group col-md-2'
                     ],
                 ],
                 [
-                    'name' => 'switchType',
-                    'label' => 'Switch type',
-                    'type' => 'select_from_array',
-                    'options' => $switchType,
-                    'default' => array_keys($switchType)[0] ?? null,
+                    'name'              => 'switchType',
+                    'label'             => 'Switch type',
+                    'type'              => 'select_from_array',
+                    'options'           => $switchType,
+                    'default'           => array_keys($switchType)[0] ?? null,
                     'wrapperAttributes' => [
                         'class' => 'form-group col-md-2'
                     ],
                 ],
                 [
-                    'name' => 'status',
-                    'label' => 'Status',
-                    'type' => 'select_from_array',
-                    'options' => ['on' => 'On', 'off' => 'Off'],
-                    'default' => 'on',
+                    'name'              => 'status',
+                    'label'             => 'Status',
+                    'type'              => 'select_from_array',
+                    'options'           => ['on' => 'On', 'off' => 'Off'],
+                    'default'           => 'on',
                     'wrapperAttributes' => [
                         'class' => 'form-group col-md-2'
                     ],
                 ],
                 [
-                    'name' => 'comment',
-                    'label' => 'Comment',
-                    'type' => 'text',
+                    'name'              => 'comment',
+                    'label'             => 'Comment',
+                    'type'              => 'text',
                     'wrapperAttributes' => [
                         'class' => 'form-group col-md-6'
                     ],
@@ -127,8 +127,8 @@ class SwitchUnitCrudController extends CrudController
             ],
             // options
             'new_item_label' => 'Add switch', // customize the text of the button
-            'init_rows' => 12, // number of empty rows to be initialized, by default 1
-            'min_rows' => 1, // minimum rows allowed, when reached the "delete" buttons will be hidden
+            'init_rows'      => 12, // number of empty rows to be initialized, by default 1
+            'min_rows'       => 1, // minimum rows allowed, when reached the "delete" buttons will be hidden
             //'max_rows' => 12, // maximum rows allowed, when reached the "new item" button will be hidden
         ]);
         CRUD::addField([
@@ -153,5 +153,56 @@ class SwitchUnitCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function setupShowOperation()
+    {
+        $this->crud->setShowContentClass('col-md-12');
+
+        CRUD::column('name');
+        CRUD::column('serial_number');
+        CRUD::column('description');
+        CRUD::column('status');
+
+        $this->crud->addColumn([
+            'name'     => 'switches',
+            'label'    => 'Switches',
+            'type'     => 'closure',
+            'escaped'  => false,
+            'function' => function ($entry) {
+                $switches = json_decode($entry->switches ?? '[]', true);
+                $html     = '<table class="table table-bordered">';
+                $html     .= '<thead>';
+                $html     .= '<tr>';
+                $html     .= '<th>Number</th>';
+                $html     .= '<th>Type</th>';
+                $html     .= '<th>Status</th>';
+                $html     .= '<th>Comment</th>';
+                $html     .= '</tr>';
+                $html     .= '</thead>';
+                $html     .= '<tbody>';
+
+                $switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
+                $relatedSwitches      = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id')->toArray();
+
+                foreach ($switches as $switch) {
+                    $relatedSwitchesName = $relatedSwitches[$switch['switchType']]['name'] ?? '-';
+
+                    $html .= '<tr>';
+                    $html .= "<td>{$switch['number']}</td>";
+                    $html .= "<td>{$relatedSwitchesName}</td>";
+                    $html .= "<td>{$switch['status']}</td>";
+                    $html .= "<td>{$switch['comment']}</td>";
+                    $html .= '</tr>';
+                }
+                $html .= '</tbody>';
+                $html .= '</table>';
+
+                return $html;
+            },
+        ]);
+
+        $this->createdByList();
+        $this->createdAtList();
     }
 }

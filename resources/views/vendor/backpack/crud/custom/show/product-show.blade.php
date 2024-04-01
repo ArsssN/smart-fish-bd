@@ -74,11 +74,33 @@
                                         <div class="col-sm-4">Customer</div>
                                         <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
                                         <div class="col-sm-6 col-lg-6 col-xl-7">
-{{--                                            <a href="{{ route('user.showDetailsRow', $entry->customer->id) }}" target="_blank">--}}
-                                                {{
-                                                    $entry->customer->name
-                                                }}
-{{--                                            </a>--}}
+                                            {{--                                            <a href="{{ route('user.showDetailsRow', $entry->customer->id) }}" target="_blank">--}}
+                                            {{
+                                                $entry->customer->name
+                                            }}
+                                            {{--                                            </a>--}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-sm-4">Gateway</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-6 col-lg-6 col-xl-7">
+                                            {{
+                                                $entry->gateway_name
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-sm-4">Gateway SN</div>
+                                        <div class="col-sm-2 col-lg-2 col-xl-1">:</div>
+                                        <div class="col-sm-6 col-lg-6 col-xl-7">
+                                            {{
+                                                $entry->gateway_serial_number
+                                            }}
                                         </div>
                                     </div>
                                 </div>
@@ -128,143 +150,127 @@
                             </div>
                         </div>
 
-                        <hr />
+                        <hr/>
 
-                        <div class="body container-fluid mb-3">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="accordion" id="accordionExample1">
-                                        <div class="card mb-0">
-                                            <div class="card-header bg-light" id="headingOne1">
-                                                <h2 class="mb-0">
-                                                    <button class="btn btn-link w-100 text-left text-dark" type="button" data-toggle="collapse"
-                                                            data-target="#collapseOne1" aria-expanded="true"
-                                                            aria-controls="collapseOne1">
-                                                        Sensors
-                                                    </button>
-                                                </h2>
-                                            </div>
+                        @forelse($entry->ponds as $pond)
+                            <div class="body container-fluid mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>
+                                            {{
+                                                $pond->name
+                                            }}
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body container-fluid mb-5">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="accordion" id="accordionExample1">
+                                            <div class="card mb-0">
+                                                <div class="card-header bg-light" id="headingOne1">
+                                                    <h2 class="mb-0">
+                                                        <button class="btn btn-link w-100 text-left text-dark"
+                                                                type="button"
+                                                                data-toggle="collapse"
+                                                                data-target="#collapseOne1"
+                                                                aria-expanded="true"
+                                                                aria-controls="collapseOne1">
+                                                            Sensor Units
+                                                        </button>
+                                                    </h2>
+                                                </div>
 
-                                            <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1"
-                                                 data-parent="#accordionExample1">
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>SN</th>
-                                                            <th>Sensor</th>
-                                                            <th>Sensor type</th>
-                                                            <th>Serial number</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @foreach($entry->sensors as $sensor)
+                                                <div id="collapseOne1"
+                                                     class="collapse show"
+                                                     aria-labelledby="headingOne1"
+                                                     data-parent="#accordionExample1">
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered">
+                                                            <thead>
                                                             <tr>
-                                                                <td>{{ $loop->iteration }}</td>
-                                                                <td>
-                                                                    <a href="{{ route('sensor.show', $sensor->id) }}" target="_blank">
-                                                                        {{ $sensor->name }}
-                                                                    </a>
-                                                                </td>
-                                                                <td>{{ $sensor->sensorType->name }}</td>
-                                                                <td>{{ $sensor->serial_number }}</td>
+                                                                <th>SN</th>
+                                                                <th>Sensor</th>
+                                                                <th>Sensor type</th>
+                                                                <th>Serial number</th>
                                                             </tr>
-                                                        @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($entry->sensors as $sensor)
+                                                                <tr>
+                                                                    <td>{{ $loop->iteration }}</td>
+                                                                    <td>
+                                                                        <a href="{{ route('sensor.show', $sensor->id) }}"
+                                                                           target="_blank">
+                                                                            {{ $sensor->name }}
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>{{ $sensor->sensorType->name }}</td>
+                                                                    <td>{{ $sensor->serial_number }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="accordion" id="accordionExample2">
-                                        <div class="card mb-0">
-                                            <div class="card-header bg-light" id="headingOne2">
-                                                <h2 class="mb-0">
-                                                    <button class="btn btn-link w-100 text-left text-dark" type="button" data-toggle="collapse"
-                                                            data-target="#collapseOne2" aria-expanded="true"
-                                                            aria-controls="collapseOne2">
-                                                        Feeders
-                                                    </button>
-                                                </h2>
-                                            </div>
-
-                                            <div id="collapseOne2" class="collapse show" aria-labelledby="headingOne2"
-                                                 data-parent="#accordionExample2">
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>SN</th>
-                                                            <th>Feeder</th>
-                                                            <th>Serial number</th>
-                                                            <th>Run status</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @foreach($entry->feeders as $feeder)
-                                                            <tr>
-                                                                <td>{{ $loop->iteration }}</td>
-                                                                <td>
-                                                                    <a href="{{ route('feeder.show', $feeder->id) }}" target="_blank">
-                                                                        {{ $feeder->name }}
-                                                                    </a>
-                                                                </td>
-                                                                <td>{{ $feeder->serial_number }}</td>
-                                                                <td>{{ $feeder->run_status }}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                        </tbody>
-                                                    </table>
+                                        <div class="accordion" id="accordionExample2">
+                                            <div class="card mb-0">
+                                                <div class="card-header bg-light" id="headingOne2">
+                                                    <h2 class="mb-0">
+                                                        <button class="btn btn-link w-100 text-left text-dark"
+                                                                type="button"
+                                                                data-toggle="collapse"
+                                                                data-target="#collapseOne2"
+                                                                aria-expanded="true"
+                                                                aria-controls="collapseOne2">
+                                                            Switch Units
+                                                        </button>
+                                                    </h2>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion" id="accordionExample3">
-                                        <div class="card mb-0">
-                                            <div class="card-header bg-light" id="headingOne3">
-                                                <h2 class="mb-0">
-                                                    <button class="btn btn-link w-100 text-left text-dark" type="button" data-toggle="collapse"
-                                                            data-target="#collapseOne3" aria-expanded="true"
-                                                            aria-controls="collapseOne3">
-                                                        Aerators
-                                                    </button>
-                                                </h2>
-                                            </div>
 
-                                            <div id="collapseOne3" class="collapse show" aria-labelledby="headingOne3"
-                                                 data-parent="#accordionExample3">
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>SN</th>
-                                                            <th>Aerator</th>
-                                                            <th>Serial number</th>
-                                                            <th>Run status</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @foreach($entry->aerators as $aerator)
+                                                <div id="collapseOne2"
+                                                     class="collapse show"
+                                                     aria-labelledby="headingOne2"
+                                                     data-parent="#accordionExample2">
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered">
+                                                            <thead>
                                                             <tr>
-                                                                <td>{{ $loop->iteration }}</td>
-                                                                <td>
-                                                                    <a href="{{ route('aerator.show', $aerator->id) }}" target="_blank">
-                                                                        {{ $aerator->name }}
-                                                                    </a>
-                                                                </td>
-                                                                <td>{{ $aerator->serial_number }}</td>
-                                                                <td>{{ $aerator->run_status }}</td>
+                                                                <th>SN</th>
+                                                                <th>Feeder</th>
+                                                                <th>Serial number</th>
+                                                                <th>Run status</th>
                                                             </tr>
-                                                        @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($entry->feeders as $feeder)
+                                                                <tr>
+                                                                    <td>{{ $loop->iteration }}</td>
+                                                                    <td>
+                                                                        <a href="{{ route('feeder.show', $feeder->id) }}"
+                                                                           target="_blank">
+                                                                            {{ $feeder->name }}
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>{{ $feeder->serial_number }}</td>
+                                                                    <td>{{ $feeder->run_status }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @empty
+                            <div class="alert alert-info">No data found</div>
+                        @endforelse
 
                         <div class="d-flex mt-4">
                             <div class="header container-fluid">

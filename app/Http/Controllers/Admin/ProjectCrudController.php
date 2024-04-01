@@ -207,15 +207,6 @@ class ProjectCrudController extends CrudController
                 return $entry->description;
             },
         ]);
-        CRUD::addColumn([
-            'name' => 'sensors',
-        ]);
-        CRUD::addColumn([
-            'name' => 'aerators',
-        ]);
-        CRUD::addColumn([
-            'name' => 'feeders',
-        ]);
 
         CRUD::column('status');
 

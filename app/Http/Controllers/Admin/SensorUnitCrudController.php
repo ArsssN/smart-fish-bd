@@ -74,25 +74,25 @@ class SensorUnitCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'serial_number',
+            'name'              => 'serial_number',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ],
         ]);
         CRUD::addField([
-            'name' => 'sensorTypes',
-            'label' => 'Sensor types',
-            'type' => 'relationship',
-            'entity' => 'sensorTypes',
-            'pivot' => true,
+            'name'              => 'sensorTypes',
+            'label'             => 'Sensor types',
+            'type'              => 'relationship',
+            'entity'            => 'sensorTypes',
+            'pivot'             => true,
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-12'
             ],
-            'default' => SensorType::query()->get()->pluck('id')->toArray(),
+            'default'           => SensorType::query()->get()->pluck('id')->toArray(),
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'name'              => 'status',
+            'type'              => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-12'
             ]
@@ -115,5 +115,29 @@ class SensorUnitCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function setupShowOperation()
+    {
+        $this->crud->setShowContentClass('col-md-12');
+
+        CRUD::column('name');
+        CRUD::column('serial_number');
+        CRUD::column('status');
+        CRUD::column('description');
+
+        // $this->sensorTypes
+        CRUD::addColumn([
+            'name'     => 'sensorTypes',
+            'label'    => 'Sensor types',
+            'type'     => 'relationship',
+            'entity'   => 'sensorTypes',
+            'attribute' => 'name',
+            'model'    => "App\Models\SensorType",
+            'pivot'    => true,
+        ]);
+
+        $this->createdByList();
+        $this->createdAtList();
     }
 }

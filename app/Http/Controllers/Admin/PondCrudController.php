@@ -191,6 +191,22 @@ class PondCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    // setupShowOperation
+    public function setupShowOperation()
+    {
+        $this->crud->setShowContentClass('col-md-12');
+
+        CRUD::column('name');
+        CRUD::column('project_id');
+        CRUD::column('sensorUnits');
+        CRUD::column('switchUnits');
+        CRUD::column('address');
+        CRUD::column('status');
+
+        $this->createdByList();
+        $this->createdAtList();
+    }
+
     public function fetchProject()
     {
         return $this->fetch(Project::class);
