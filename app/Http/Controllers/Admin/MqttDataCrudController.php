@@ -45,10 +45,50 @@ class MqttDataCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('project_id');
-        CRUD::column('type');
+        CRUD::addColumn([
+            'name'    => 'type',
+            'label'   => 'Type',
+            'type'    => 'closure',
+            'escaped' => false,
+            'function' => function ($entry) {
+                return ucfirst($entry->type);
+            },
+        ]);
 
         $this->createdByList();
         $this->createdAtList();
+
+        // filters
+        CRUD::addFilter([
+            'name'  => 'project_id',
+            'type'  => 'select2',
+            'label' => 'Project',
+        ], function () {
+            return \App\Models\Project::all()->pluck('name', 'id')->toArray();
+        }, function ($value) {
+            $this->crud->addClause('where', 'project_id', $value);
+        });
+
+        CRUD::addFilter([
+            'name'  => 'type',
+            'type'  => 'select2',
+            'label' => 'Type',
+        ], function () {
+            return ['sensor' => 'Sensor', 'switch' => 'Switch'];
+        }, function ($value) {
+            $this->crud->addClause('where', 'type', $value);
+        });
+
+        // date between created_at
+        CRUD::addFilter([
+            'name'  => 'created_at',
+            'type'  => 'date_range',
+            'label' => 'Created At',
+        ], false, function ($value) {
+            $dates = json_decode($value);
+            $this->crud->addClause('where', 'created_at', '>=', $dates->from);
+            $this->crud->addClause('where', 'created_at', '<=', $dates->to);
+        });
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -90,7 +130,15 @@ class MqttDataCrudController extends CrudController
         $this->crud->setShowContentClass('col-md-12');
 
         CRUD::column('project_id');
-        CRUD::column('type');
+        CRUD::addColumn([
+            'name'    => 'type',
+            'label'   => 'Type',
+            'type'    => 'closure',
+            'escaped' => false,
+            'function' => function ($entry) {
+                return ucfirst($entry->type);
+            },
+        ]);
 
         $this->createdByList();
         $this->createdAtList();
