@@ -85,5 +85,10 @@ $pond_sensor_unit = array (
     'pond_id' => 1,
     'sensor_unit_id' => 1,
   ),
+  17 => 
+  array (
+    'pond_id' => 6,
+    'sensor_unit_id' => 12,
+  ),
 );
 return $pond_sensor_unit;

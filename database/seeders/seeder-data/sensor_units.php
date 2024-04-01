@@ -17,7 +17,7 @@ $sensor_units = array (
   array (
     'id' => 2,
     'name' => 'Sensor Unit 2',
-    'serial_number' => '769',
+    'serial_number' => '261',
     'slug' => 'sensor-unit-2',
     'description' => NULL,
     'status' => 'active',
@@ -147,7 +147,7 @@ $sensor_units = array (
   array (
     'id' => 12,
     'name' => 'Sensor Unit 12',
-    'serial_number' => '583',
+    'serial_number' => '26',
     'slug' => 'sensor-unit-12',
     'description' => NULL,
     'status' => 'active',

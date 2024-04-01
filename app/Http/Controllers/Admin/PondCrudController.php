@@ -49,6 +49,9 @@ class PondCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('name');
+        CRUD::column('project_id')->label('Project')->type('relationship');
+        CRUD::column('sensorUnits')->label('Sensor units');
+        CRUD::column('switchUnits')->label('Switch units');
         CRUD::column('status');
 
         // only project owner can see the project
@@ -58,6 +61,46 @@ class PondCrudController extends CrudController
 
         $this->createdByList();
         $this->createdAtList();
+
+        // sensorUnits filter
+        $this->crud->addFilter([
+            'name'  => 'sensorUnits',
+            'type'  => 'select2',
+            'label' => 'Sensor Units'
+        ], function () {
+            return SensorUnit::query()->get()
+                ->map(function ($sensorUnit) {
+                    return [
+                        'id'   => $sensorUnit->id,
+                        'name' => $sensorUnit->serial_number . ' - ' . $sensorUnit->name,
+                    ];
+                })
+                ->pluck('name', 'id')
+            ->toArray();
+        }, function ($value) {
+            $this->crud->addClause('whereHas', 'sensorUnits', function ($query) use ($value) {
+                $query->where('sensor_unit_id', $value);
+            });
+        });
+
+        // project filter
+        $this->crud->addFilter([
+            'name'  => 'project_id',
+            'type'  => 'select2',
+            'label' => 'Project'
+        ], function () {
+            return Project::query()->get()
+                ->map(function ($project) {
+                    return [
+                        'id'   => $project->id,
+                        'name' => $project->name,
+                    ];
+                })
+                ->pluck('name', 'id')
+            ->toArray();
+        }, function ($value) {
+            $this->crud->addClause('where', 'project_id', $value);
+        });
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -80,24 +123,24 @@ class PondCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'project_id',
-            'type' => 'relationship',
-            'entity' => 'project',
-            'ajax' => true,
-            'inline_create' => [
+            'name'              => 'project_id',
+            'type'              => 'relationship',
+            'entity'            => 'project',
+            'ajax'              => true,
+            'inline_create'     => [
                 'entity' => 'project',
-                'field' => 'name',
+                'field'  => 'name',
             ],
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
         ]);
         CRUD::addField([
-            'name' => 'sensorUnits',
-            'label' => 'Sensor units',
-            'type' => 'relationship',
-            'entity' => 'sensorUnits',
-            'ajax' => true,
+            'name'              => 'sensorUnits',
+            'label'             => 'Sensor units',
+            'type'              => 'relationship',
+            'entity'            => 'sensorUnits',
+            'ajax'              => true,
             /*'inline_create' => [
                 'entity' => 'sensorUnit',
                 'field' => 'name',
@@ -107,11 +150,11 @@ class PondCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name' => 'switchUnits',
-            'label' => 'Switch units',
-            'type' => 'relationship',
-            'entity' => 'switchUnits',
-            'ajax' => true,
+            'name'              => 'switchUnits',
+            'label'             => 'Switch units',
+            'type'              => 'relationship',
+            'entity'            => 'switchUnits',
+            'ajax'              => true,
             /*'inline_create' => [
                 'entity' => 'switchUnit',
                 'field' => 'name',
@@ -121,8 +164,8 @@ class PondCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'name'              => 'status',
+            'type'              => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-12'
             ]
