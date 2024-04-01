@@ -48,6 +48,11 @@ class MqttData extends Model
         return $this->hasMany(MqttDataHistory::class);
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

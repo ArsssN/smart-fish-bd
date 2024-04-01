@@ -21,6 +21,7 @@
 @if(isShellAdminOrSuperAdmin())
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('switch-type') }}'><i class='nav-icon la la-tape'></i> Switch Types</a></li>
 @endif
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('mqtt-data') }}'><i class='nav-icon la la-info'></i> Mqtt data</a></li>
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('aerator') }}'><i class='nav-icon la la-air-freshener'></i> Aerators</a></li>--}}
 {{--<li class='nav-item mb-2'>Feeder</li>--}}
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('feeder') }}'><i class='nav-icon la la-bacon'></i> Feeders</a></li>--}}

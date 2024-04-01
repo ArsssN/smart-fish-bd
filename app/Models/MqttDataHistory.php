@@ -47,6 +47,36 @@ class MqttDataHistory extends Model
         return $this->belongsTo(MqttData::class);
     }
 
+    // pond
+    public function pond()
+    {
+        return $this->belongsTo(Pond::class);
+    }
+
+    // sensor unit
+    public function sensorUnit()
+    {
+        return $this->belongsTo(SensorUnit::class);
+    }
+
+    // sensor type
+    public function sensorType()
+    {
+        return $this->belongsTo(SensorType::class);
+    }
+
+    // switch unit
+    public function switchUnit()
+    {
+        return $this->belongsTo(SwitchUnit::class);
+    }
+
+    // switch type
+    public function switchType()
+    {
+        return $this->belongsTo(SwitchType::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

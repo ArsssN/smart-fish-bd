@@ -39,4 +39,5 @@ Route::group([
     Route::crud('switch-unit', 'SwitchUnitCrudController');
     Route::crud('switch-type', 'SwitchTypeCrudController');
     Route::crud('switch', 'SwitchCrudController');
+    Route::crud('mqtt-data', 'MqttDataCrudController');
 }); // this should be the absolute last line of this file
