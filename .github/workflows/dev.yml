@@ -25,7 +25,7 @@ jobs:
             git pull origin dev
             composer install
             php artisan o:c
-            php artisan migrate:fresh --seed
+            php artisan migrate
             php artisan up
             chmod -R 777 storage/framework/*
             chmod -R 777 public/uploads/*
