@@ -91,6 +91,10 @@ class MqttDataCrudController extends CrudController
 
         CRUD::column('project_id');
         CRUD::column('type');
+
+        $this->createdByList();
+        $this->createdAtList();
+
         CRUD::addColumn([
             'name'     => 'histories',
             'label'    => 'Histories',
@@ -100,6 +104,8 @@ class MqttDataCrudController extends CrudController
                 $histories = $entry->histories()
                     ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType')
                     ->get();
+
+//                dd($histories->groupBy('pond_id'));
 
                 $html = '<table class="table table-bordered table-striped">';
                 $html .= '<thead>';
@@ -113,28 +119,34 @@ class MqttDataCrudController extends CrudController
                     $html .= '<th>Switch Unit</th>';
                     $html .= '<th>Switch Type</th>';
                 }
-                
+
                 $html .= '<th>Value</th>';
                 $html .= '<th>Message</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
                 $html .= '<tbody>';
 
-                foreach ($histories as $history) {
+                if ($histories->isEmpty()) {
                     $html .= '<tr>';
-                    $html .= '<td>' . $history->pond->name . '</td>';
-
-                    if ($entry->type == 'sensor') {
-                        $html .= '<td>' . optional($history->sensorUnit)->name . '</td>';
-                        $html .= '<td>' . optional($history->sensorType)->name . '</td>';
-                    } else if ($entry->type == 'switch') {
-                        $html .= '<td>' . optional($history->switchUnit)->name . '</td>';
-                        $html .= '<td>' . optional($history->switchType)->name . '</td>';
-                    }
-
-                    $html .= '<td>' . $history->value . '</td>';
-                    $html .= '<td>' . $history->message . '</td>';
+                    $html .= '<td colspan="5">No data found</td>';
                     $html .= '</tr>';
+                } else {
+                    foreach ($histories as $history) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $history->pond->name . '</td>';
+
+                        if ($entry->type == 'sensor') {
+                            $html .= '<td>' . optional($history->sensorUnit)->name . '</td>';
+                            $html .= '<td>' . optional($history->sensorType)->name . '</td>';
+                        } else if ($entry->type == 'switch') {
+                            $html .= '<td>' . optional($history->switchUnit)->name . '</td>';
+                            $html .= '<td>' . optional($history->switchType)->name . '</td>';
+                        }
+
+                        $html .= '<td>' . $history->value . '</td>';
+                        $html .= '<td>' . $history->message . '</td>';
+                        $html .= '</tr>';
+                    }
                 }
 
                 $html .= '</tbody>';
