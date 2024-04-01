@@ -167,47 +167,71 @@
                             <div class="body container-fluid mb-5">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="accordion" id="accordionExample1">
+                                        <div class="accordion" id="accordionExample-{{$pond->id}}-{{$loop->index}}-0">
                                             <div class="card mb-0">
-                                                <div class="card-header bg-light" id="headingOne1">
+                                                <div class="card-header bg-light"
+                                                     id="headingOne-{{$pond->id}}-{{$loop->index}}-0">
                                                     <h2 class="mb-0">
                                                         <button class="btn btn-link w-100 text-left text-dark"
                                                                 type="button"
                                                                 data-toggle="collapse"
-                                                                data-target="#collapseOne1"
+                                                                data-target="#collapseOne-{{$pond->id}}-{{$loop->index}}"
                                                                 aria-expanded="true"
-                                                                aria-controls="collapseOne1">
+                                                                aria-controls="collapseOne-{{$pond->id}}-{{$loop->index}}">
                                                             Sensor Units
                                                         </button>
                                                     </h2>
                                                 </div>
 
-                                                <div id="collapseOne1"
+                                                <div id="collapseOne-{{$pond->id}}-{{$loop->index}}"
                                                      class="collapse show"
-                                                     aria-labelledby="headingOne1"
-                                                     data-parent="#accordionExample1">
+                                                     aria-labelledby="headingOne-{{$pond->id}}-{{$loop->index}}-0"
+                                                     data-parent="#accordionExample-{{$pond->id}}-{{$loop->index}}-0">
                                                     <div class="card-body">
                                                         <table class="table table-bordered">
                                                             <thead>
                                                             <tr>
                                                                 <th>SN</th>
                                                                 <th>Sensor</th>
-                                                                <th>Sensor type</th>
                                                                 <th>Serial number</th>
+                                                                <th>Status</th>
+                                                                <th>Description</th>
+                                                                <th>Sensor types</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach($entry->sensors as $sensor)
+                                                            @foreach($pond->sensorUnits as $sensorUnit)
                                                                 <tr>
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>
-                                                                        <a href="{{ route('sensor.show', $sensor->id) }}"
+                                                                        <a href="{{ route('sensor-unit.show', $sensorUnit->id) }}"
                                                                            target="_blank">
-                                                                            {{ $sensor->name }}
+                                                                            {{ $sensorUnit->name }}
                                                                         </a>
                                                                     </td>
-                                                                    <td>{{ $sensor->sensorType->name }}</td>
-                                                                    <td>{{ $sensor->serial_number }}</td>
+                                                                    <td>{{ $sensorUnit->serial_number }}</td>
+                                                                    <td>{{ $sensorUnit->status }}</td>
+                                                                    <td>{{ $sensorUnit->description }}</td>
+                                                                    <td>
+                                                                        <table class="table table-bordered table-sm">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>SN</th>
+                                                                                <th>Type</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            @foreach($sensorUnit->sensorTypes as $sensorType)
+                                                                                <tr>
+                                                                                    <td>{{ $loop->iteration }}</td>
+                                                                                    <td>{{ $sensorType->name }}
+                                                                                        <code>({{$sensorType->remote_name}})</code>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                             </tbody>
@@ -216,47 +240,81 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="accordion" id="accordionExample2">
+                                        <div class="accordion" id="accordionExample-{{$pond->id}}-{{$loop->index}}-1">
                                             <div class="card mb-0">
-                                                <div class="card-header bg-light" id="headingOne2">
+                                                <div class="card-header bg-light"
+                                                     id="headingOne-{{$pond->id}}-{{$loop->index}}-1">
                                                     <h2 class="mb-0">
                                                         <button class="btn btn-link w-100 text-left text-dark"
                                                                 type="button"
                                                                 data-toggle="collapse"
-                                                                data-target="#collapseOne2"
+                                                                data-target="#collapseOne-{{$pond->id}}-{{$loop->index}}-1"
                                                                 aria-expanded="true"
-                                                                aria-controls="collapseOne2">
+                                                                aria-controls="collapseOne-{{$pond->id}}-{{$loop->index}}-1">
                                                             Switch Units
                                                         </button>
                                                     </h2>
                                                 </div>
 
-                                                <div id="collapseOne2"
+                                                <div id="collapseOne-{{$pond->id}}-{{$loop->index}}-1"
                                                      class="collapse show"
-                                                     aria-labelledby="headingOne2"
-                                                     data-parent="#accordionExample2">
+                                                     aria-labelledby="headingOne-{{$pond->id}}-{{$loop->index}}-1"
+                                                     data-parent="#accordionExample-{{$pond->id}}-{{$loop->index}}-1">
                                                     <div class="card-body">
                                                         <table class="table table-bordered">
                                                             <thead>
                                                             <tr>
                                                                 <th>SN</th>
-                                                                <th>Feeder</th>
+                                                                <th>Name</th>
                                                                 <th>Serial number</th>
-                                                                <th>Run status</th>
+                                                                <th>Status</th>
+                                                                <th>Description</th>
+                                                                <th>Switches</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach($entry->feeders as $feeder)
+                                                            @foreach($pond->switchUnits as $switchUnit)
                                                                 <tr>
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>
-                                                                        <a href="{{ route('feeder.show', $feeder->id) }}"
+                                                                        <a href="{{ route('switch-unit.show', $switchUnit->id) }}"
                                                                            target="_blank">
-                                                                            {{ $feeder->name }}
+                                                                            {{ $switchUnit->name }}
                                                                         </a>
                                                                     </td>
-                                                                    <td>{{ $feeder->serial_number }}</td>
-                                                                    <td>{{ $feeder->run_status }}</td>
+                                                                    <td>{{ $switchUnit->serial_number }}</td>
+                                                                    <td>{{ $switchUnit->status }}</td>
+                                                                    <td>{{ $switchUnit->description }}</td>
+                                                                    <td>
+                                                                        <table class="table table-bordered table-sm">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>SN</th>
+                                                                                <th>Switch type</th>
+                                                                                <th>Status</th>
+                                                                                <th>Comment</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            @php
+                                                                                $switches = json_decode($switchUnit->switches ?? '[]');
+                                                                                $switches = collect($switches);
+                                                                                $switchTypeIDs = $switches->pluck('switchType')->unique()->toArray();
+                                                                                $switchTypes = \App\Models\SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+                                                                            @endphp
+                                                                            @foreach($switches as $switch)
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        {{ $switch->number }}
+                                                                                    </td>
+                                                                                    <td>{{ $switchTypes[$switch->switchType]->name ?? '-' }}</td>
+                                                                                    <td>{{ $switch->status }}</td>
+                                                                                    <td>{{ $switch->comment }}</td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                             </tbody>
