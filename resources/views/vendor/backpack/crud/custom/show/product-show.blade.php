@@ -153,13 +153,16 @@
                         <hr/>
 
                         @forelse($entry->ponds as $pond)
-                            <div class="body container-fluid mb-3">
+                            <div class="body container-fluid mb-1">
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>
-                                            {{
-                                                $pond->name
-                                            }}
+                                            <a href="{{ route('pond.show', $pond->id) }}"
+                                               target="_blank">
+                                                {{
+                                                    $pond->name
+                                                }}
+                                            </a>
                                         </h4>
                                     </div>
                                 </div>

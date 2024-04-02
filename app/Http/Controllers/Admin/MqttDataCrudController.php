@@ -153,7 +153,7 @@ class MqttDataCrudController extends CrudController
                     ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType')
                     ->get();
 
-//                dd($histories->groupBy('pond_id'));
+                //dd($histories->groupBy('pond_id'));
 
                 $html = '<table class="table table-bordered table-striped">';
                 $html .= '<thead>';

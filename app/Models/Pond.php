@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pond extends Model
@@ -68,6 +69,16 @@ class Pond extends Model
     public function switchUnits(): BelongsToMany
     {
         return $this->belongsToMany(SwitchUnit::class, 'pond_switch_unit');
+    }
+
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasMany
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(MqttDataHistory::class);
     }
 
     /*
