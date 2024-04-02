@@ -58,7 +58,7 @@ function saveMqttData($type, $jsonDec): void
                     });
             })->with("{$type}Units.{$type}Types");
         })
-        ->first();
+        ->firstOrFail();
 
     $projectID = $project->id;
     $mqttData  = \App\Models\MqttData::query()->create([
