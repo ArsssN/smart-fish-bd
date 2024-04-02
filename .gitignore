@@ -17,3 +17,4 @@ yarn-error.log
 frontend
 public/uploads/.tmb
 public/phpmyadmin
+/public/uploads/
