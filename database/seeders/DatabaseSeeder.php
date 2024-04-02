@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
             SwitchSeeder::class,
             SwitchUnitSeeder::class,
             PondSwitchUnitSeeder::class,
+            MqttDataSeeder::class,
             MqttDataHistorySeeder::class,
         ]);
     }
