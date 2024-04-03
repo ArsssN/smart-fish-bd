@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 class MqttCommandController extends Controller
 {
+    public static $abc = 'abc';
+
     /**
      * @param $type string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
@@ -16,20 +18,31 @@ class MqttCommandController extends Controller
      */
     public static function saveMqttData(string $type, object $responseMessage): string
     {
-        $remoteNames = collect($responseMessage->data)->keys()->toArray();
+        $newResponseMessage                        = new \stdClass();
+        $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
+        $newResponseMessage->type                  = $type;
+        $newResponseMessage->serial_number         = hexdec($responseMessage->addr);
+        $newResponseMessage->data                  = $responseMessage->data;
 
+        $remoteNames  = collect($responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec($responseMessage->addr);
-        $project      = Project::query()
-            ->where('gateway_serial_number', $responseMessage->gw_id)
-            ->with('ponds', function ($query) use ($type, $serialNumber, $remoteNames) {
-                $query->whereHas("{$type}Units", function ($query) use ($type, $serialNumber, $remoteNames) {
-                    $query->where('serial_number', $serialNumber)
-                        ->whereHas("{$type}Types", function ($query) use ($remoteNames) {
-                            $query->whereIn('remote_name', $remoteNames);
-                        });
-                })->with("{$type}Units.{$type}Types");
+
+        $model = 'App\Models\\' . Str::ucfirst($type) . 'Unit';
+
+        $typeUnit = $model::query()
+            ->where('serial_number', $serialNumber)
+            ->with("{$type}Types", "ponds")
+            ->whereHas("{$type}Types", function ($query) use ($remoteNames) {
+                $query->whereIn('remote_name', $remoteNames);
+            })
+            ->whereHas("ponds", function ($query) use ($newResponseMessage) {
+                $query->whereHas("project", function ($query) use ($newResponseMessage) {
+                    $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
+                });
             })
             ->firstOrFail();
+
+        $project = $typeUnit->ponds->firstOrFail()->project;
 
         $switchState = array_fill(0, 12, 0);
 
@@ -39,50 +52,68 @@ class MqttCommandController extends Controller
             'project_id' => $projectID,
             'data'       => json_encode($responseMessage),
         ]);
-        $project->ponds->each(function ($pond) use ($type, $responseMessage, $mqttData, &$switchState) {
-            $pondID    = $pond->id;
-            $typeUnits = "{$type}Units";
-            $pond->$typeUnits->each(function ($typeUnit) use ($type, $responseMessage, $mqttData, $pondID, &$switchState) {
-                $typeUnitID = $typeUnit->id;
-                $typeTypes  = "{$type}Types";
-                $typeUnit->$typeTypes->each(function ($typeType) use ($type, $responseMessage, $mqttData, $pondID, $typeUnitID, &$switchState) {
-                    $typeTypeID = $typeType->id;
-                    $remoteName = $typeType->remote_name;
-                    $value      = $responseMessage->data->$remoteName;
 
-                    $typeName         = Str::replace(' ', '', $typeType->name);
-                    $helperMethodName = "get{$typeName}Update";
-
-                    if (function_exists($helperMethodName)) {
-                        $type_message = ($helperMethodName(
-                            $value,
-                        ));
-
-                        // if array
-                        if (is_array($type_message) && $typeType->can_switch_sensor) {
-                            $switchState = mergeSwitchArray(
-                                $type_message,
-                                $switchState
-                            );
-
-                            $type_message = implode(', ', $type_message);
-                        }
-                    } else {
-                        $type_message = "No helper method found for $type: {$typeType->name}";
-                    }
-
-                    $mqttData->histories()->create([
-                        'pond_id'         => $pondID,
-                        "{$type}_unit_id" => $typeUnitID,
-                        "{$type}_type_id" => $typeTypeID,
-                        'value'           => $value,
-                        'type'            => $type,
-                        'message'         => $type_message,
-                    ]);
-                });
-            });
-        });
+        $typeUnit->{$type . 'Types'}
+            ->each(
+                function ($typeType)
+                use ($typeUnit, $type, $responseMessage, $mqttData, &$switchState) {
+                    self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, $switchState);
+                }
+            );
 
         return implode(', ', $switchState);
+    }
+
+    /**
+     * Save mqtt data history
+     *
+     * @param $typeType
+     * @param $typeUnit
+     * @param $type
+     * @param $responseMessage
+     * @param $mqttData
+     * @param $switchState
+     * @return void
+     */
+    private static function saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, &$switchState): void
+    {
+        $typeUnitID = $typeUnit->id;
+        $typeTypeID = $typeType->id;
+        $remoteName = $typeType->remote_name;
+        $value      = $responseMessage->data->$remoteName;
+
+        $typeName         = Str::replace(' ', '', $typeType->name);
+        $helperMethodName = "get{$typeName}Update";
+
+        if (function_exists($helperMethodName)) {
+            $type_message = ($helperMethodName(
+                $value,
+            ));
+
+            // if array
+            if (is_array($type_message) && $typeType->can_switch_sensor) {
+                $switchState = mergeSwitchArray(
+                    $type_message,
+                    $switchState
+                );
+
+                $type_message = implode(', ', $type_message);
+            }
+        } else {
+            $type_message = "No helper method found for $type: {$typeType->name}";
+        }
+
+        $typeUnit->ponds->each(function ($pond) use ($type, $mqttData, $typeUnitID, $typeTypeID, $value, $type_message) {
+            $pondID = $pond->id;
+
+            $mqttData->histories()->create([
+                'pond_id'         => $pondID,
+                "{$type}_unit_id" => $typeUnitID,
+                "{$type}_type_id" => $typeTypeID,
+                'value'           => $value,
+                'type'            => $type,
+                'message'         => $type_message,
+            ]);
+        });
     }
 }
