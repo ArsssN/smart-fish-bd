@@ -156,13 +156,14 @@ class PondCrudController extends CrudController
             'type'              => 'relationship',
             'entity'            => 'switchUnits',
             'ajax'              => true,
+            'data_source'       => route('pond.fetchUnusedSwitchUnits'),
             /*'inline_create' => [
                 'entity' => 'switchUnit',
                 'field' => 'name',
             ],*/
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
-            ]
+            ],
         ]);
         CRUD::addField([
             'name'              => 'status',
@@ -355,6 +356,14 @@ class PondCrudController extends CrudController
     public function fetchSwitchUnits()
     {
         return $this->fetch(SwitchUnit::class);
+    }
+
+    public function fetchUnusedSwitchUnits()
+    {
+        return SwitchUnit::query()
+            ->where('name', 'like', '%' . request()->get('q') . '%')
+            ->whereDoesntHave('ponds')
+            ->get();
     }
 
     private function getXUnitHistory($type, $xUnitHistories)

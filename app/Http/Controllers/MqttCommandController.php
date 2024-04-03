@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\MqttData;
+use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\NoReturn;
 
 class MqttCommandController extends Controller
 {
-    public static $abc = 'abc';
-
     /**
      * @param $type string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
@@ -60,6 +60,8 @@ class MqttCommandController extends Controller
                     self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, $switchState);
                 }
             );
+
+        self::changeSwitchStateOfSensorUnit($mqttData, $typeUnit->ponds, $switchState);
 
         return implode(', ', $switchState);
     }
@@ -114,6 +116,44 @@ class MqttCommandController extends Controller
                 'type'            => $type,
                 'message'         => $type_message,
             ]);
+        });
+    }
+
+    /**
+     * @param $mqttData
+     * @param $ponds
+     * @param $switchState
+     * @return void
+     */
+    private static function changeSwitchStateOfSensorUnit($mqttData, $ponds, $switchState): void
+    {
+        $ponds->each(function ($pond) use ($mqttData, $switchState) {
+            $mqttDataSwitchUnitHistories = [];
+            $pond->switchUnits->each(function ($switchUnit) use ($mqttData, $switchState, &$mqttDataSwitchUnitHistories) {
+
+                $switches = collect(json_decode($switchUnit->switches ?? '[]'));
+                $switches->map(function ($switch, $index) use ($switchUnit, $mqttData, $switchState) {
+                    $switch->status = $switchState[$index]
+                        ? 'on'
+                        : 'off';
+
+                    return $switch;
+                });
+
+                $switchUnit->switches = json_encode($switches);
+                $switchUnit->save();
+
+                $mqttDataSwitchUnitHistories[] = [
+                    'mqtt_data_id'   => $mqttData->id,
+                    'pond_id'        => $switchUnit->pivot->pond_id,
+                    'switch_unit_id' => $switchUnit->id,
+                    'switches'       => json_encode($switches),
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ];
+            });
+
+            MqttDataSwitchUnitHistory::query()->insert($mqttDataSwitchUnitHistories);
         });
     }
 }
