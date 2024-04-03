@@ -51,4 +51,5 @@ Route::group([
         Route::get('ajax-switch-unit-options', 'MqttDataHistoryCrudController@switchUnitOptions');
     });
     Route::crud('mqtt-data-history', 'MqttDataHistoryCrudController');
+    Route::crud('mqtt-data-switch-unit-history', 'MqttDataSwitchUnitHistoryCrudController');
 }); // this should be the absolute last line of this file

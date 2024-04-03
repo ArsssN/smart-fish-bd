@@ -339,6 +339,24 @@ class PondCrudController extends CrudController
             },
         ]);
 
+        CRUD::addColumn([
+            'name'     => 'switchUnitHistories',
+            'label'    => 'Switch unit histories',
+            'type'     => 'closure',
+            'escaped'  => false,
+            'function' => function ($entry) {
+                $count = $entry->switchUnitHistories->count() ?? 0;
+
+                return "<a target='_blank' href='" . route(
+                        'mqtt-data-switch-unit-history.index',
+                        [
+                            'pond_id' => $entry->id,
+                            'pond_id_text' => $entry->name
+                        ]
+                    ) . "'>View all switch unit histories</a> ($count)";
+            }
+        ]);
+
         $this->createdByList();
         $this->createdAtList();
     }

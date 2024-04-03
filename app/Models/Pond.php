@@ -31,9 +31,9 @@ class Pond extends Model
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
-        "target-field" => "name", // The field that will be used to generate the slug
-        "separator" => "-", // The separator that will be used to separate the words
-        "slug-field" => "slug", // The field that will be used to store the slug
+        "target-field"  => "name", // The field that will be used to generate the slug
+        "separator"     => "-", // The separator that will be used to separate the words
+        "slug-field"    => "slug", // The field that will be used to store the slug
     ];
 
     /*
@@ -79,6 +79,16 @@ class Pond extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(MqttDataHistory::class);
+    }
+
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasMany
+     */
+    public function switchUnitHistories(): HasMany
+    {
+        return $this->hasMany(MqttDataSwitchUnitHistory::class);
     }
 
     /*
