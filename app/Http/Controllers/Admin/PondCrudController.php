@@ -313,10 +313,25 @@ class PondCrudController extends CrudController
                 $switchUnitHistories =
                     (clone $historiesQuery)->where('switch_unit_id', '!=', null)->latest()->limit($limit)->get();
 
-                $html = "<h4>Sensor Histories <small>(Latest {$limit} data)</small></h4>";
+                $html =
+                    "<h4>Sensor Histories <small>(Latest {$limit} data) <a target='_blank' href='" . route(
+                        'mqtt-data-history.index',
+                        [
+                            'pond_id'      => $entry->id,
+                            'pond_id_text' => $entry->name,
+                            'type'         => 'sensor'
+                        ]
+                    ) . "'>View all</a></small></h4>";
                 $html .= $this->getXUnitHistory('sensor', $sensorUnitHistories);
 
-                $html .= "<h4>Switch Histories <small>(Latest {$limit} data)</small></h4>";
+                $html .= "<h4>Switch Histories <small>(Latest {$limit} data) <a target='_blank' href='" . route(
+                        'mqtt-data-history.index',
+                        [
+                            'pond_id'      => $entry->id,
+                            'pond_id_text' => $entry->name,
+                            'type'         => 'switch'
+                        ]
+                    ) . "'>View all</a></small></h4>";
                 $html .= $this->getXUnitHistory('switch', $switchUnitHistories);
 
                 return $html;

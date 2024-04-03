@@ -40,4 +40,15 @@ Route::group([
     Route::crud('switch-type', 'SwitchTypeCrudController');
     Route::crud('switch', 'SwitchCrudController');
     Route::crud('mqtt-data', 'MqttDataCrudController');
+
+
+    Route::prefix('mqtt-data-history')->group(function () {
+        Route::get('ajax-project-options', 'MqttDataHistoryCrudController@projectOptions');
+        Route::get('ajax-pond-options', 'MqttDataHistoryCrudController@pondOptions');
+        Route::get('ajax-sensor-type-options', 'MqttDataHistoryCrudController@sensorTypeOptions');
+        Route::get('ajax-sensor-unit-options', 'MqttDataHistoryCrudController@sensorUnitOptions');
+        Route::get('ajax-switch-type-options', 'MqttDataHistoryCrudController@switchTypeOptions');
+        Route::get('ajax-switch-unit-options', 'MqttDataHistoryCrudController@switchUnitOptions');
+    });
+    Route::crud('mqtt-data-history', 'MqttDataHistoryCrudController');
 }); // this should be the absolute last line of this file
