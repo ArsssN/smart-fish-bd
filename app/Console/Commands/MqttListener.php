@@ -31,7 +31,7 @@ class MqttListener extends Command
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe('#', function(string $topic, string $message) {
-
+            Log::info("'Received message on topic [%s]: %s',$topic, $message");
             echo sprintf('Received message on topic [%s]: %s',$topic, $message);
         });
 
