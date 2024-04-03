@@ -1,6 +1,6 @@
 <?php
 $sensor_types = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
     'name' => 'Oxygen Sensor',
@@ -9,12 +9,13 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'o2',
+    'can_switch_sensor' => 1,
     'created_by' => 4,
     'created_at' => '2024-03-06 01:41:24',
     'updated_at' => '2024-04-01 21:11:11',
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'name' => 'TDS Sensor',
@@ -23,12 +24,13 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'tds',
+    'can_switch_sensor' => 0,
     'created_by' => 4,
     'created_at' => '2024-03-06 01:41:29',
     'updated_at' => '2024-04-01 21:11:22',
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'Temperature Sensor',
@@ -37,12 +39,13 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'temp',
+    'can_switch_sensor' => 1,
     'created_by' => 4,
     'created_at' => '2024-03-06 01:41:40',
     'updated_at' => '2024-04-01 21:11:01',
     'deleted_at' => NULL,
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'name' => 'PH Sensor',
@@ -51,12 +54,13 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'ph',
+    'can_switch_sensor' => 0,
     'created_by' => 4,
     'created_at' => '2024-03-06 01:41:47',
     'updated_at' => '2024-04-01 21:10:49',
     'deleted_at' => NULL,
   ),
-  4 => 
+  4 =>
   array (
     'id' => 5,
     'name' => 'Food Sensor',
@@ -65,12 +69,13 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'food',
+    'can_switch_sensor' => 0,
     'created_by' => 1,
     'created_at' => '2024-04-01 21:11:40',
     'updated_at' => '2024-04-01 21:11:40',
     'deleted_at' => NULL,
   ),
-  5 => 
+  5 =>
   array (
     'id' => 6,
     'name' => 'Rain Sensor',
@@ -79,6 +84,7 @@ $sensor_types = array (
     'status' => 'active',
     'customer_id' => NULL,
     'remote_name' => 'rain',
+    'can_switch_sensor' => 0,
     'created_by' => 1,
     'created_at' => '2024-04-01 21:12:06',
     'updated_at' => '2024-04-01 21:12:06',

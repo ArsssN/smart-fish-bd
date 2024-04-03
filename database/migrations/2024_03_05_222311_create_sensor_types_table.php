@@ -24,6 +24,8 @@ return new class extends Migration
             )->nullable()->constrained('users')->references('id')->cascadeOnDelete();
             $table->string('remote_name', 180)->nullable();
 
+            $table->boolean('can_switch_sensor')->default(false);
+
             $table->foreignId('created_by')->nullable()->constrained('users')->references('id')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

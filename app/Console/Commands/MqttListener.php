@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\MqttCommandController;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PhpMqtt\Client\Facades\MQTT;
@@ -23,6 +24,20 @@ class MqttListener extends Command
     protected $description = 'Subscribe To MQTT topic';
 
     /**
+     * The message to be displayed when the command is executed.
+     *
+     * @var string
+     */
+    protected $message;
+
+    /**
+     * The topic to be subscribed to.
+     *
+     * @var string
+     */
+    protected $topic;
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -30,12 +45,44 @@ class MqttListener extends Command
     public function handle()
     {
         $mqtt = MQTT::connection();
-        $mqtt->subscribe('#', function(string $topic, string $message) {
+        $mqtt->subscribe('#', function (string $topic, string $message) {
+            $this->topic   = $topic;
+            $this->message = $message;
 
-            echo sprintf('Received message on topic [%s]: %s',$topic, $message);
+            $feedBackMessage = $this->processResponse();
+
+            MQTT::publish($topic, $feedBackMessage);
+
+            echo sprintf('Received message on topic [%s]: %s', $topic, $message);
         });
 
         $mqtt->loop(true);
         return Command::SUCCESS;
+    }
+
+    /**
+     * Process the response from the MQTT server.
+     *
+     * @return string
+     */
+    private function processResponse(): string
+    {
+        // $responseMessage =
+        //  json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":25.7,"o2":2.8,"ph":6}}');
+        $responseMessage = json_decode($this->message);
+        $feedBackMessage = '';
+
+        switch ($responseMessage->type) {
+            case 'sen':
+                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
+                break;
+            case 'swi':
+                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
+                break;
+            default:
+                break;
+        }
+
+        return $feedBackMessage;
     }
 }
