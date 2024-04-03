@@ -14,7 +14,7 @@ class MqttListener extends Command
      *
      * @var string
      */
-    protected $signature = 'mqtt:subscribe';
+    protected $signature = 'mqtt:listen';
 
     /**
      * The console command description.
@@ -53,7 +53,8 @@ class MqttListener extends Command
 
             MQTT::publish($topic, $feedBackMessage);
 
-            echo sprintf('Received message on topic [%s]: %s', $topic, $message);
+            Log::info("'Received message on topic [%s]: %s',$topic, $message");
+            echo sprintf('Received message on topic [%s]: %s',$topic, $message);
         });
 
         $mqtt->loop(true);
