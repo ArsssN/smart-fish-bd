@@ -170,6 +170,7 @@ class MqttDataCrudController extends CrudController
 
                 $html .= '<th>Value</th>';
                 $html .= '<th>Message</th>';
+                $html .= '<th>Created At</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
                 $html .= '<tbody>';
@@ -193,6 +194,7 @@ class MqttDataCrudController extends CrudController
 
                         $html .= '<td>' . $history->value . '</td>';
                         $html .= '<td>' . $history->message . '</td>';
+                        $html .= '<td title="'.$history->created_at->diffForHumans().'">' . $history->created_at . '</td>';
                         $html .= '</tr>';
                     }
                 }

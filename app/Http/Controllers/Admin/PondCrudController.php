@@ -218,7 +218,8 @@ class PondCrudController extends CrudController
 
                 $entry->sensorUnits->each(function ($sensorUnit) use (&$html) {
                     $html .= "<tr>";
-                    $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id) . "'>{$sensorUnit->name}</a></td>";
+                    $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id)
+                             . "'>{$sensorUnit->name}</a></td>";
                     $html .= "<td>";
                     $html .= "<ul>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html) {
@@ -254,7 +255,8 @@ class PondCrudController extends CrudController
 
                 $entry->switchUnits->each(function ($switchUnit) use (&$html) {
                     $html     .= "<tr>";
-                    $html     .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id) . "'>{$switchUnit->name}</a></td>";
+                    $html     .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id)
+                                 . "'>{$switchUnit->name}</a></td>";
                     $html     .= "<td>";
                     $html     .= "<table class='table table-bordered table-striped table-sm'>";
                     $html     .= "<thead>";
@@ -268,8 +270,8 @@ class PondCrudController extends CrudController
                     $html     .= "<tbody>";
                     $switches = collect(json_decode($switchUnit->switches));
 
-                    $switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
-                    $relatedSwitches      = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+                    $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
+                    $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
                     $switches->each(function ($switch) use (&$html, $relatedSwitches) {
                         $html .= "<tr>";
@@ -302,21 +304,19 @@ class PondCrudController extends CrudController
             'type'     => 'closure',
             'escaped'  => false,
             'function' => function ($entry) {
-                $histories = $entry->histories()
-                    ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType')
-                    ->get();
+                $limit          = 10;
+                $historiesQuery = $entry->histories()
+                    ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType');
 
-                $sensorUnitHistories = $histories->filter(function ($history) {
-                    return $history->sensorUnit;
-                });
-                $switchUnitHistories = $histories->filter(function ($history) {
-                    return $history->switchUnit;
-                });
+                $sensorUnitHistories =
+                    (clone $historiesQuery)->where('sensor_unit_id', '!=', null)->latest()->limit($limit)->get();
+                $switchUnitHistories =
+                    (clone $historiesQuery)->where('switch_unit_id', '!=', null)->latest()->limit($limit)->get();
 
-                $html = "<h4>Sensor Histories</h4>";
+                $html = "<h4>Sensor Histories <small>(Latest {$limit} data)</small></h4>";
                 $html .= $this->getXUnitHistory('sensor', $sensorUnitHistories);
 
-                $html .= "<h4>Switch Histories</h4>";
+                $html .= "<h4>Switch Histories <small>(Latest {$limit} data)</small></h4>";
                 $html .= $this->getXUnitHistory('switch', $switchUnitHistories);
 
                 return $html;
@@ -353,6 +353,7 @@ class PondCrudController extends CrudController
 
         $html .= '<th>Value</th>';
         $html .= '<th>Message</th>';
+        $html .= '<th>Created At</th>';
         $html .= '</tr>';
         $html .= '</thead>';
         $html .= '<tbody>';
@@ -370,6 +371,7 @@ class PondCrudController extends CrudController
 
                 $html .= '<td>' . $history->value . '</td>';
                 $html .= '<td>' . $history->message . '</td>';
+                $html .= '<td title="' . $history->created_at->diffForHumans() . '">' . $history->created_at . '</td>';
                 $html .= '</tr>';
             }
         }

@@ -133,14 +133,14 @@ if (!function_exists('setPermissionsToSuperAdmin')) {
      */
     function setPermissionsToSuperAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
-        $guard_name = config('backpack.base.guard') ?? 'web';
+        $guard_name        = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except = array_unique(array_merge($except, []));
-        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $except        = array_unique(array_merge($except, []));
+        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -165,14 +165,14 @@ if (!function_exists('setPermissionsToAdmin')) {
      */
     function setPermissionsToAdmin(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
-        $guard_name = config('backpack.base.guard') ?? 'web';
+        $guard_name        = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except = array_unique(array_merge($except, getAdminPermissionExcepts()));
-        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $except        = array_unique(array_merge($except, getAdminPermissionExcepts()));
+        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -197,14 +197,14 @@ if (!function_exists('setPermissionsToCustomer')) {
      */
     function setPermissionsToCustomer(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = []): void
     {
-        $guard_name = config('backpack.base.guard') ?? 'web';
+        $guard_name        = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query();
 
-        $except = array_unique(array_merge($except, getCustomerPermissionExcepts()));
-        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $except        = array_unique(array_merge($except, getCustomerPermissionExcepts()));
+        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -323,20 +323,20 @@ if (!function_exists('setPermissionsToUser')) {
      */
     function setPermissionsToUser(array $permissionIds, Role $role, bool $manual = true, array $accept = [], array $except = [])
     {
-        $permissionIds = $manual
+        $permissionIds     = $manual
             ? $permissionIds
             : [];
-        $guard_name = config('backpack.base.guard') ?? 'web';
+        $guard_name        = config('backpack.base.guard') ?? 'web';
         $permissionBuilder = Permission::query()->where('guard_name', $guard_name);
 
-        $except = array_unique(array_merge(
+        $except        = array_unique(array_merge(
             $except,
             $permissionBuilder->pluck('name')->toArray()
         ));
-        $exceptIDs = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
+        $exceptIDs     = $permissionBuilder->whereIn('name', $except)->pluck('id')->toArray();
         $permissionIds = array_diff($permissionIds, $exceptIDs);
 
-        $acceptIDs = $permissionBuilder->where('guard_name', $guard_name)
+        $acceptIDs     = $permissionBuilder->where('guard_name', $guard_name)
             ->whereIn('name', $accept)
             ->pluck('id')
             ->toArray();
@@ -444,20 +444,20 @@ if (!function_exists('crudAccessList')) {
     function crudAccessList(): array
     {
         return [
-            'bulkdelete' => 'bulkdelete',
-            'bulkclone' => 'bulkclone',
-            'clone' => 'clone',
-            'create' => 'create',
-            'delete' => 'delete',
-            'fetch' => 'fetch',
+            'bulkdelete'   => 'bulkdelete',
+            'bulkclone'    => 'bulkclone',
+            'clone'        => 'clone',
+            'create'       => 'create',
+            'delete'       => 'delete',
+            'fetch'        => 'fetch',
             'inlinecreate' => 'inlinecreate',
-            'index' => 'list',
-            'show' => 'show',
-            'reorder' => 'reorder',
-            'update' => 'update',
+            'index'        => 'list',
+            'show'         => 'show',
+            'reorder'      => 'reorder',
+            'update'       => 'update',
 
             'revisions' => 'revisions',
-            'revise' => 'revise',
+            'revise'    => 'revise',
         ];
     }
 }
@@ -468,10 +468,10 @@ if (!function_exists('denyAccessArray')) {
      */
     function denyAccessArray(string $route = null): array
     {
-        $routeArray = explode('.', $route);
+        $routeArray     = explode('.', $route);
         $crudAccessList = crudAccessList();
-        $action = end($routeArray);
-        $hasPermission = userHasPermission($route);
+        $action         = end($routeArray);
+        $hasPermission  = userHasPermission($route);
 
         return $hasPermission
             ? []
@@ -503,28 +503,28 @@ if (!function_exists('userHasPermission')) {
         }
 
         $routePost = [
-            'create' => 'create',
-            'store' => 'create',
-            'destroy' => 'destroy',
-            'edit' => 'edit',
-            'info' => 'info',
-            'update' => 'edit',
-            'index' => 'index',
-            'search' => 'index',
-            'show' => 'show',
-            'showDetailsRow' => 'show',
-            'reorder' => 'reorder',
-            'popup' => 'popup',
-            'theme' => 'theme',
-            'connector' => 'connector',
+            'create'               => 'create',
+            'store'                => 'create',
+            'destroy'              => 'destroy',
+            'edit'                 => 'edit',
+            'info'                 => 'info',
+            'update'               => 'edit',
+            'index'                => 'index',
+            'search'               => 'index',
+            'show'                 => 'show',
+            'showDetailsRow'       => 'show',
+            'reorder'              => 'reorder',
+            'popup'                => 'popup',
+            'theme'                => 'theme',
+            'connector'            => 'connector',
             'bulkInvitationCreate' => 'bulkInvitationCreate',
-            'bulkInvitationStore' => 'bulkInvitationStore',
+            'bulkInvitationStore'  => 'bulkInvitationStore',
         ];
 
-        $routeArr = explode('.', $route);
-        $post = end($routeArr);
+        $routeArr                 = explode('.', $route);
+        $post                     = end($routeArr);
         $routeArr[key($routeArr)] = $routePost[$post];
-        $route = implode('.', $routeArr);
+        $route                    = implode('.', $routeArr);
 
         return backpack_user()->can($route);
     }
@@ -596,11 +596,11 @@ if (!function_exists('getRouteList')) {
         $routeList = Route::getRoutes()->getRoutes();
         $routeList = collect($routeList)->map(function ($route) {
             return [
-                'domain' => $route->domain(),
-                'method' => implode('|', $route->methods() ?? []),
-                'uri' => $route->uri(),
-                'name' => $route->getName(),
-                'action' => $route->getActionName(),
+                'domain'     => $route->domain(),
+                'method'     => implode('|', $route->methods() ?? []),
+                'uri'        => $route->uri(),
+                'name'       => $route->getName(),
+                'action'     => $route->getActionName(),
                 'middleware' => implode(', ', $route->middleware() ?? []),
             ];
         })->filter(function ($route) {
@@ -618,7 +618,7 @@ if (!function_exists('setCompanyData')) {
     function setCompanyData(): Model|Builder|DSCompany
     {
         // get subdomain
-        $urlArr = explode('.', request()->getHost());
+        $urlArr  = explode('.', request()->getHost());
         $company = new DSCompany();
 
         if (count($urlArr) > 2) {
@@ -648,8 +648,8 @@ if (!function_exists('getSettingsUrl')) {
     {
         $setting = Setting::query()->where('key', $key)->first(['id', 'key']);
         return $setting->id ?? false
-                ? route('setting.edit', $setting->id)
-                : '#';
+            ? route('setting.edit', $setting->id)
+            : '#';
     }
 }
 
@@ -717,10 +717,10 @@ if (!function_exists('pdfUrl')) {
     {
         $encrypt_url = encrypt(trim($url, '/'));
 
-        $urlArr = explode('/', $url);
-        $urlFullName = Arr::last($urlArr);
+        $urlArr         = explode('/', $url);
+        $urlFullName    = Arr::last($urlArr);
         $urlFullNameArr = explode('.', $urlFullName);
-        $name = $urlFullNameArr[0] ?? 'pdf';
+        $name           = $urlFullNameArr[0] ?? 'pdf';
 
         return route("pdf", [$encrypt_url, $name]);
     }
@@ -793,7 +793,7 @@ if (!function_exists('getActiveCycleCostQueryParam')) {
      */
     function getActiveCycleCostQueryParam($slug = null): string
     {
-        $slug = strtolower($slug ?? now()->format('F-Y'));
+        $slug  = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first();
 
         if ($cycle && $cycle->is_closed) {
@@ -818,7 +818,7 @@ if (!function_exists('getCycleCostQueryParam')) {
      */
     function getCycleCostQueryParam($slug = null): string
     {
-        $slug = strtolower($slug ?? now()->format('F-Y'));
+        $slug  = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first();
 
         if ($cycle) {
@@ -885,9 +885,9 @@ if (!function_exists('firstOfCreateCycle')) {
         return Cycle::query()->firstOrCreate([
             'slug' => $slug,
         ], [
-            'title' => $date->format('F - Y'),
+            'title'      => $date->format('F - Y'),
             'start_date' => $date->format('Y-m-1'),
-            'end_date' => $date->addMonth()->format('Y-m-d'),
+            'end_date'   => $date->addMonth()->format('Y-m-d'),
         ]);
     }
 }
@@ -911,9 +911,9 @@ if (!function_exists('getLastUnclosedCycle')) {
      */
     function getLastUnclosedCycle(string $slug = null): Cycle
     {
-        $slug = strtolower($slug ?? now()->format('F-Y'));
+        $slug  = strtolower($slug ?? now()->format('F-Y'));
         $cycle = Cycle::query()->where('slug', $slug)->first()
-            ?? firstOfCreateCycle($slug);
+                 ?? firstOfCreateCycle($slug);
 
         if (
             $cycle
@@ -958,8 +958,8 @@ if (!function_exists('getEmiAt')) {
     function getEmiAt(string $date = null): Carbon
     {
         $emiClosingDate = EMI::EMI_CLOSING_DATE ?? 28;
-        $date = $date ?? today()->format('Y-m-d');
-        $emiAt = Carbon::parse($date);
+        $date           = $date ?? today()->format('Y-m-d');
+        $emiAt          = Carbon::parse($date);
         if (Carbon::parse($date)->day <= $emiClosingDate) {
             $emiAt = $emiAt->subMonth();
         }
@@ -997,7 +997,7 @@ if (!function_exists('createUniqueInvitationCode')) {
     function createUniqueInvitationCode(string|int $length = 8, string|int $eventId = '', string|int $inviteeId = '', string|int $tolerance = '', int $iteration = 0): string
     {
         $IDsLength = strlen($eventId) + strlen($inviteeId);
-        $length = $length - $IDsLength + $iteration;
+        $length    = $length - $IDsLength + $iteration;
 
         $code = $eventId . createInvitationCode($length) . $tolerance . $inviteeId;
         if (Invitation::query()->where('code', $code)->exists()) {
@@ -1017,9 +1017,9 @@ if (!function_exists('createInvitationCode')) {
      */
     function createInvitationCode($length): string
     {
-        $characters = '0123456789';
+        $characters       = '0123456789';
         $charactersLength = strlen($characters);
-        $randomString = '';
+        $randomString     = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
@@ -1045,9 +1045,9 @@ if (!function_exists('getOtp')) {
      */
     function getOtp(int $length = 4): string
     {
-        $characters = '0123456789';
+        $characters       = '0123456789';
         $charactersLength = strlen($characters);
-        $randomString = '';
+        $randomString     = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
@@ -1064,7 +1064,7 @@ if (!function_exists('getInvitationOTPMessage')) {
     function getInvitationOTPMessage(string $otp): string
     {
         return "Your " . config("app.name") . " OTP is $otp." . PHP_EOL . "Please do not share this OTP with anyone. "
-            . PHP_EOL . "This OTP is valid for " . InvitationOtp::EXPIRY_TIME . " minutes.";
+               . PHP_EOL . "This OTP is valid for " . InvitationOtp::EXPIRY_TIME . " minutes.";
     }
 }
 
@@ -1120,5 +1120,29 @@ if (!function_exists('canUserBeCreatedFromInvitee')) {
         $superAdminSettings = json_decode(getSettingValue('super_admin_settings', false), true)[0] ?? [];
 
         return !!(int)($superAdminSettings['can_user_be_created_from_invitee'] ?? false);
+    }
+}
+
+
+// Marge array but keep the true value from multiple arrays
+if (!function_exists('mergeSwitchArray')) {
+    /**
+     * @param array ...$arrays
+     * @return array
+     */
+    function mergeSwitchArray(...$arrays): array
+    {
+        $max    = max(array_map('count', $arrays));
+        $merged = array_fill(0, $max, 0);
+
+        foreach ($arrays as $array) {
+            foreach ($array as $key => $value) {
+                if ($value) {
+                    $merged[$key] = +!!$value;
+                }
+            }
+        }
+
+        return $merged;
     }
 }

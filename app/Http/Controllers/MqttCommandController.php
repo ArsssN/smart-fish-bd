@@ -31,19 +31,21 @@ class MqttCommandController extends Controller
             })
             ->firstOrFail();
 
+        $switchState = array_fill(0, 12, 0);
+
         $projectID = $project->id;
         $mqttData  = MqttData::query()->create([
             'type'       => $type,
             'project_id' => $projectID,
             'data'       => json_encode($responseMessage),
         ]);
-        $project->ponds->each(function ($pond) use ($type, $responseMessage, $mqttData) {
+        $project->ponds->each(function ($pond) use ($type, $responseMessage, $mqttData, &$switchState) {
             $pondID    = $pond->id;
             $typeUnits = "{$type}Units";
-            $pond->$typeUnits->each(function ($typeUnit) use ($type, $responseMessage, $mqttData, $pondID) {
+            $pond->$typeUnits->each(function ($typeUnit) use ($type, $responseMessage, $mqttData, $pondID, &$switchState) {
                 $typeUnitID = $typeUnit->id;
                 $typeTypes  = "{$type}Types";
-                $typeUnit->$typeTypes->each(function ($typeType) use ($type, $responseMessage, $mqttData, $pondID, $typeUnitID) {
+                $typeUnit->$typeTypes->each(function ($typeType) use ($type, $responseMessage, $mqttData, $pondID, $typeUnitID, &$switchState) {
                     $typeTypeID = $typeType->id;
                     $remoteName = $typeType->remote_name;
                     $value      = $responseMessage->data->$remoteName;
@@ -57,7 +59,12 @@ class MqttCommandController extends Controller
                         ));
 
                         // if array
-                        if (is_array($type_message)) {
+                        if (is_array($type_message) && $typeType->can_switch_sensor) {
+                            $switchState = mergeSwitchArray(
+                                $type_message,
+                                $switchState
+                            );
+
                             $type_message = implode(', ', $type_message);
                         }
                     } else {
@@ -73,11 +80,9 @@ class MqttCommandController extends Controller
                         'message'         => $type_message,
                     ]);
                 });
-
-                die();
             });
         });
 
-        return '0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1';
+        return implode(', ', $switchState);
     }
 }
