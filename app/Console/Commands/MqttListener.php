@@ -13,7 +13,7 @@ class MqttListener extends Command
      *
      * @var string
      */
-    protected $signature = 'mqtt:subscribe';
+    protected $signature = 'mqtt:listen';
 
     /**
      * The console command description.
