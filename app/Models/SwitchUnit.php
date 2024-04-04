@@ -34,6 +34,9 @@ class SwitchUnit extends Model
         "separator"     => "-", // The separator that will be used to separate the words
         "slug-field"    => "slug", // The field that will be used to store the slug
     ];
+    protected $casts = [
+        'switches' => 'array',
+    ];
 
     /*
     |--------------------------------------------------------------------------
