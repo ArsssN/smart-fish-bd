@@ -181,11 +181,11 @@ class UserCrudController extends CrudController
         $this->crud->unsetValidation(); // validation has already been run
 
         $roles = $this->crud->getRequest()->input('roles');
-        if ($roles == null) {
+        if ($roles == null || $roles == "[]") {
             $adminRole = Role::query()->where('name', 'Customer')->first();
 
             if ($adminRole) {
-                $roles = [$adminRole->id];
+                $roles = json_encode([$adminRole->id]);
 
                 $this->crud->getRequest()->request->set('roles', $roles);
                 request()->request->set('roles', $roles);
@@ -210,11 +210,11 @@ class UserCrudController extends CrudController
         $this->crud->unsetValidation(); // validation has already been run
 
         $roles = $this->crud->getRequest()->input('roles');
-        if ($roles == null) {
-            $adminRole = Role::query()->where('name', 'Admin')->first();
+        if ($roles == null || $roles == "[]") {
+            $adminRole = Role::query()->where('name', 'Customer')->first();
 
             if ($adminRole) {
-                $roles = [$adminRole->id];
+                $roles = json_encode([$adminRole->id]);
 
                 $this->crud->getRequest()->request->set('roles', $roles);
                 request()->request->set('roles', $roles);
@@ -363,6 +363,19 @@ class UserCrudController extends CrudController
                     ],
                     'tab' => 'Roles & Permissions',
                 ]
+            ]);
+        } else {
+            $this->crud->addFields([
+                [
+                    'name'  => 'roles',
+                    'label' => 'Roles',
+                    'type'  => 'hidden',
+                ],
+                [
+                    'name'  => 'permissions',
+                    'label' => 'Permissions',
+                    'type'  => 'hidden',
+                ],
             ]);
         }
     }
