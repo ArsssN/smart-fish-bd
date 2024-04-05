@@ -368,6 +368,7 @@ if (!function_exists('getPublicPermissions')) {
             "backpack.auth.password.reset",
             "backpack.auth.logout",
             "backpack.auth.login",
+            "l5-swagger.default.api",
         ];
 
         if ($type == 'id') {
@@ -510,6 +511,7 @@ if (!function_exists('userHasPermission')) {
             'info'                 => 'info',
             'update'               => 'edit',
             'index'                => 'index',
+            'api'                  => 'api',
             'search'               => 'index',
             'show'                 => 'show',
             'showDetailsRow'       => 'show',

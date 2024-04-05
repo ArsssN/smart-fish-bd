@@ -28,7 +28,7 @@ class PermissionSeeder extends Seeder
 
         // Permissions
         $routes      = collect(Route::getRoutes()->getRoutes());
-        $adminRoutes = $routes->filter(
+        $adminPermissions = $routes->filter(
             fn($route) => !($routePrefix = config('backpack.base.route_prefix'))
                           || Str::startsWith($route->getPrefix(), $routePrefix)
         )->map(
@@ -41,7 +41,19 @@ class PermissionSeeder extends Seeder
         )->reject(
             fn($route) => !$route['name']
         )->toArray();
-        DB::table('permissions')->insert($adminRoutes);
+        $otherRoutes = [
+            "l5-swagger.default.api",
+        ];
+        $otherPermissions = array_map(
+            fn($route) => [
+                'name'       => $route,
+                'guard_name' => $guard_name,
+                'created_at' => $created_at = now(),
+                'updated_at' => $created_at
+            ],
+            $otherRoutes
+        );
+        DB::table('permissions')->insert([...$adminPermissions, ...$otherPermissions]);
 
         // Model Permissions
         $permissionIDs = DB::table('permissions')->pluck('id')->toArray();
