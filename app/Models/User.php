@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomerCreateNotification;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -61,6 +62,15 @@ class User extends Authenticatable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            $password = request()->password;
+            $user->notify(new CustomerCreateNotification($password));
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +129,7 @@ class User extends Authenticatable
     */
     public function setNameAttribute($value): void
     {
-        $userDetails = request()->userDetails;
+        $userDetails              = request()->userDetails;
         $this->attributes['name'] = $userDetails['first_name'] . ' ' . $userDetails['last_name'];
     }
 }

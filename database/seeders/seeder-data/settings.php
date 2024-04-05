@@ -170,9 +170,9 @@ $settings = array(
             'description' => 'Welcome Message of Smart Fish BD',
             'value'       => '<p>Welcome to Smart Fish BD, where innovation swims with purpose! Established in 2024, we are a team of brilliant minds, including scientists, engineers, software, and mobile app developers, dedicated to revolutionizing the fisheries industry across our country. Dive into our platform to discover cutting-edge solutions aimed at creating a smarter, more sustainable future for fishery management. Join us in our mission to harness technology and expertise to ensure the prosperity of our aquatic resources. Together, let&#39;s pave the way for a brighter tomorrow for both fishermen and fish alike.</p>',
             'field'       => json_encode([
-                'name'      => 'value',
-                'label'     => 'Welcome Message',
-                'type'      => 'ckeditor',
+                'name'  => 'value',
+                'label' => 'Welcome Message',
+                'type'  => 'ckeditor',
             ]),
             'active'      => 1,
             'created_at'  => NULL,
@@ -201,9 +201,9 @@ $settings = array(
                         'type'  => 'browse',
                     ],
                     [
-                        'name'  => 'description',
-                        'label' => 'Description',
-                        'type'  => 'textarea',
+                        'name'       => 'description',
+                        'label'      => 'Description',
+                        'type'       => 'textarea',
                         'attributes' => [
                             'rows' => '4'
                         ],
@@ -240,14 +240,14 @@ $settings = array(
                         'hint'  => 'Image size should be 1:1 ratio',
                     ],
                     [
-                        'name'  => 'designation',
-                        'label' => 'Designation',
-                        'type'  => 'select_from_array',
+                        'name'    => 'designation',
+                        'label'   => 'Designation',
+                        'type'    => 'select_from_array',
                         'options' => [
-                            'Consultant' => 'Consultant',
-                            'Team Coordinator' => 'Team Coordinator',
-                            'IOT Engineer' => 'IOT Engineer',
-                            'Software Developer' => 'Software Developer',
+                            'Consultant'           => 'Consultant',
+                            'Team Coordinator'     => 'Team Coordinator',
+                            'IOT Engineer'         => 'IOT Engineer',
+                            'Software Developer'   => 'Software Developer',
                             'Mobile App Developer' => 'Mobile App Developer',
                         ],
                     ],
@@ -282,9 +282,9 @@ $settings = array(
                         'type'  => 'browse',
                     ],
                     [
-                        'name'  => 'description',
-                        'label' => 'Description',
-                        'type'  => 'textarea',
+                        'name'       => 'description',
+                        'label'      => 'Description',
+                        'type'       => 'textarea',
                         'attributes' => [
                             'rows' => '4'
                         ],
@@ -292,6 +292,22 @@ $settings = array(
                 ],
                 'min_rows'  => 1,
                 'init_rows' => 1,
+            ]),
+            'active'      => 1,
+            'created_at'  => NULL,
+            'updated_at'  => NULL,
+        ),
+    9 =>
+        array(
+            'id'          => 10,
+            'key'         => 'app_link',
+            'name'        => 'App Link',
+            'description' => 'Mobile app Link',
+            'value'       => 'https://play.google.com/store/apps/details?id=com.smartfishbd',
+            'field'       => json_encode([
+                'name'  => 'value',
+                'label' => 'App Link',
+                'type'  => 'text',
             ]),
             'active'      => 1,
             'created_at'  => NULL,
