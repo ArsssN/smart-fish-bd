@@ -68,8 +68,16 @@ Route::get('/test/sensors', function () {
     return view('test.sensors', compact('sensors', 'sensor_message'));
 });
 
-
 // home redirect to /
 Route::get('/home', function () {
     return redirect('/');
+});
+
+Route::get('/test/mail', function () {
+    $user = \App\Models\User::query()->where('email', 'afzalbd1@gmail.com')->first();
+    $password = Str::random(8);
+
+    $user->notify(new \App\Notifications\CustomerCreateNotification($password));
+
+    return 'Notification sent';
 });

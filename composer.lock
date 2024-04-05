@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f7d36346ab08d9b4e2312a8163c53b7",
+    "content-hash": "6cc3c114d8e7c7ded41e080906479d0b",
     "packages": [
         {
             "name": "afzalsabbir/backupmanager",
@@ -12318,5 +12318,5 @@
         "ext-curl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
