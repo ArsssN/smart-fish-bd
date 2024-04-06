@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
 use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserCrudController extends CrudController
 {
@@ -165,13 +167,13 @@ class UserCrudController extends CrudController
     public function setupCreateOperation()
     {
         $this->addUserFields();
-        $this->crud->setValidation(StoreRequest::class);
+        $this->crud->setValidation(UserRequest::class);
     }
 
     public function setupUpdateOperation()
     {
         $this->addUserFields();
-        $this->crud->setValidation(UpdateRequest::class);
+        $this->crud->setValidation(UserRequest::class);
 
         $entry = $this->crud->getCurrentEntry();
         if(isCustomer() && $entry->id != backpack_user()->id) {
@@ -186,6 +188,17 @@ class UserCrudController extends CrudController
      */
     public function store()
     {
+        // if password not set, generate a random password
+        if (!$this->crud->getRequest()->input('password')) {
+            $password = Str::random(8);
+
+            $this->crud->getRequest()->request->set('password', $password);
+            request()->request->set('password', $password);
+
+            $this->crud->getRequest()->request->set('password_confirmation', $password);
+            request()->request->set('password_confirmation', $password);
+        }
+
         $this->crud->setRequest($this->crud->validateRequest());
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
