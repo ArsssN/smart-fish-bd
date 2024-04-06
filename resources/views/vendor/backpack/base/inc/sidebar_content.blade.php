@@ -1,6 +1,10 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
+@if(isCustomer())
+<li class='nav-item mb-2'>Self Service</li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('user.edit', backpack_auth()->user()->id) }}"><i class="nav-icon la la-user"></i> <span>Profile</span></a></li>
+@endif
 <li class='nav-item mb-2'>Project</li>
 @if(!isCustomer())
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-users"></i> <span>Customers</span></a></li>
@@ -31,8 +35,8 @@
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish') }}'><i class='nav-icon la la-fish'></i> Fish</a></li>--}}
 {{--<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fish-weight') }}'><i class='nav-icon la la-weight-hanging'></i> Fish weights</a></li>--}}
 
-<li class='nav-item mb-2'>Other</li>
 @if(!isCustomer())
+    <li class='nav-item mb-2'>Other</li>
     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'><i class='nav-icon la la-cog'></i> <span>Settings</span></a></li>
 @endif
 

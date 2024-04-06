@@ -58,7 +58,9 @@ class CustomerCreateNotification extends Notification
             ->line(new HtmlString('Your password is: <strong>' . $this->password . '</strong>'))
             ->action('Login', route('backpack.auth.login'))
             ->line('You can download our mobile app from the following links:')
-            ->line(new HtmlString("<a href='{$appLink}'>Google Play Store</a>"))
+            ->line(new HtmlString("<a href='{$appLink}'>App download link</a>."))
+            ->line('Please update your profile to get the best experience:')
+            ->line(new HtmlString("<a href='" . route('user.edit', $notifiable->id) . "'>Update Profile</a>."))
             ->line('Thank you for using our application!');
     }
 

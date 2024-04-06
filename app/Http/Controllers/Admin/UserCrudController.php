@@ -35,7 +35,8 @@ class UserCrudController extends CrudController
 
         // admin only can't access
         if (isCustomer()) {
-            CRUD::denyAccess(['list', 'create', 'delete', 'update', 'show', 'reorder']);
+            //CRUD::denyAccess(['list', 'create', 'delete', 'update', 'show', 'reorder']);
+            CRUD::denyAccess(['create', 'delete', 'reorder']);
         }
 
         if (!backpack_auth()->user()->can('user.index')) {
@@ -155,6 +156,10 @@ class UserCrudController extends CrudController
                 $query->where('role_id', '=', $customerRole->id);
             });
         }
+
+        if (isCustomer()) {
+            $this->crud->addClause('where', 'id', '=', backpack_user()->id);
+        }
     }
 
     public function setupCreateOperation()
@@ -167,6 +172,11 @@ class UserCrudController extends CrudController
     {
         $this->addUserFields();
         $this->crud->setValidation(UpdateRequest::class);
+
+        $entry = $this->crud->getCurrentEntry();
+        if(isCustomer() && $entry->id != backpack_user()->id) {
+            abort(403);
+        }
     }
 
     /**
@@ -180,18 +190,28 @@ class UserCrudController extends CrudController
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
 
-        $roles = $this->crud->getRequest()->input('roles');
-        if ($roles == null || $roles == "[]") {
-            $adminRole = Role::query()->where('name', 'Customer')->first();
+        if (!isShellAdminOrSuperAdmin()) {
+            $roles      = $this->crud->getRequest()->input('roles');
+            $roles_show = $this->crud->getRequest()->input('roles_show');
+            if ($roles == null || $roles == "[]") {
+                $customerRole = Role::query()->where('name', 'Customer')->first();
 
-            if ($adminRole) {
-                $roles = json_encode([$adminRole->id]);
+                if ($customerRole) {
+                    $roles = json_encode([$customerRole->id]);
 
-                $this->crud->getRequest()->request->set('roles', $roles);
-                request()->request->set('roles', $roles);
+                    $this->crud->getRequest()->request->set('roles', $roles);
+                    request()->request->set('roles', $roles);
 
-                $this->crud->getRequest()->request->set('roles_show', $roles);
-                request()->request->set('roles_show', $roles);
+                    $this->crud->getRequest()->request->set('roles_show', $roles);
+                    request()->request->set('roles_show', $roles);
+                }
+            } else {
+                $roles = collect(json_decode($roles, true));
+                if ($roles->count() > 0) {
+                    $rolesId = $roles->pluck('id')->toArray();
+                    $this->crud->getRequest()->request->set('roles', json_encode($rolesId));
+                    request()->request->set('roles', json_encode($rolesId));
+                }
             }
         }
 
@@ -209,18 +229,28 @@ class UserCrudController extends CrudController
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
 
-        $roles = $this->crud->getRequest()->input('roles');
-        if ($roles == null || $roles == "[]") {
-            $adminRole = Role::query()->where('name', 'Customer')->first();
+        if (!isShellAdminOrSuperAdmin()) {
+            $roles      = $this->crud->getRequest()->input('roles');
+            $roles_show = $this->crud->getRequest()->input('roles_show');
+            if ($roles == null || $roles == "[]") {
+                $customerRole = Role::query()->where('name', 'Customer')->first();
 
-            if ($adminRole) {
-                $roles = json_encode([$adminRole->id]);
+                if ($customerRole) {
+                    $roles = json_encode([$customerRole->id]);
 
-                $this->crud->getRequest()->request->set('roles', $roles);
-                request()->request->set('roles', $roles);
+                    $this->crud->getRequest()->request->set('roles', $roles);
+                    request()->request->set('roles', $roles);
 
-                $this->crud->getRequest()->request->set('roles_show', $roles);
-                request()->request->set('roles_show', $roles);
+                    $this->crud->getRequest()->request->set('roles_show', $roles);
+                    request()->request->set('roles_show', $roles);
+                }
+            } else {
+                $roles = collect(json_decode($roles, true));
+                if ($roles->count() > 0) {
+                    $rolesId = $roles->pluck('id')->toArray();
+                    $this->crud->getRequest()->request->set('roles', json_encode($rolesId));
+                    request()->request->set('roles', json_encode($rolesId));
+                }
             }
         }
 
