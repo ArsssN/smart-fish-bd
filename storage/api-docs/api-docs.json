@@ -1035,6 +1035,10 @@
                         "description": "The name of the sensor type.",
                         "type": "string"
                     },
+                    "slug": {
+                        "description": "The slug of the sensor type.",
+                        "type": "string"
+                    },
                     "description": {
                         "description": "A description of the sensor type.",
                         "type": "string",

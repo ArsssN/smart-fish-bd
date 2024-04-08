@@ -21,6 +21,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The name of the sensor type."
  *     ),
  *     @OA\Property(
+ *         property="slug",
+ *         type="string",
+ *         description="The slug of the sensor type."
+ *     ),
+ *     @OA\Property(
  *         property="description",
  *         type="string",
  *         nullable=true,
