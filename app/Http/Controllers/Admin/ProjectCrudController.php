@@ -58,15 +58,19 @@ class ProjectCrudController extends CrudController
             'entity' => 'customer',
             'model' => User::class,
         ]);
+
+        CRUD::column('gateway_name')->label('Gateway');
+        CRUD::column('gateway_serial_number')->label('Gateway SN');
+
         CRUD::column('status');
+
+        // $this->createdByList();
+        // $this->createdAtList();
 
         // only project owner can see the project
         if (isCustomer()) {
             $this->crud->addClause('where', 'customer_id', backpack_user()->id);
         }
-
-        $this->createdByList();
-        $this->createdAtList();
 
         // filter
         $this->crud->addFilter([
