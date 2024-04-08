@@ -131,7 +131,7 @@ class MqttCommandController extends Controller
             $mqttDataSwitchUnitHistories = [];
             $pond->switchUnits->each(function ($switchUnit) use ($mqttData, $switchState, &$mqttDataSwitchUnitHistories) {
 
-                $switches = collect(json_decode($switchUnit->switches ?? '[]'));
+                $switches = collect($switchUnit->switches ?? '[]');
                 $switches->map(function ($switch, $index) use ($switchUnit, $mqttData, $switchState) {
                     $switch->status = $switchState[$index]
                         ? 'on'

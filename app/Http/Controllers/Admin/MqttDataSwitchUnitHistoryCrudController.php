@@ -171,6 +171,7 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
                 $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
                 $switches->each(function ($switch) use (&$html, $relatedSwitches) {
+                    $switch = (object) $switch;
                     $html .= "<tr>";
                     $html .= "<td>{$switch->number}</td>";
                     $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";

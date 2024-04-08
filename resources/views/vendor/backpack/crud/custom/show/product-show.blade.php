@@ -20,7 +20,7 @@
                 .</small>
             @if ($crud->hasAccess('list'))
                 <small class=""><a href="{{ url($crud->route) }}" class="font-sm"><i
-                            class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
+                                class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
                         <span>{{ $crud->entity_name_plural }}</span></a></small>
             @endif
         </h2>
@@ -300,12 +300,13 @@
                                                                             </thead>
                                                                             <tbody>
                                                                             @php
-                                                                                $switches = json_decode($switchUnit->switches ?? '[]');
+                                                                                $switches = $switchUnit->switches ?? [];
                                                                                 $switches = collect($switches);
                                                                                 $switchTypeIDs = $switches->pluck('switchType')->unique()->toArray();
                                                                                 $switchTypes = \App\Models\SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
                                                                             @endphp
                                                                             @foreach($switches as $switch)
+                                                                                @php($switch = (object)$switch)
                                                                                 <tr>
                                                                                     <td>
                                                                                         {{ $switch->number }}
