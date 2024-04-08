@@ -44,7 +44,7 @@ class SwitchUnitResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'status' => $this->status,
-            'switches' => json_decode($this->switches),
+            'switches' => $this->switches,
         ];
 
         return $switchUnit;
