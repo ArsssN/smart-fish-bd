@@ -67,7 +67,6 @@ class UserResource extends JsonResource
     {
         $user = [
             'email' => $this->email,
-            'phone' => $this->phone,
             'username' => $this->username,
             'is_admin' => $this->is_admin,
         ];
@@ -86,6 +85,7 @@ class UserResource extends JsonResource
         $optionals['first_name'] = $userDetails->first_name;
         $optionals['last_name'] = $userDetails->last_name;
         $optionals['farm_name'] = $userDetails->farm_name;
+        $optionals['phone'] = $userDetails->phone;
 
 
         return [
