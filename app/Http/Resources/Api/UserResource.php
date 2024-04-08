@@ -67,6 +67,7 @@ class UserResource extends JsonResource
     {
         $user = [
             'email' => $this->email,
+            'phone' => $this->phone,
             'username' => $this->username,
             'is_admin' => $this->is_admin,
         ];
