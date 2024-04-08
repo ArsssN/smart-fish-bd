@@ -269,12 +269,13 @@ class PondCrudController extends CrudController
                     $html     .= "</tr>";
                     $html     .= "</thead>";
                     $html     .= "<tbody>";
-                    $switches = collect(json_decode($switchUnit->switches));
+                    $switches = collect($switchUnit->switches);
 
                     $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
                     $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
                     $switches->each(function ($switch) use (&$html, $relatedSwitches) {
+                        $switch = (object) $switch;
                         $html .= "<tr>";
                         $html .= "<td>{$switch->number}</td>";
                         $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
