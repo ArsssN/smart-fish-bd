@@ -583,6 +583,190 @@
                     }
                 ]
             }
+        },
+        "/api/v1/sensor-unit/list": {
+            "get": {
+                "tags": [
+                    "Sensor Unit"
+                ],
+                "summary": "List of sensor units",
+                "operationId": "sensorUnitList",
+                "responses": {
+                    "200": {
+                        "description": "List of sensors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorUnitResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/sensor-unit/{sensorUnit}/sensor-type/list": {
+            "get": {
+                "tags": [
+                    "Sensor Unit"
+                ],
+                "summary": "List of sensor types for a sensor unit",
+                "operationId": "sensorUnitSensorTypeList",
+                "parameters": [
+                    {
+                        "name": "sensorUnit",
+                        "in": "path",
+                        "description": "Sensor unit ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of sensor types",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/switch-type/list": {
+            "get": {
+                "tags": [
+                    "Switch Type"
+                ],
+                "summary": "List of switch types",
+                "operationId": "switchTypeList",
+                "responses": {
+                    "200": {
+                        "description": "List of switchs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SwitchType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/switch-unit/list": {
+            "get": {
+                "tags": [
+                    "Switch Unit"
+                ],
+                "summary": "List of switch units",
+                "operationId": "switchUnitList",
+                "responses": {
+                    "200": {
+                        "description": "List of switchs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SwitchUnitResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/switch-unit/{switchUnit}/switch-type/list": {
+            "get": {
+                "tags": [
+                    "Switch Unit"
+                ],
+                "summary": "List of switch types for a switch unit",
+                "operationId": "switchUnitSwitchTypeList",
+                "parameters": [
+                    {
+                        "name": "switchUnit",
+                        "in": "path",
+                        "description": "Switch unit ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of switch types",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SwitchType"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

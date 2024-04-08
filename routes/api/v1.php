@@ -10,6 +10,9 @@ use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\Api\SensorTypeController;
+use App\Http\Controllers\Api\SensorUnitController;
+use App\Http\Controllers\Api\SwitchTypeController;
+use App\Http\Controllers\Api\SwitchUnitController;
 use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +37,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/sensor-type')->group(function () {
         Route::get('/list', [SensorTypeController::class, 'list']);
         Route::get('/feedback/{sensor}/{value}', [SensorTypeController::class, 'sensorFeedback']);
+    });
+
+    Route::prefix('/switch-type')->group(function () {
+        Route::get('/list', [SwitchTypeController::class, 'list']);
+    });
+
+    Route::prefix('/sensor-unit')->group(function () {
+        Route::get('/list', [SensorUnitController::class, 'list']);
+        Route::get('/{sensorUnit}/sensor-type/list', [SensorUnitController::class, 'sensorTypeList']);
+    });
+
+    Route::prefix('/switch-unit')->group(function () {
+        Route::get('/list', [SwitchUnitController::class, 'list']);
+        Route::get('/{switchUnit}/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
     });
 
     Route::prefix('/project')->group(function () {
