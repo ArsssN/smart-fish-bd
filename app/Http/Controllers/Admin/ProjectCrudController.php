@@ -53,10 +53,10 @@ class ProjectCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::addColumn([
-            'name' => 'customer_id',
-            'label' => 'Customer',
+            'name'   => 'customer_id',
+            'label'  => 'Customer',
             'entity' => 'customer',
-            'model' => User::class,
+            'model'  => User::class,
         ]);
 
         CRUD::column('gateway_name')->label('Gateway');
@@ -74,8 +74,8 @@ class ProjectCrudController extends CrudController
 
         // filter
         $this->crud->addFilter([
-            'name' => 'status',
-            'type' => 'select2',
+            'name'  => 'status',
+            'type'  => 'select2',
             'label' => 'Status'
         ], ['active' => 'Active', 'inactive' => 'Inactive']);
 
@@ -102,20 +102,20 @@ class ProjectCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name' => 'status',
-            'type' => 'enum',
+            'name'              => 'status',
+            'type'              => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
         ]);
         CRUD::addField([
-            'name' => 'customer_id',
-            'type' => $isCustomer
+            'name'              => 'customer_id',
+            'type'              => $isCustomer
                 ? 'hidden'
                 : 'select2',
-            'label' => 'Customer',
-            'entity' => 'customer',
-            'options' => (function ($query) use ($isCustomer) {
+            'label'             => 'Customer',
+            'entity'            => 'customer',
+            'options'           => (function ($query) use ($isCustomer) {
                 if ($isCustomer) {
                     $user = $query->where('id', backpack_user()->id)->get();
                 } else {
@@ -126,40 +126,42 @@ class ProjectCrudController extends CrudController
 
                 return $user;
             }),
-            'default' => $isCustomer
+            'default'           => $isCustomer
                 ? backpack_user()->id
                 : null,
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
         ]);
-        CRUD::addField([
-            'name' => 'ponds',
-            'label' => 'Ponds',
-            'type' => 'relationship',
-            'entity' => 'ponds',
-            'pivot' => true,
-            'ajax' => true,
-            'inline_create' => [
-                'entity' => 'pond',
-                'field' => 'name',
-            ],
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-6'
-            ]
+        if (request()->route()->getName() !== 'project-inline-create') {
+            CRUD::addField([
+                'name'              => 'ponds',
+                'label'             => 'Ponds',
+                'type'              => 'relationship',
+                'entity'            => 'ponds',
+                'pivot'             => true,
+                'ajax'              => true,
+                'inline_create'     => [
+                    'entity' => 'pond',
+                    'field'  => 'name',
+                ],
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-6'
+                ]
 
-            /*'options' => (function ($query) {
-                return $query->where('created_by', backpack_user()->id)->get();
-            }),*/
-        ]);
+                /*'options' => (function ($query) {
+                    return $query->where('created_by', backpack_user()->id)->get();
+                }),*/
+            ]);
+        }
         CRUD::addField([
-            'name' => 'gateway_name',
+            'name'              => 'gateway_name',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
         ]);
         CRUD::addField([
-            'name' => 'gateway_serial_number',
+            'name'              => 'gateway_serial_number',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
@@ -197,16 +199,16 @@ class ProjectCrudController extends CrudController
 
         CRUD::column('name');
         CRUD::addColumn([
-            'name' => 'customer_id',
-            'label' => 'Customer',
+            'name'   => 'customer_id',
+            'label'  => 'Customer',
             'entity' => 'customer',
-            'model' => User::class,
+            'model'  => User::class,
         ]);
         CRUD::addColumn([
-            'name' => 'description',
-            'label' => 'Description',
-            'type' => 'closure',
-            'escaped' => false, // allow HTML in this column
+            'name'     => 'description',
+            'label'    => 'Description',
+            'type'     => 'closure',
+            'escaped'  => false, // allow HTML in this column
             'function' => function ($entry) {
                 return $entry->description;
             },

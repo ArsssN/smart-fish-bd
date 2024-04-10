@@ -24,13 +24,18 @@ class ProjectRequest extends FormRequest
      */
     public function rules()
     {
+        $projectInlineCreateRoutes = ['project-inline-create', 'project-inline-create-save'];
+        $isProjectInlineCreate = in_array(request()->route()->getName(), $projectInlineCreateRoutes);
+
+        $pond = $isProjectInlineCreate ? 'nullable|array' : 'required|array';
+
         return [
             'name' => 'required|min:5|max:180',
             'status' => 'required|in:active,inactive',
             /*'sensors' => 'required|array',
             'aerators' => 'required|array',
             'feeders' => 'required|array',*/
-            'ponds' => 'required|array',
+            'ponds' => $pond,
             /*'sensors.*' => 'required|exists:sensors,id',
             'aerators.*' => 'required|exists:aerators,id',
             'feeders.*' => 'required|exists:feeders,id',*/
