@@ -133,7 +133,7 @@ class MqttCommandController extends Controller
 
                 $switches = collect($switchUnit->switches ?? '[]');
                 $switches->map(function ($switch, $index) use ($switchUnit, $mqttData, $switchState) {
-                    $switch->status = $switchState[$index]
+                    $switch['status'] = $switchState[$index]
                         ? 'on'
                         : 'off';
 
