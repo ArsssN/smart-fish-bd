@@ -45,6 +45,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      type="string",
  *  ),
  *  @OA\Property(
+ *      property="phone",
+ *      type="string",
+ *  ),
+ *  @OA\Property(
  *      property="username",
  *      type="string",
  *  ),

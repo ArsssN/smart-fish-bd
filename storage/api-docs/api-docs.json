@@ -1145,6 +1145,9 @@
                     "email": {
                         "type": "string"
                     },
+                    "phone": {
+                        "type": "string"
+                    },
                     "username": {
                         "type": "string"
                     },

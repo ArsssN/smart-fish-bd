@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\AuthHelper;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -17,6 +18,14 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     Route::get('backup/table/{table?}', 'BackupController@backupTable')->name('backup.table');
+
+    // get current user access token
+    Route::get('access-token', function () {
+        // clear old tokens
+        //backpack_auth()->user()->tokens()->delete();
+        $newTokenData = AuthHelper::getAccessToken(backpack_auth()->user());
+        return response()->json($newTokenData);
+    })->name('access-token.create');
 
     require __DIR__ . '/shell.php';
     Route::crud('route-list', 'RouteListCrudController');
