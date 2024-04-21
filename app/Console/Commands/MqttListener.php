@@ -53,7 +53,7 @@ class MqttListener extends Command
 
             $feedBackMessage = $this->processResponse();
             echo sprintf(' /// MQTT::publish on topic [%s]: %s', $this->topic, $feedBackMessage);
-            MQTT::publish($this->topic, $feedBackMessage);
+            MQTT::publish($this->topic, '$feedBackMessage');
         });
 
         $mqtt->loop(true);
