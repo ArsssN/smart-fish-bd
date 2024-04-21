@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MqttCommandController;
+use App\Jobs\CustomerCreateJob;
 use App\Models\Sensor;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -77,7 +78,7 @@ Route::get('/test/mail', function () {
     $user = \App\Models\User::query()->where('email', 'afzalbd1@gmail.com')->first();
     $password = Str::random(8);
 
-    $user->notify(new \App\Notifications\CustomerCreateNotification($password));
+    CustomerCreateJob::dispatch($password, $user->email);
 
     return 'Notification sent';
 });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Jobs\CustomerCreateJob;
 use App\Notifications\CustomerCreateNotification;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,7 +69,7 @@ class User extends Authenticatable
 
         static::created(function ($user) {
             $password = request()->password;
-            $user->notify(new CustomerCreateNotification($password));
+            CustomerCreateJob::dispatch($password, $user->email);
         });
     }
 
