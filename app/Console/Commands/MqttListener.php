@@ -48,7 +48,7 @@ class MqttListener extends Command
         $mqtt->subscribe('#', function (string $topic, string $message) {
             Log::info("'Received message on topic [%s]: %s',$topic, $message");
             echo sprintf('Received message on topic [%s]: %s', $topic, $message);
-            $this->topic = $topic;
+            $this->topic = str_replace("PUB", "SUB", $topic);
             $this->message = $message;
 
             $feedBackMessage = $this->processResponse();
