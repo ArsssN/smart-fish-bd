@@ -46,17 +46,15 @@ class MqttListener extends Command
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe('#', function (string $topic, string $message) {
-            // Get current date and time
-            $currentDateTime = now()->format('Y-m-d H:i:s');
-            Log::info("Received message on topic [$topic]: $message");
-            echo sprintf('[%s] Received message on topic [%s]: %s', $currentDateTime, $topic, $message);
+            Log::info("'Received message on topic [%s]: %s',$topic, $message");
+            echo sprintf('Received message on topic [%s]: %s', $topic, $message);
             $this->topic = str_replace("PUB", "SUB", $topic);
             $this->message = $message;
 
 //            $feedBackMessage = $this->processResponse();
             $feedBackMessage = '$this->processResponse()';
-            Log::info("Send message on topic [$this->topic]: $feedBackMessage");
-            echo sprintf('[%s] Send message on topic [%s]: %s', $currentDateTime, $this->topic, $feedBackMessage);
+            Log::info("'Send message on topic [%s]: %s',$this->topic, $feedBackMessage");
+            echo sprintf("Send message on topic [%s]: %s", $this->topic, $feedBackMessage);
             MQTT::publish($this->topic, $feedBackMessage);
         });
 
