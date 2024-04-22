@@ -15,6 +15,7 @@ Route::controller('ShellCommandController')->prefix('shell')->group(function () 
         });
         Route::prefix('artisan')->group(function () {
             Route::get('migrate-fresh-seed', 'migrateFreshSeed')->name('shell.command.artisan.migrate.fresh.seed');
+            Route::get('remove-seed', 'removeSeed')->name('shell.command.artisan.remove.seed');
         });
         Route::get('/any/{command?}', 'call')->name('shell.command.any.command'); // base64 $command
     });

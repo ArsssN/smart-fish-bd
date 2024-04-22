@@ -18,6 +18,7 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     Route::get('backup/table/{table?}', 'BackupController@backupTable')->name('backup.table');
+    Route::get('remove-seed', 'BackupController@removeSeed')->name('remove.seed');
 
     // get current user access token
     Route::get('access-token', function () {
