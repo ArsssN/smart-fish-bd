@@ -140,7 +140,7 @@ class MqttCommandController extends Controller
                     return $switch;
                 });
 
-                $switchUnit->switches = json_encode($switches);
+                $switchUnit->switches = $switches;
                 $switchUnit->save();
 
                 $mqttDataSwitchUnitHistories[] = [
