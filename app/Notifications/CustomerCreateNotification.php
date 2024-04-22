@@ -54,7 +54,7 @@ class CustomerCreateNotification extends Notification
             ->subject('New Account Created Successfully')
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('Your account has been created successfully.')
-            ->line(new HtmlString('Your username is: <strong>' . $notifiable->username . '</strong>'))
+            ->line(new HtmlString('Your email is: <strong>' . $notifiable->email . '</strong>'))
             ->line(new HtmlString('Your password is: <strong>' . $this->password . '</strong>'))
             ->action('Login', route('backpack.auth.login'))
             ->line('You can download our mobile app from the following links:')
