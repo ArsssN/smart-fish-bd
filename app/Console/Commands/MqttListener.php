@@ -53,10 +53,23 @@ class MqttListener extends Command
             $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
             $this->message = $message;
 
-            $feedBackMessage = $this->processResponse();
-            Log::info("Send message on topic [$this->topic]: $feedBackMessage");
-            echo sprintf('[%s] Send message on topic [%s]: %s', $currentDateTime, $this->topic, $feedBackMessage);
-            MQTT::publish($this->topic, $feedBackMessage);
+            try {
+                $feedBackArr = $this->processResponse();
+                Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
+                echo sprintf(
+                    '[%s] Send message on topic [%s]: %s',
+                    $currentDateTime,
+                    $this->topic,
+                    $feedBackArr['relay']
+                );
+
+                if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
+                    MQTT::publish($this->topic, json_encode($feedBackArr));
+                }
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+                echo sprintf('[%s] %s', $currentDateTime, $e->getMessage());
+            }
         });
 
         $mqtt->loop(true);
@@ -66,14 +79,18 @@ class MqttListener extends Command
     /**
      * Process the response from the MQTT server.
      *
-     * @return string
+     * @return array
      */
-    private function processResponse(): string
+    private function processResponse(): array
     {
         // $responseMessage =
         //  json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":29.7,"o2":2.8,"ph":6}}');
         $responseMessage = json_decode($this->message);
         $feedBackMessage = '';
+        $feedBackArr = [
+            'addr' => $responseMessage->addr,
+            'type' => $responseMessage->type,
+        ];
 
         switch ($responseMessage->type) {
             case 'sen':
@@ -86,6 +103,8 @@ class MqttListener extends Command
                 break;
         }
 
-        return $feedBackMessage;
+        $feedBackArr['relay'] = $feedBackMessage;
+
+        return $feedBackArr;
     }
 }
