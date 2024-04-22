@@ -3,6 +3,7 @@
 use App\Http\Controllers\MqttCommandController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\Sensor;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -47,14 +48,14 @@ Route::get('/test', function () {
 });
 
 Route::get('/test/sensors', function () {
-    $sensors        = Sensor::all();
+    $sensors = Sensor::all();
     $sensor_message = null;
 
     if (request()->has('sensor_id')) {
-        $sensor_id  = request()->get('sensor_id');
+        $sensor_id = request()->get('sensor_id');
         $sensorType = Sensor::query()->findOrFail($sensor_id)->sensorType;
 
-        $sensorName       = Str::replace(' ', '', $sensorType->name);
+        $sensorName = Str::replace(' ', '', $sensorType->name);
         $helperMethodName = "get{$sensorName}Update";
 
         if (function_exists($helperMethodName)) {
@@ -72,6 +73,12 @@ Route::get('/test/sensors', function () {
 // home redirect to /
 Route::get('/home', function () {
     return redirect('/');
+});
+
+Route::get('/test/remove-seed', function () {
+    $backupController = new \App\Http\Controllers\Admin\BackupController();
+
+    return response()->json($backupController->removeSeed());
 });
 
 Route::get('/test/mail', function () {

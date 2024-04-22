@@ -79,6 +79,12 @@
                 "url" => route("backup.table"),
                 "confirmation" => "Are you sure you want to backup to seed?"
             ])
+            @include("partials.menu-item-confirmation", [
+                "text" => "Remove seed",
+                "icon" => "la la-cloud-meatball",
+                "url" => route("remove.seed"),
+                "confirmation" => "Are you sure you want to remove seed from the database?"
+            ])
         </ul>
     </li>
 @endif
