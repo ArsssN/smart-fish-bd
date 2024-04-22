@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\MqttCommandController;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
 
 class MqttListener extends Command
@@ -45,16 +46,16 @@ class MqttListener extends Command
     public function handle()
     {
         $mqtt = MQTT::connection();
-        $mqtt->subscribe('#', function (string $topic, string $message) {
-//            Log::info("'Received message on topic [%s]: %s',$topic, $message");
-//            echo sprintf('Received message on topic [%s]: %s', $topic, $message);
-            $this->topic = $topic;
+        $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
+            $currentDateTime = now()->format('Y-m-d H:i:s');
+            Log::info("Received message on topic [$topic]: $message");
+            echo sprintf('[%s] Received message on topic [%s]: %s', $currentDateTime, $topic, $message);
+            $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
             $this->message = $message;
 
-//            $feedBackMessage = $this->processResponse();
-            $feedBackMessage = '$this->processResponse()';
-//            Log::info("'Send message on topic [%s]: %s',$this->topic, $feedBackMessage");
-//            echo sprintf("Send message on topic [%s]: %s", $this->topic, $feedBackMessage);
+            $feedBackMessage = $this->processResponse();
+            Log::info("Send message on topic [$this->topic]: $feedBackMessage");
+            echo sprintf('[%s] Send message on topic [%s]: %s', $currentDateTime, $this->topic, $feedBackMessage);
             MQTT::publish($this->topic, $feedBackMessage);
         });
 
