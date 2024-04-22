@@ -140,7 +140,7 @@ class MqttCommandController extends Controller
                     return $switch;
                 });
 
-                $switchUnit->switches = $switches;
+                $switchUnit->switches = $switches->toArray();
                 $switchUnit->save();
 
                 $mqttDataSwitchUnitHistories[] = [
