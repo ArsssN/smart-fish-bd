@@ -55,7 +55,7 @@ class MqttDataCrudController extends CrudController
             },
         ]);
 
-        $this->createdByList();
+        /*$this->createdByList();*/
         $this->createdAtList();
 
         // filters

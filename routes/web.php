@@ -4,6 +4,7 @@ use App\Http\Controllers\MqttCommandController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\Sensor;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -28,23 +29,38 @@ Route::post(
 Route::get('/test', function () {
     $responseMessage =
         json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+//        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
     // $responseMessage = json_decode($this->message);
     $feedBackMessage = '';
+    $feedBackArr = [
+        'addr' => $responseMessage->addr,
+        'type' => $responseMessage->type,
+    ];
 
-    switch ($responseMessage->type) {
-        case 'sen':
-            $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
-            break;
-        case 'swi':
-            $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
-            break;
-        default:
-            break;
+    try {
+        switch ($responseMessage->type) {
+            case 'sen':
+                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
+                break;
+            case 'swi':
+                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
+                break;
+            default:
+                break;
+        }
+
+        $feedBackArr['relay'] = $feedBackMessage;
+
+        if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
+            dump('$feedBackMessage', $feedBackMessage, $feedBackArr, $responseMessage);
+        } else {
+            dump('No relay message', $feedBackArr);
+        }
+        return phpinfo();
+    } catch (Exception $e) {
+        Log::error($e->getMessage());
+        return sprintf('[%s] %s', now(), $e->getMessage());
     }
-
-    dump('$feedBackMessage', $feedBackMessage);
-
-    return phpinfo();
 });
 
 Route::get('/test/sensors', function () {

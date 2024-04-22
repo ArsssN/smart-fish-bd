@@ -12,19 +12,20 @@ use JetBrains\PhpStorm\NoReturn;
 class MqttCommandController extends Controller
 {
     /**
-     * @param $type string - unit type (sensor, switch, etc)
+     * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
+     *
      * @return string
      */
     public static function saveMqttData(string $type, object $responseMessage): string
     {
-        $newResponseMessage                        = new \stdClass();
+        $newResponseMessage = new \stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
-        $newResponseMessage->type                  = $type;
-        $newResponseMessage->serial_number         = hexdec($responseMessage->addr);
-        $newResponseMessage->data                  = $responseMessage->data;
+        $newResponseMessage->type = $type;
+        $newResponseMessage->serial_number = hexdec($responseMessage->addr);
+        $newResponseMessage->data = $responseMessage->data;
 
-        $remoteNames  = collect($responseMessage->data)->keys()->toArray();
+        $remoteNames = collect($responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec($responseMessage->addr);
 
         $model = 'App\Models\\' . Str::ucfirst($type) . 'Unit';
@@ -47,10 +48,10 @@ class MqttCommandController extends Controller
         $switchState = array_fill(0, 12, 0);
 
         $projectID = $project->id;
-        $mqttData  = MqttData::query()->create([
-            'type'       => $type,
+        $mqttData = MqttData::query()->create([
+            'type' => $type,
             'project_id' => $projectID,
-            'data'       => json_encode($responseMessage),
+            'data' => json_encode($responseMessage),
         ]);
 
         $typeUnit->{$type . 'Types'}
@@ -75,6 +76,7 @@ class MqttCommandController extends Controller
      * @param $responseMessage
      * @param $mqttData
      * @param $switchState
+     *
      * @return void
      */
     private static function saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, &$switchState): void
@@ -82,9 +84,12 @@ class MqttCommandController extends Controller
         $typeUnitID = $typeUnit->id;
         $typeTypeID = $typeType->id;
         $remoteName = $typeType->remote_name;
-        $value      = $responseMessage->data->$remoteName;
+        if (!isset($responseMessage->data->$remoteName)) {
+            return;
+        }
+        $value = $responseMessage->data->$remoteName;
 
-        $typeName         = Str::replace(' ', '', $typeType->name);
+        $typeName = Str::replace(' ', '', $typeType->name);
         $helperMethodName = "get{$typeName}Update";
 
         if (function_exists($helperMethodName)) {
@@ -109,12 +114,12 @@ class MqttCommandController extends Controller
             $pondID = $pond->id;
 
             $mqttData->histories()->create([
-                'pond_id'         => $pondID,
+                'pond_id' => $pondID,
                 "{$type}_unit_id" => $typeUnitID,
                 "{$type}_type_id" => $typeTypeID,
-                'value'           => $value,
-                'type'            => $type,
-                'message'         => $type_message,
+                'value' => $value,
+                'type' => $type,
+                'message' => $type_message,
             ]);
         });
     }
@@ -123,6 +128,7 @@ class MqttCommandController extends Controller
      * @param $mqttData
      * @param $ponds
      * @param $switchState
+     *
      * @return void
      */
     private static function changeSwitchStateOfSensorUnit($mqttData, $ponds, $switchState): void
@@ -144,12 +150,12 @@ class MqttCommandController extends Controller
                 $switchUnit->save();
 
                 $mqttDataSwitchUnitHistories[] = [
-                    'mqtt_data_id'   => $mqttData->id,
-                    'pond_id'        => $switchUnit->pivot->pond_id,
+                    'mqtt_data_id' => $mqttData->id,
+                    'pond_id' => $switchUnit->pivot->pond_id,
                     'switch_unit_id' => $switchUnit->id,
-                    'switches'       => json_encode($switches),
-                    'created_at'     => now(),
-                    'updated_at'     => now(),
+                    'switches' => json_encode($switches),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             });
 
