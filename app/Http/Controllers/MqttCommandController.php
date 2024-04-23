@@ -59,6 +59,11 @@ class MqttCommandController extends Controller
             'project_id' => $projectID,
             'data' => json_encode($responseMessage),
             'publish_topic' => $topic,
+            'publish_message' => json_encode([
+                'addr' => $responseMessage->addr,
+                'type' => $responseMessage->type,
+                'relay' => implode('', $switchState),
+            ])
         ]);
         self::$mqttData = $mqttData;
 

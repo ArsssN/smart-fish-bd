@@ -105,6 +105,14 @@ class Project extends Model
         return $this->hasMany(Pond::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function mqttData(): HasMany
+    {
+        return $this->hasMany(MqttData::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
