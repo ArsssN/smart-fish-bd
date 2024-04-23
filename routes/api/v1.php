@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\MqttDataHistoryController;
 use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SensorController;
@@ -61,15 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/list', [PondController::class, 'list'])->name("api.v1.pond.list");
             Route::prefix('/{pond}')->group(function () {
                 Route::get('/', [PondController::class, 'show'])->name("api.v1.pond.show");
-                Route::prefix('/unit-type/{unitType}')->group(function () {
-                    Route::prefix('/unit/{unitId}/history')->group(function () {
-                        Route::get('/', [PondController::class, 'unitTypeHistory'])->name("api.v1.pond.unit.history");
-                        Route::get(
-                            '/type/{typeId}',
-                            [PondController::class, 'unitTypeHistoryByType']
-                        )->name("api.v1.pond.unit.history.type");
-                    });
-                });
+                Route::get('/unit-type/{unitType}/unit/{unitId}/history', [MqttDataHistoryController::class, 'unitTypeHistory'])->name("api.v1.pond.unit.history");
             });
         });
     });

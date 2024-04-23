@@ -328,6 +328,174 @@
                 ]
             }
         },
+        "/api/v1/project/{project}/pond/{pond}/unit-type/{unitType}/unit/{unitId}/history": {
+            "get": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "Get unit type history",
+                "operationId": "unitTypeHistory",
+                "parameters": [
+                    {
+                        "name": "project",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "pond",
+                        "in": "path",
+                        "description": "Pond ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "unitType",
+                        "in": "path",
+                        "description": "Unit Type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sensor",
+                                "switch"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "unitId",
+                        "in": "path",
+                        "description": "Unit ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "typeId",
+                        "in": "query",
+                        "description": "Unit Type ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "enum": [
+                                10,
+                                20,
+                                50,
+                                100
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unit type history",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MqttDataHistoryResource"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string"
+                                        },
+                                        "from": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page_url": {
+                                            "type": "string"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string"
+                                                    },
+                                                    "label": {
+                                                        "type": "string"
+                                                    },
+                                                    "active": {
+                                                        "type": "boolean"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "type": "string"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string"
+                                        },
+                                        "to": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pond not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/project/{project}/pond/list": {
             "get": {
                 "tags": [
@@ -787,6 +955,66 @@
                     },
                     "isAuthenticated": {
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "MqttDataHistoryResource": {
+                "title": "Mqtt Data History Resource",
+                "required": [
+                    "id",
+                    "mqtt_data_id",
+                    "sensor_unit_id",
+                    "sensor_type_id",
+                    "switch_unit_id",
+                    "switch_type_id",
+                    "value",
+                    "message",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the resource",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "mqtt_data_id": {
+                        "description": "The unique identifier of the mqtt data",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sensor_unit_id": {
+                        "description": "The unique identifier of the sensor unit",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sensor_type_id": {
+                        "description": "The unique identifier of the sensor type",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "switch_unit_id": {
+                        "description": "The unique identifier of the switch unit",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "switch_type_id": {
+                        "description": "The unique identifier of the switch type",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "value": {
+                        "description": "The value of the resource",
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "The message of the resource",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "The date and time of the resource created",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
