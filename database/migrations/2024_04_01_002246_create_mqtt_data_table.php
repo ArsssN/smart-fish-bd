@@ -23,14 +23,6 @@ return new class extends Migration {
                 'The data from the MQTT response'
             );
 
-            $table->text('publish_message')->comment(
-                'The data to be published to the MQTT'
-            )->nullable();
-
-            $table->text('publish_topic')->comment(
-                'The topic to be published to the MQTT'
-            )->nullable();
-
             $table->foreignId('created_by')->comment(
                 'History created by the user'
             )->nullable()->constrained('users')->references('id')->cascadeOnDelete();
