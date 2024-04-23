@@ -27,10 +27,24 @@ Route::post(
 
 // php info
 Route::get('/test', function () {
+    $topic = 'SUB/1E4F/PUB';
+    $isUpdate = false;
     $responseMessage =
-        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+//        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
 //        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
+        json_decode('{"update":1}');
     // $responseMessage = json_decode($this->message);
+
+    if (isset($responseMessage->update)) {
+        $isUpdate = true;
+        $gateway_serial_number_last_4digit = Str::before(Str::after($topic, '/'), '/');
+        $project = \App\Models\Project::query()
+            ->where('gateway_serial_number', 'LIKE', "%{$gateway_serial_number_last_4digit}")
+            ->first();
+        $mqtt_data = $project->mqttData()->latest()->first();
+        $responseMessage = json_decode($mqtt_data->data);
+    }
+
     $feedBackMessage = '';
     $feedBackArr = [
         'addr' => $responseMessage->addr,
@@ -40,10 +54,10 @@ Route::get('/test', function () {
     try {
         switch ($responseMessage->type) {
             case 'sen':
-                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
+                $feedBackMessage = MqttCommandController::{$isUpdate ? 'getMqttData' : 'saveMqttData'}('sensor', $responseMessage);
                 break;
             case 'swi':
-                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
+                $feedBackMessage = MqttCommandController::{$isUpdate ? 'getMqttData' : 'saveMqttData'}('switch', $responseMessage);
                 break;
             default:
                 break;
