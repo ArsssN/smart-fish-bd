@@ -59,7 +59,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::prefix('/{project}/pond')->group(function () {
             Route::get('/list', [PondController::class, 'list'])->name("api.v1.pond.list");
-            Route::get('/{pond}', [PondController::class, 'show'])->name("api.v1.pond.show");
+            Route::prefix('/{pond}')->group(function () {
+                Route::get('/', [PondController::class, 'show'])->name("api.v1.pond.show");
+                Route::prefix('/unit-type/{unitType}')->group(function () {
+                    Route::prefix('/unit/{unitId}/history')->group(function () {
+                        Route::get('/', [PondController::class, 'unitTypeHistory'])->name("api.v1.pond.unit.history");
+                        Route::get(
+                            '/type/{typeId}',
+                            [PondController::class, 'unitTypeHistoryByType']
+                        )->name("api.v1.pond.unit.history.type");
+                    });
+                });
+            });
         });
     });
 });
