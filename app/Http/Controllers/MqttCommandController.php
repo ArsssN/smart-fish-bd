@@ -12,12 +12,18 @@ use JetBrains\PhpStorm\NoReturn;
 class MqttCommandController extends Controller
 {
     /**
+     * @var MqttData $mqttData - mqtt data
+     */
+    public static MqttData $mqttData;
+
+    /**
      * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
+     * @param $topic           string - mqtt topic
      *
      * @return string
      */
-    public static function saveMqttData(string $type, object $responseMessage): string
+    public static function saveMqttData(string $type, object $responseMessage, string $topic): string
     {
         $newResponseMessage = new \stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
@@ -52,7 +58,9 @@ class MqttCommandController extends Controller
             'type' => $type,
             'project_id' => $projectID,
             'data' => json_encode($responseMessage),
+            'publish_topic' => $topic,
         ]);
+        self::$mqttData = $mqttData;
 
         $typeUnit->{$type . 'Types'}
             ->each(

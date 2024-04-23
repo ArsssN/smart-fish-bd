@@ -40,10 +40,10 @@ Route::get('/test', function () {
     try {
         switch ($responseMessage->type) {
             case 'sen':
-                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
+                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage, '');
                 break;
             case 'swi':
-                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
+                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage, '');
                 break;
             default:
                 break;
@@ -53,7 +53,10 @@ Route::get('/test', function () {
 
         if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
             $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
-            dump('$feedBackMessage', $feedBackMessage, $feedBackArr, $responseMessage);
+            // MQTT::publish($this->topic, json_encode($feedBackArr));
+            MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
+            MqttCommandController::$mqttData->save();
+            dump(MqttCommandController::$mqttData, $feedBackMessage, $feedBackArr, $responseMessage);
         } else {
             dump('No relay message', $feedBackArr);
         }

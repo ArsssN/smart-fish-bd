@@ -95,10 +95,10 @@ class MqttListener extends Command
 
         switch ($responseMessage->type) {
             case 'sen':
-                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
+                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage, $this->topic);
                 break;
             case 'swi':
-                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
+                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage, $this->topic);
                 break;
             default:
                 break;
