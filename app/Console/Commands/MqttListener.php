@@ -64,6 +64,7 @@ class MqttListener extends Command
                 );
 
                 if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
+                    $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
                     MQTT::publish($this->topic, json_encode($feedBackArr));
                 }
             } catch (\Exception $e) {

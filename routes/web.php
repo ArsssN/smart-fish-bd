@@ -52,6 +52,7 @@ Route::get('/test', function () {
         $feedBackArr['relay'] = $feedBackMessage;
 
         if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
+            $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
             dump('$feedBackMessage', $feedBackMessage, $feedBackArr, $responseMessage);
         } else {
             dump('No relay message', $feedBackArr);
