@@ -39,6 +39,13 @@ class MqttListener extends Command
     protected $topic;
 
     /**
+     * The flag to check if the message is an update.
+     *
+     * @var bool
+     */
+    protected $isUpdate = false;
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -64,7 +71,12 @@ class MqttListener extends Command
                 );
 
                 if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
-                    $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
+                    if (!$this->isUpdate) {
+                        $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
+                        MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
+                        MqttCommandController::$mqttData->save();
+                    }
+
                     MQTT::publish($this->topic, json_encode($feedBackArr));
                 }
             } catch (\Exception $e) {
@@ -84,24 +96,41 @@ class MqttListener extends Command
      */
     private function processResponse(): array
     {
-        // $responseMessage =
-        //  json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":29.7,"o2":2.8,"ph":6}}');
+        $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
         $feedBackMessage = '';
+
+        if (isset($responseMessage->update)) {
+            $this->isUpdate = true;
+            $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
+            $project = \App\Models\Project::query()
+                ->where('gateway_serial_number', 'LIKE', "%{$gateway_serial_number_last_4digit}")
+                ->firstOrFail();
+            $mqtt_data = $project->mqttData()
+                //->whereNotNull('publish_message')
+                ->orderBy('id', 'desc')
+                ->firstOrFail();
+            $responseMessage = json_decode($mqtt_data->data);
+            $publishMessage = json_decode($mqtt_data->publish_message);
+            $feedBackMessage = $publishMessage->relay ?? implode('', array_fill(0, 12, 0));
+        }
+
         $feedBackArr = [
             'addr' => $responseMessage->addr,
             'type' => $responseMessage->type,
         ];
 
-        switch ($responseMessage->type) {
-            case 'sen':
-                $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage);
-                break;
-            case 'swi':
-                $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage);
-                break;
-            default:
-                break;
+        if (!$this->isUpdate) {
+            switch ($responseMessage->type) {
+                case 'sen':
+                    $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage, $this->topic);
+                    break;
+                case 'swi':
+                    $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage, $this->topic);
+                    break;
+                default:
+                    break;
+            }
         }
 
         $feedBackArr['relay'] = $feedBackMessage;
