@@ -140,7 +140,17 @@ class MqttDataCrudController extends CrudController
             },
         ]);
 
-        $this->createdByList();
+        CRUD::addColumn([
+            'name' => 'publish_message',
+            'type' => 'table',
+            'columns' => [
+                'addr' => 'Address',
+                'type' => 'Type',
+                'relay' => 'Relay',
+            ],
+        ]);
+        CRUD::column('publish_topic');
+
         $this->createdAtList();
 
         CRUD::addColumn([
