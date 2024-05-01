@@ -50,6 +50,7 @@ Route::get('/test', function () {
 
         $mqttListener->setMessage(json_encode($responseMessage));
         $mqttListener->setTopic($topic);
+        $mqttListener->setIsTest(true);
 
         $mqttListener->processResponse();
 

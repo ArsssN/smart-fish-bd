@@ -99,6 +99,10 @@ class MqttListener extends Command
         $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
 
+        if ($this->isTest) {
+            MqttCommandController::$isSaveMqttData = false;
+        }
+
         if (isset($responseMessage->update)) {
             $this->isUpdate = true;
             $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
@@ -142,8 +146,11 @@ class MqttListener extends Command
         if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
             if (!$this->isUpdate) {
                 $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
-                MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
-                MqttCommandController::$mqttData->save();
+
+                if (MqttCommandController::$isSaveMqttData) {
+                    MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
+                    MqttCommandController::$mqttData->save();
+                }
             }
 
             $publishable = true;
