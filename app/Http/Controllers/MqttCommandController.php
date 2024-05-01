@@ -17,13 +17,22 @@ class MqttCommandController extends Controller
     public static MqttData $mqttData;
 
     /**
+     * @var array $feedBackArray - feedback array
+     */
+    public static array $feedBackArray = [
+        'addr' => '',
+        'type' => 'sw',
+        'relay' => '000000000000',
+    ];
+
+    /**
      * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
      * @param $topic           string - mqtt topic
      *
-     * @return string
+     * @return void
      */
-    public static function saveMqttData(string $type, object $responseMessage, string $topic): string
+    public static function saveMqttData(string $type, object $responseMessage, string $topic): void
     {
         $newResponseMessage = new \stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
@@ -49,7 +58,12 @@ class MqttCommandController extends Controller
             })
             ->firstOrFail();
 
-        $project = $typeUnit->ponds->firstOrFail()->project;
+        $pond = $typeUnit->ponds->firstOrFail();
+
+        $switchUnit = $pond->switchUnits->firstOrFail();
+        self::$feedBackArray['addr'] = dechex((int)$switchUnit->serial_number);
+
+        $project = $pond->project;
 
         $switchState = array_fill(0, 12, 0);
 
@@ -77,7 +91,12 @@ class MqttCommandController extends Controller
 
         self::changeSwitchStateOfSensorUnit($mqttData, $typeUnit->ponds, $switchState);
 
-        return implode(', ', $switchState);
+        self::$feedBackArray['relay'] = implode('', $switchState);
+
+        // Confirms if the relay is empty or null, if empty or null then set it to 000000000000
+        if (!(bool)self::$feedBackArray['relay']) {
+            self::$feedBackArray['relay'] = implode('', array_fill(0, 12, 0));
+        }
     }
 
     /**
