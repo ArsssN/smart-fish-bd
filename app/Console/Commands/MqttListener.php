@@ -134,12 +134,14 @@ class MqttListener extends Command
 
         $feedBackArr = MqttCommandController::$feedBackArray;
         Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
-        echo sprintf(
-            '[%s] Send message on topic [%s]: %s',
-            $this->currentDateTime,
-            $this->topic,
-            $feedBackArr['relay']
-        );
+        if(!$this->isTest) {
+            echo sprintf(
+                '[%s] Send message on topic [%s]: %s',
+                $this->currentDateTime,
+                $this->topic,
+                $feedBackArr['relay']
+            );
+        }
 
         $publishable = false;
 

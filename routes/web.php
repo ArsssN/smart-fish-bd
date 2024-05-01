@@ -26,40 +26,48 @@ Route::post(
 )->name('contact.submit');
 
 // php info
-Route::get('/test', function () {
-    $topic = 'SUB/1E4F/PUB';
-    $responseMessage = json_decode('{
+Route::get('/test/mqtt', function () {
+    $topic = request()->get('topic');
+    $responseMessage =
+        json_decode(json_encode(request()->except('topic')));
+
+    $autoFill =
+        json_decode('{
           "gw_id": "3083987D2528",
           "type": "sen",
-          "addr": "0x1A",
-          "data": {
+            "addr": "0x1A",
+            "data": {
                 "food": 3,
-            "tds": 120.88,
-            "rain": 1,
-            "temp": 32.56,
-            "o2": 1.5,
-            "ph": 4
-          }
+                "tds": 120.88,
+                "rain": 1,
+                "temp": 32.56,
+                "o2": 1.5,
+                "ph": 4
+            }
         }');
-//        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
-//        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
-//        json_decode('{"update":1}');
+    // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+    // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
+    // json_decode('{"update":1}');
+    $autoFill->topic = 'SUB/1E4F/PUB';
 
     try {
-        $mqttListener = new \App\Console\Commands\MqttListener();
+        if (request()->get('gw_id')) {
+            $mqttListener = new \App\Console\Commands\MqttListener();
 
-        $mqttListener->setMessage(json_encode($responseMessage));
-        $mqttListener->setTopic($topic);
-        $mqttListener->setIsTest(true);
+            $mqttListener->setMessage(json_encode($responseMessage));
+            $mqttListener->setTopic($topic);
+            $mqttListener->setIsTest(true);
 
-        $mqttListener->processResponse();
-
-        dd('done', MqttCommandController::$feedBackArray);
+            $mqttListener->processResponse();
+        }
     } catch (Exception $e) {
         Log::error($e->getMessage());
-        return sprintf('[%s] %s', now(), $e->getMessage());
     }
-});
+
+    $publishMessage = MqttCommandController::$feedBackArray;
+
+    return view('test.mqtt', compact('publishMessage', 'autoFill'));
+})->name('test.mqtt');
 
 Route::get('/test/sensors', function () {
     $sensors = Sensor::all();
