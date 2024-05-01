@@ -170,7 +170,7 @@ class SwitchUnitCrudController extends CrudController
             'type'     => 'closure',
             'escaped'  => false,
             'function' => function ($entry) {
-                $switches = json_decode($entry->switches ?? '[]', true);
+                $switches = $entry->switches ?? [];
                 $html     = '<table class="table table-bordered">';
                 $html     .= '<thead>';
                 $html     .= '<tr>';
