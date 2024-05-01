@@ -65,7 +65,8 @@ class MqttCommandController extends Controller
         $pond = $typeUnit->ponds->firstOrFail();
 
         $switchUnit = $pond->switchUnits->firstOrFail();
-        self::$feedBackArray['addr'] = dechex((int)$switchUnit->serial_number);
+        $addr = dechex((int)$switchUnit->serial_number);
+        self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
 
         $project = $pond->project;
 
