@@ -19,6 +19,7 @@
         "afzalsabbir/sslaracommerz": "^0.0.1@alpha",
         "arsbs23/pro": "^1.1",
         "biscolab/laravel-recaptcha": "^6.0",
+        "consoletvs/charts": "6.*",
         "darkaonline/l5-swagger": "^8.6",
         "doctrine/annotations": "^2.0",
         "guzzlehttp/guzzle": "^7.8",

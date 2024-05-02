@@ -62,4 +62,14 @@ Route::group([
     });
     Route::crud('mqtt-data-history', 'MqttDataHistoryCrudController');
     Route::crud('mqtt-data-switch-unit-history', 'MqttDataSwitchUnitHistoryCrudController');
+
+    Route::group([
+        'prefix' => 'report',
+    ], function () {
+        Route::get('machine', [
+            \App\Http\Controllers\ReportController::class,
+            'machine',
+        ])->name('report.machine');
+    });
+    Route::get('charts/machine-report', 'Charts\MachineReportChartController@response')->name('charts.machine-report.index');
 }); // this should be the absolute last line of this file
