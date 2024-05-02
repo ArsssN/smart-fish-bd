@@ -15,14 +15,14 @@ class ReportController extends Controller
     {
         $breadcrumbs = [
             "Admin" => url('admin/dashboard'),
-            "Report" => false,
+            "Reports" => false,
             "Machine" => false
         ];
 
         $ponds = Pond::query()->get(['name', 'id']);
 
         if (!request()->has('pond_id') && $ponds->count() > 0) {
-            return redirect()->route('report.machine', ['pond_id' => $ponds->first()->id]);
+            return redirect()->route('reports.machine', ['pond_id' => $ponds->first()->id]);
         }
 
         $pond_id = request()->get('pond_id');
@@ -39,7 +39,7 @@ class ReportController extends Controller
             ]);
         if (!request()->has('sensors')) {
             return redirect()->route(
-                'report.machine',
+                'reports.machine',
                 [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
             );
         }
