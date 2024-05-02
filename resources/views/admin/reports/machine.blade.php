@@ -106,14 +106,12 @@
         const datasets = @json($graphData);
         const labels = @json($labels);
 
-        /*datasets.forEach(function (dataset) {
-            dataset.borderWidth = 1;
-        });*/
+        console.log([datasets, labels])
 
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                // labels: labels,
                 datasets: datasets
             },
             options: {

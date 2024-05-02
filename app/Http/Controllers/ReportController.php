@@ -65,8 +65,10 @@ class ReportController extends Controller
             ->whereIn('remote_name', $remote_names)
             ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
                 $query->where('pond_id', $pond_id)
-                    ->whereBetween('created_at', [$start_date, $end_date]);
+                    ->whereBetween('created_at', [$start_date, $end_date])
+                    ->latest();
             })
+            ->latest()
             ->get()
             ->map(function ($sensorType) use ($colors, $labelList) {
                 $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
