@@ -29,7 +29,9 @@ class ReportController extends Controller
         $start_date = request()->get('start_date') ?? Carbon::now()->startOfWeek()->format('Y-m-d');
         $end_date = request()->get('end_date') ?? Carbon::now()->format('Y-m-d');
 
+        $defaultSensors = ['o2', 'temp', 'tds'];
         $sensors = SensorType::query()
+            ->whereIn('remote_name', $defaultSensors)
             ->get([
                 'id',
                 'name',
@@ -38,7 +40,7 @@ class ReportController extends Controller
         if (!request()->has('sensors')) {
             return redirect()->route(
                 'report.machine',
-                [...request()->all(), Arr::query(['sensors' => ['temp', 'tds']])]
+                [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
             );
         }
         $remote_names = request()->get('sensors');
@@ -46,14 +48,15 @@ class ReportController extends Controller
         $colors = [
             'tds' => 'blue',
             'temp' => 'red',
-            'ph' => 'green',
+            'ph' => 'purple',
             'do' => 'yellow',
-            'o2' => 'purple',
+            'o2' => 'green',
             'food' => 'orange',
             'rain' => 'cyan',
         ];
 
         $labelList = [
+            'o2' => 'DO Level',
             'tds' => 'TDS',
             'temp' => 'Water Temperature',
         ];
