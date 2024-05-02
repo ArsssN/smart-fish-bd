@@ -11,6 +11,39 @@
     <div class="container-fluid animated fadeIn">
         <div class="row">
             <div class="col-md-12">
+                <div class="d-flex justify-content-between my-2">
+                    <div class="card mb-0 px-3 py-4 justify-content-center">
+                        <h5 class="m-0">Machine Run Status: <strong>On</strong></h5>
+                    </div>
+                    <div class="card mb-0 px-3 py-3">
+                        <div class="rounded">
+                            <table class="table table-borderless table-sm m-0 table-borderless">
+                                <tbody>
+                                <tr class="border-0">
+                                    <td class="border-0 font-weight-bold">DO Level</td>
+                                    <td class="border-0">:</td>
+                                    <td class="border-0">0.0</td>
+                                </tr>
+                                <tr class="border-0">
+                                    <td class="border-0 font-weight-bold">Water Temp.</td>
+                                    <td class="border-0">:</td>
+                                    <td class="border-0">0.0</td>
+                                </tr>
+                                <tr class="border-0">
+                                    <td class="border-0 font-weight-bold">TDS
+                                    <td class="border-0">:</td>
+                                    <td class="border-0">0.0</td>
+                                </tr>
+                                <tr class="border-0">
+                                    <td class="border-0 font-weight-bold">PH</td>
+                                    <td class="border-0">:</td>
+                                    <td class="border-0">0.0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <nav class="navbar navbar-expand-lg navbar-filters mb-0 pb-0 pt-0 my-2">
                     <a class="nav-item d-none d-lg-block"><span class="la la-filter"></span></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bp-filters-navbar"
