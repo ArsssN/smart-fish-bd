@@ -81,7 +81,8 @@ class ReportController extends Controller
                 $config = [
                     'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
                     'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
-                    'borderWidth' => 1
+                    'borderWidth' => 1,
+                    'tension' => 0.3,
                 ];
 
                 return [
