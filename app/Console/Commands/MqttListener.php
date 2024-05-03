@@ -104,6 +104,7 @@ class MqttListener extends Command
         }
 
         if (isset($responseMessage->update)) {
+            sleep(2);
             $this->isUpdate = true;
             $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
             $project = \App\Models\Project::query()
