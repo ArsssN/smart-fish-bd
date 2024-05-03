@@ -19,7 +19,6 @@ class MqttCommandController extends Controller
      * @var array $feedBackArray - feedback array
      */
     public static array $feedBackArray = [
-        'gw_id' => '',
         'addr' => '',
         'type' => 'sw',
         'relay' => '000000000000',

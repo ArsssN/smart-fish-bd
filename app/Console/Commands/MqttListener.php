@@ -76,11 +76,7 @@ class MqttListener extends Command
 
             try {
                 if ($this->processResponse()) {
-                    $feedBackArray = MqttCommandController::$feedBackArray;
-                    if (empty($feedBackArray['gw_id'])) {
-                        unset($feedBackArray['gw_id']);
-                    }
-                    MQTT::publish($this->topic, json_encode($feedBackArray));
+                    MQTT::publish($this->topic, json_encode(MqttCommandController::$feedBackArray));
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
@@ -106,7 +102,7 @@ class MqttListener extends Command
         if ($this->isTest) {
             MqttCommandController::$isSaveMqttData = false;
         }
-        MqttCommandController::$feedBackArray['gw_id'] = '';
+
         if (isset($responseMessage->update)) {
             $this->isUpdate = true;
             $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
@@ -119,7 +115,6 @@ class MqttListener extends Command
                 ->firstOrFail();
             $responseMessage = json_decode($mqtt_data->data);
             $publishMessage = json_decode($mqtt_data->publish_message);
-            MqttCommandController::$feedBackArray['gw_id'] = $project->gateway_serial_number;
             MqttCommandController::$feedBackArray['relay'] = $publishMessage->relay
                 ?? implode('', array_fill(0, 12, 0));
         }
