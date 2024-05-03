@@ -154,8 +154,10 @@ class MqttListener extends Command
                     MqttCommandController::$mqttData->save();
                 }
             }
+            if ($this->isUpdate || $responseMessage->type == 'sen'){
+                $publishable = true;
+            }
 
-            $publishable = true;
         }
 
         return $publishable;
