@@ -154,17 +154,17 @@
                     }
                 },
                 plugins: {
-                    zoom: {
-                        zoom: {
-                            wheel: {
-                                enabled: true,
-                            },
-                            pinch: {
-                                enabled: true
-                            },
-                            mode: 'x',
-                        }
-                    }
+                    // zoom: {
+                    //     zoom: {
+                    //         wheel: {
+                    //             enabled: true,
+                    //         },
+                    //         pinch: {
+                    //             enabled: true
+                    //         },
+                    //         mode: 'x',
+                    //     }
+                    // }
                 }
             }
         });
