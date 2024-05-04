@@ -66,7 +66,7 @@ class ReportController extends Controller
             ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
                 $query->where('pond_id', $pond_id)
                     ->whereBetween('created_at', [$start_date, $end_date])
-                    ->latest();
+                    ->orderBy('created_at', 'asc');
             })
             ->latest()
             ->get()

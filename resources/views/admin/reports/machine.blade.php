@@ -117,7 +117,7 @@
                 </nav>
                 <div class="">
                     <div class="row">
-                        <div class="col-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6 col-xxxxl-4">
+                        <div class="col-12 col-md-12 col-lg-12">
                             <div class="card no-padding no-border">
                                 <canvas id="myChart"></canvas>
                             </div>
