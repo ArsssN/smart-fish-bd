@@ -29,7 +29,7 @@ class ReportController extends Controller
         $start_date = request()->get('start_date') ?? Carbon::now()->startOfWeek()->format('Y-m-d');
         $end_date = request()->get('end_date') ?? Carbon::now()->format('Y-m-d');
 
-        $defaultSensors = ['o2', 'temp', 'tds'];
+        $defaultSensors = SensorType::$defaultSensors;
         $sensors = SensorType::query()
             ->whereIn('remote_name', $defaultSensors)
             ->get([
