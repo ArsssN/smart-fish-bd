@@ -77,6 +77,8 @@
                                            name="end_date" id="end_date" class="form-control"
                                            placeholder="End Date">
                                 </li>
+
+                                <li class="nav-item pl-3 mr-3 border-right"></li>
                                 {{--<li class="nav-item my-auto d-none" title="Sensors">
                                     <select name="sensors[]" id="sensors" class="form-control" multiple="multiple">
                                         @foreach($sensors as $sensor)
@@ -89,7 +91,7 @@
                                 </li>--}}
                                 @foreach($sensors as $sensor)
                                     <li class="nav-item my-auto" title="Sensors">
-                                        <label class="m-0" for="sensor_{{$sensor->remote_name}}">
+                                        <label class="m-0" for="sensor_{{$sensor->remote_name}}" style="color:{{$colors[$sensor->remote_name]}}">
                                             <input type="checkbox" name="sensors[]"
                                                    id="sensor_{{$sensor->remote_name}}"
                                                    value="{{$sensor->remote_name}}" {{in_array($sensor->remote_name, request()->get('sensors') ?? []) ? 'checked' : ''}}>

@@ -131,7 +131,8 @@ class ReportController extends Controller
                 'labels',
                 'ponds',
                 'sensors',
-                'labelList'
+                'labelList',
+                'colors'
             )
         );
     }
