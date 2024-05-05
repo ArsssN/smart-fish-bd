@@ -53,6 +53,16 @@ class MqttData extends Model
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasMany
+     */
+    public function mqttDataHistories(): HasMany
+    {
+        return $this->hasMany(MqttDataHistory::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

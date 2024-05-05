@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MqttData;
 use App\Models\Pond;
 use App\Models\SensorType;
 use Backpack\CRUD\app\Library\Widget;
@@ -11,6 +12,76 @@ use Illuminate\Support\Carbon;
 
 class ReportController extends Controller
 {
+    public function abc()
+    {
+        $mqttData = MqttData::query()->get();
+        $sensorTypes = SensorType::query()->get();
+
+        $mqttData->each(function ($mqttDatum) use ($sensorTypes) {
+            // sensorType that are not in the mqttDataHistories
+            $nonExistentSensorTypes = $sensorTypes->diff($mqttDatum->histories->map(function ($history) {
+                return $history->sensorType;
+            }));
+
+            if ($mqttDatum->histories->count() === 0) {
+                return;
+            }
+
+            $history = $mqttDatum->histories->first();
+
+            $newHistories = $nonExistentSensorTypes->map(function ($sensorType) use ($mqttDatum, $history) {
+                $pondSensorUnits = $sensorType->sensorUnits()
+                    ->with('ponds')
+                    ->whereHas(
+                        'ponds',
+                        function ($query) use ($history) {
+                            $query->where('pond_id', $history->pond_id);
+                        }
+                    )
+                    ->get();
+
+                $_newHistories = [
+                    'mqtt_data_id' => $mqttDatum->id,
+                    'pond_id' => $history->pond_id,
+                    'sensor_unit_id' => null,
+                    'sensor_type_id' => $sensorType->id,
+                    'value' => null,
+                    'message' => null,
+                    'created_at' => $mqttDatum->created_at,
+                    'updated_at' => $mqttDatum->updated_at,
+                    'deleted_at' => null,
+                ];
+
+                $newHistories = [];
+
+                $pondSensorUnits->each(function ($pondSensorUnit) use (&$newHistories, $_newHistories) {
+                    $newHistories[] = [
+                        'sensor_unit_id' => $pondSensorUnit->id,
+                        ...$_newHistories
+                    ];
+                });
+
+                if(count($newHistories) === 0) {
+                    $newHistories[] = $_newHistories;
+                }
+
+                dd(
+                    $history->pond_id,
+                    $sensorType->id,
+                    $pondSensorUnits,
+                    $_newHistories,
+                    $newHistories,
+                );
+
+                return $newHistories;
+            });
+
+            dd($mqttDatum->histories->toArray(), $nonExistentSensorTypes->pluck('id')->toArray(), $newHistories);
+        });
+
+        dd('abc', $mqttData->toArray());
+    }
+
     public function machine()
     {
         $breadcrumbs = [
@@ -60,6 +131,14 @@ class ReportController extends Controller
             'tds' => 'TDS',
             'temp' => 'Water Temperature',
         ];
+        $defaultConfig = [
+            'backgroundColor' => 'black',
+            'borderColor' => 'black',
+            'borderWidth' => 1,
+            'tension' => 0.3,
+        ];
+
+        $this->abc();
 
         $graphData = SensorType::query()
             ->whereIn('remote_name', $remote_names)
@@ -70,7 +149,7 @@ class ReportController extends Controller
             })
             ->latest()
             ->get()
-            ->map(function ($sensorType) use ($colors, $labelList) {
+            ->map(function ($sensorType) use ($colors, $labelList, $defaultConfig) {
                 $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
                     return [
                         'x' => $mqttDataHistory->created_at->format('Y-m-d H:i:s'),
@@ -81,8 +160,7 @@ class ReportController extends Controller
                 $config = [
                     'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
                     'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
-                    'borderWidth' => 1,
-                    'tension' => 0.3,
+                    ...$defaultConfig,
                 ];
 
                 return [
@@ -91,6 +169,8 @@ class ReportController extends Controller
                     ...$config
                 ];
             });
+
+        dd($graphData->toArray());
 
         $labels = $graphData->reduce(function ($carry, $item) {
             if (count($carry) <= $item['data']->count()) {
