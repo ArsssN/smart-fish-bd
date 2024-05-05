@@ -56,7 +56,17 @@ class MqttDataCrudController extends CrudController
         ]);
 
         /*$this->createdByList();*/
-        $this->createdAtList();
+        /*$this->createdAtList();*/
+        CRUD::addColumn([
+            'name' => 'created_at',
+            'label' => 'Created At',
+            'type' => 'closure',
+            'escaped' => false,
+            'function' => function ($entry) {
+            $title = $entry->created_at->diffForHumans();
+                return "<span title='{$title}'>{$entry->created_at->format('d-M-Y h:i:sA')}</span>";
+            },
+        ]);
 
         // filters
         CRUD::addFilter([
@@ -151,7 +161,17 @@ class MqttDataCrudController extends CrudController
         ]);
         CRUD::column('publish_topic');
 
-        $this->createdAtList();
+        /*$this->createdAtList();*/
+        CRUD::addColumn([
+            'name' => 'created_at',
+            'label' => 'Created At',
+            'type' => 'closure',
+            'escaped' => false,
+            'function' => function ($entry) {
+                $title = $entry->created_at->diffForHumans();
+                return "<span title='{$title}'>{$entry->created_at->format('d-M-Y h:i:sA')}</span>";
+            },
+        ]);
 
         CRUD::addColumn([
             'name'     => 'histories',
