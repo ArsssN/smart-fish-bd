@@ -100,6 +100,29 @@ class ReportController extends Controller
             }
         }, []);
 
+        $graphData = $graphData->sortByDesc(function ($item) {
+            return count($item['data']);
+        })->values();
+
+        // take all x values from all data
+        $_labels = $graphData->pluck('data')->flatten(1)->pluck('x')->unique()->sort()->values();
+
+        // fill all data with x values or null
+        $graphData = $graphData->map(function ($item) use ($_labels) {
+            $data = $_labels->map(function ($x) use ($item) {
+                $reportData = $item['data']->firstWhere('x', $x);
+                return [
+                    'x' => $x,
+                    'y' => $reportData ? $reportData['y'] : null
+                ];
+            });
+
+            return [
+                ...$item,
+                'data' => $data
+            ];
+        });
+
         return view(
             'admin.reports.machine',
             compact(
