@@ -130,7 +130,8 @@ class ReportController extends Controller
                 'graphData',
                 'labels',
                 'ponds',
-                'sensors'
+                'sensors',
+                'labelList'
             )
         );
     }

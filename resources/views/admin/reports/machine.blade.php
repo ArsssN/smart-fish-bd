@@ -93,7 +93,7 @@
                                             <input type="checkbox" name="sensors[]"
                                                    id="sensor_{{$sensor->remote_name}}"
                                                    value="{{$sensor->remote_name}}" {{in_array($sensor->remote_name, request()->get('sensors') ?? []) ? 'checked' : ''}}>
-                                            {{$sensor->name}}
+                                            {{$labelList[$sensor->remote_name]}}
                                         </label>
                                     </li>
                                 @endforeach
