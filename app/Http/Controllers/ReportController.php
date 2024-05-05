@@ -138,7 +138,7 @@ class ReportController extends Controller
             'tension' => 0.3,
         ];
 
-        $this->abc();
+        //$this->abc();
 
         $graphData = SensorType::query()
             ->whereIn('remote_name', $remote_names)
@@ -158,9 +158,9 @@ class ReportController extends Controller
                 });
 
                 $config = [
+                    ...$defaultConfig,
                     'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
                     'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
-                    ...$defaultConfig,
                 ];
 
                 return [
@@ -170,7 +170,7 @@ class ReportController extends Controller
                 ];
             });
 
-        dd($graphData->toArray());
+        //dd($graphData->toArray());
 
         $labels = $graphData->reduce(function ($carry, $item) {
             if (count($carry) <= $item['data']->count()) {
