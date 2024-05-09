@@ -51,9 +51,10 @@ Route::get('/test/mqtt', function () {
     $autoFill->topic = 'SUB/1E4F/PUB';
 
     $publishable = false;
+    $isUpdate = request()->get('update') ?? false;
 
     try {
-        if (request()->get('gw_id')) {
+        if (request()->get('gw_id') || $isUpdate) {
             $mqttListener = new \App\Console\Commands\MqttListener();
 
             $mqttListener->setMessage(json_encode($responseMessage));
@@ -75,7 +76,8 @@ Route::get('/test/mqtt', function () {
             'publishMessage',
             'autoFill',
             'publishable',
-            'isAlreadyPublished'
+            'isAlreadyPublished',
+            'isUpdate'
         )
     );
 })->name('test.mqtt');

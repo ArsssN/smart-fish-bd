@@ -171,7 +171,7 @@ class MqttListener extends Command
         }
 
         MqttCommandController::$isAlreadyPublished = false;
-        if ($publishable) {
+        if ($publishable && !$this->isUpdate) {
             $previousMqttData = MqttData::query()
                 ->where('project_id', MqttCommandController::$mqttData->project_id)
                 ->where('id', '!=', MqttCommandController::$mqttData->id)

@@ -26,9 +26,16 @@
                             @dump($publishMessage ?? '')
                         @endif
                     @else
-                        <div class="alert alert-info">
-                            No data found
-                        </div>
+                        @if($isUpdate)
+                            <div class="alert alert-success">
+                                Mqtt request data contains <code>{"update": 1}</code>. Serving last published data.
+                            </div>
+                            @dump($publishMessage ?? '')
+                        @else
+                            <div class="alert alert-info">
+                                No data found
+                            </div>
+                        @endif
                     @endif
                 @else
                     <div class="alert alert-warning">
