@@ -28,7 +28,7 @@
                     @else
                         @if($isUpdate)
                             <div class="alert alert-success">
-                                Mqtt request data contains <code>{"update": 1}</code>. Serving last published data.
+                                Mqtt request data contains <code>{"update": 1}</code>. Serving last published data
                             </div>
                             @dump($publishMessage ?? '')
                         @else
