@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
+use App\Models\MqttData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -135,13 +136,14 @@ class MqttListener extends Command
 
         $feedBackArr = MqttCommandController::$feedBackArray;
         Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
-        if(!$this->isTest) {
+        if (!$this->isTest) {
             echo sprintf(
-                '[%s] Send message on topic [%s]: %s',
+                '[%s] Send message on topic [%s]: <strong>%s</strong>',
                 $this->currentDateTime,
                 $this->topic,
                 $feedBackArr['relay']
             );
+            echo '<br/>';
         }
 
         $publishable = false;
@@ -155,10 +157,43 @@ class MqttListener extends Command
                     MqttCommandController::$mqttData->save();
                 }
             }
-            if ($this->isUpdate || ($responseMessage->type == 'sen' && !empty($responseMessage->data) && empty($responseMessage->relay))){
+            if (
+                $this->isUpdate
+                || (
+                    $responseMessage->type == 'sen'
+                    && !empty($responseMessage->data)
+                    && empty($responseMessage->relay)
+                )
+            ) {
                 $publishable = true;
             }
 
+        }
+
+        MqttCommandController::$isAlreadyPublished = false;
+        if ($publishable) {
+            $previousMqttData = MqttData::query()
+                ->where('project_id', MqttCommandController::$mqttData->project_id)
+                ->where('id', '!=', MqttCommandController::$mqttData->id)
+                ->latest()
+                ->first();
+
+            $publishable = (MqttCommandController::$feedBackArray['relay'] ?? '')
+            !== (json_decode($previousMqttData->publish_message, true)['relay'] ?? '');
+
+            if (!$publishable) {
+                MqttCommandController::$isAlreadyPublished = true;
+
+                Log::info("Already published message on topic [$this->topic]: " . $feedBackArr['relay']);
+                if (!$this->isTest) {
+                    echo sprintf(
+                        '[%s] Already published message on topic [%s], mqtt data id: <strong>%d</strong>',
+                        $this->currentDateTime,
+                        $this->topic,
+                        $previousMqttData->id
+                    );
+                }
+            }
         }
 
         return $publishable;

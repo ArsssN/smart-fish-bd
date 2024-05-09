@@ -30,6 +30,11 @@ class MqttCommandController extends Controller
     public static bool $isSaveMqttData = true;
 
     /**
+     * @var bool $isAlreadyPublished - flag to check if the mqtt data is already published
+     */
+    public static bool $isAlreadyPublished = false;
+
+    /**
      * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
      * @param $topic           string - mqtt topic

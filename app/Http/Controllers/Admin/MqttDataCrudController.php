@@ -56,7 +56,9 @@ class MqttDataCrudController extends CrudController
         ]);
 
         /*$this->createdByList();*/
-        /*$this->createdAtList();*/
+        if (isShellAdmin()) {
+            $this->createdAtList();
+        }
         CRUD::addColumn([
             'name' => 'created_at',
             'label' => 'Created At',

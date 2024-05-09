@@ -50,6 +50,8 @@ Route::get('/test/mqtt', function () {
     // json_decode('{"update":1}');
     $autoFill->topic = 'SUB/1E4F/PUB';
 
+    $publishable = false;
+
     try {
         if (request()->get('gw_id')) {
             $mqttListener = new \App\Console\Commands\MqttListener();
@@ -58,15 +60,24 @@ Route::get('/test/mqtt', function () {
             $mqttListener->setTopic($topic);
             $mqttListener->setIsTest(true);
 
-            $mqttListener->processResponse();
+            $publishable = $mqttListener->processResponse();
         }
     } catch (Exception $e) {
         Log::error($e->getMessage());
     }
 
     $publishMessage = MqttCommandController::$feedBackArray;
+    $isAlreadyPublished = MqttCommandController::$isAlreadyPublished;
 
-    return view('test.mqtt', compact('publishMessage', 'autoFill'));
+    return view(
+        'test.mqtt',
+        compact(
+            'publishMessage',
+            'autoFill',
+            'publishable',
+            'isAlreadyPublished'
+        )
+    );
 })->name('test.mqtt');
 
 Route::get('/test/sensors', function () {

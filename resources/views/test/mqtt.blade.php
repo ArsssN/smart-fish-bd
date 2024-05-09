@@ -13,21 +13,28 @@
             <div class="col-12 order-0 order-md-1 col-md-5 col-lg-4">
                 <h2>Response</h2>
                 <hr/>
-                @if($publishMessage['addr'] ?? '')
-                    @if(($publishMessage['relay'] ?? '') === '000000000000')
-                        <div class="alert alert-danger">
-                            There is no publishable data
-                        </div>
+                @if(!($isAlreadyPublished ?? false))
+                    @if($publishMessage['addr'] ?? '')
+                        @if(($publishMessage['relay'] ?? '') === '000000000000')
+                            <div class="alert alert-danger">
+                                There is no publishable data
+                            </div>
+                        @else
+                            <div class="alert alert-light">
+                                Test data has not been published or saved
+                            </div>
+                            @dump($publishMessage ?? '')
+                        @endif
                     @else
-                        <div class="alert alert-light">
-                            Test data has not been published or saved
+                        <div class="alert alert-info">
+                            No data found
                         </div>
-                        @dump($publishMessage ?? '')
                     @endif
                 @else
-                    <div class="alert alert-info">
-                        No data found
+                    <div class="alert alert-warning">
+                        Relay is same as previous
                     </div>
+                    @dump($publishMessage ?? '')
                 @endif
             </div>
             <div class="col-12 order-1 order-md-0 col-md-7 col-lg-8">
