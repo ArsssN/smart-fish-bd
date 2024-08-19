@@ -143,6 +143,7 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
+
         CRUD::addColumn([
             'name'  => 'mqttData.project',
             'label' => 'Project',
@@ -155,12 +156,15 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
             'type'     => 'closure',
             'escaped'   => false,
             'function' => function ($entry) {
+                $aerator_slug = 'aerator';
+
                 $html     = "<table class='table table-bordered table-striped table-sm'>";
                 $html     .= "<thead>";
                 $html     .= "<tr>";
                 $html     .= "<th>SN</th>";
                 $html     .= "<th>Switch type</th>";
                 $html     .= "<th>Status</th>";
+                $html     .= "<th>Run time</th>";
                 $html     .= "<th>Comment</th>";
                 $html     .= "</tr>";
                 $html     .= "</thead>";
@@ -170,12 +174,21 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
                 $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
                 $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
-                $switches->each(function ($switch) use (&$html, $relatedSwitches) {
+                $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
+
+                $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {
+                    $runTime = +$switch->switchType === +$aeratorSwitchTypeID
+                        ? $switch->status === 'on'
+                            ? '111'
+                            : '000'
+                        : '-';
+
                     $switch = (object) $switch;
                     $html .= "<tr>";
                     $html .= "<td>{$switch->number}</td>";
                     $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
                     $html .= "<td>{$switch->status}</td>";
+                    $html .= "<td>{$runTime}</td>";
                     $html .= "<td>{$switch->comment}</td>";
                     $html .= "</tr>";
                 });
