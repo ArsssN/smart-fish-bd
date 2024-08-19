@@ -20,7 +20,7 @@
                 .</small>
             @if ($crud->hasAccess('list'))
                 <small class=""><a href="{{ url($crud->route) }}" class="font-sm"><i
-                                class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
+                            class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
                         <span>{{ $crud->entity_name_plural }}</span></a></small>
             @endif
         </h2>
@@ -295,6 +295,7 @@
                                                                                 <th>SN</th>
                                                                                 <th>Switch type</th>
                                                                                 <th>Status</th>
+                                                                                <th>Run time</th>
                                                                                 <th>Comment</th>
                                                                             </tr>
                                                                             </thead>
@@ -304,15 +305,27 @@
                                                                                 $switches = collect($switches);
                                                                                 $switchTypeIDs = $switches->pluck('switchType')->unique()->toArray();
                                                                                 $switchTypes = \App\Models\SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+
+                                                                                $aerator_slug = 'aerator';
+                                                                                $aeratorSwitchTypeID = $switchTypes->where('slug', $aerator_slug)->first()->id;
                                                                             @endphp
                                                                             @foreach($switches as $switch)
-                                                                                @php($switch = (object)$switch)
+                                                                                @php
+                                                                                    $switch = (object)$switch;
+                                                                                    $runTime =
+                                                                                        +$switch->switchType === +$aeratorSwitchTypeID
+                                                                                            ? $switch->status === 'on'
+                                                                                                ? '111'
+                                                                                                : '000'
+                                                                                            : '-';
+                                                                                @endphp
                                                                                 <tr>
                                                                                     <td>
                                                                                         {{ $switch->number }}
                                                                                     </td>
                                                                                     <td>{{ $switchTypes[$switch->switchType]->name ?? '-' }}</td>
                                                                                     <td>{{ $switch->status }}</td>
+                                                                                    <td>{{ $runTime }}</td>
                                                                                     <td>{{ $switch->comment }}</td>
                                                                                 </tr>
                                                                             @endforeach

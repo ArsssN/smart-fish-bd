@@ -156,8 +156,6 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
             'type'     => 'closure',
             'escaped'   => false,
             'function' => function ($entry) {
-                $aerator_slug = 'aerator';
-
                 $html     = "<table class='table table-bordered table-striped table-sm'>";
                 $html     .= "<thead>";
                 $html     .= "<tr>";
@@ -174,6 +172,7 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
                 $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
                 $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
+                $aerator_slug = 'aerator';
                 $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
 
                 $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {

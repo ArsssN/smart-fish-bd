@@ -265,6 +265,7 @@ class PondCrudController extends CrudController
                     $html     .= "<th>SN</th>";
                     $html     .= "<th>Switch type</th>";
                     $html     .= "<th>Status</th>";
+                    $html     .= "<th>Run time</th>";
                     $html     .= "<th>Comment</th>";
                     $html     .= "</tr>";
                     $html     .= "</thead>";
@@ -274,12 +275,23 @@ class PondCrudController extends CrudController
                     $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
                     $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
-                    $switches->each(function ($switch) use (&$html, $relatedSwitches) {
+                    $aerator_slug = 'aerator';
+                    $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
+
+                    $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {
                         $switch = (object) $switch;
+
+                        $runTime = +$switch->switchType === +$aeratorSwitchTypeID
+                            ? $switch->status === 'on'
+                                ? '111'
+                                : '000'
+                            : '-';
+
                         $html .= "<tr>";
                         $html .= "<td>{$switch->number}</td>";
                         $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
                         $html .= "<td>{$switch->status}</td>";
+                        $html .= "<td>{$runTime}</td>";
                         $html .= "<td>{$switch->comment}</td>";
                         $html .= "</tr>";
                     });
