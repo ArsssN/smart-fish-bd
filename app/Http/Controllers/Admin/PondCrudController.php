@@ -260,13 +260,17 @@ class PondCrudController extends CrudController
                         . "'>{$sensorUnit->name}</a></td>";
                     $html .= "<td>";
 
-                    $html .= "<ul>";
-                    $html .= "<li class='d-flex justify-content-between font-weight-bold mb-2'><div>Sensor Name</div><div>Avg.</div></li>";
+                    $html .= "<table class='table table-bordered table-striped table-sm'>";
+                    $html .= "<thead>";
+                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th>Avg.</th></tr>";
+                    $html .= "</thead>";
+                    $html .= "<tbody>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {
                         $avg = number_format($sensorUnitHistories[$sensorType->id]['avg'] ?? 0, 2);
-                        $html .= "<li><div class='d-flex justify-content-between'><div>{$sensorType->name} <code>({$sensorType->remote_name})</code></div><div>{$avg}</div></div></li>";
+                        $html .= "<tr><td>{$sensorType->name}</td><td>{$sensorType->remote_name}</td><td>{$avg}</td></tr>";
                     });
-                    $html .= "</ul>";
+                    $html .= "</tbody>";
+                    $html .= "</table>";
 
                     $html .= "</td>";
                     $html .= "<td>{$sensorUnit->serial_number}</td>";
