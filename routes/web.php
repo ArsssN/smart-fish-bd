@@ -26,71 +26,61 @@ Route::post(
 )->name('contact.submit');
 
 // php info
-Route::get('/test', function () {
-    $topic = 'SUB/1E4F/PUB';
-    $isUpdate = false;
+Route::get('/test/mqtt', function () {
+    $topic = request()->get('topic');
     $responseMessage =
-//        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
-        json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
-//        json_decode('{"update":1}');
+        json_decode(json_encode(request()->except('topic')));
 
-    $feedBackMessage = '';
+    $autoFill =
+        json_decode('{
+          "gw_id": "3083987D2528",
+          "type": "sen",
+            "addr": "0x1A",
+            "data": {
+                "food": 3,
+                "tds": 120.88,
+                "rain": 1,
+                "temp": 32.56,
+                "o2": 1.5,
+                "ph": 4
+            }
+        }');
+    // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+    // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
+    // json_decode('{"update":1}');
+    $autoFill->topic = 'SUB/1E4F/PUB';
 
-    if (isset($responseMessage->update)) {
-        $isUpdate = true;
-        $gateway_serial_number_last_4digit = Str::before(Str::after($topic, '/'), '/');
-        $project = \App\Models\Project::query()
-            ->where('gateway_serial_number', 'LIKE', "%{$gateway_serial_number_last_4digit}")
-            ->firstOrFail();
-        $mqtt_data = $project->mqttData()
-            //->whereNotNull('publish_message')
-            ->orderBy('id', 'desc')
-            ->firstOrFail();
-        $responseMessage = json_decode($mqtt_data->data);
-        $publishMessage = json_decode($mqtt_data->publish_message);
-        $feedBackMessage = $publishMessage->relay ?? implode('', array_fill(0, 12, 0));
-    }
-
-    $feedBackArr = [
-        'addr' => $responseMessage->addr,
-        'type' => $responseMessage->type,
-    ];
+    $publishable = false;
+    $isUpdate = request()->get('update') ?? false;
 
     try {
-        if (!$isUpdate) {
-            switch ($responseMessage->type) {
-                case 'sen':
-                    $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage, $topic);
-                    break;
-                case 'swi':
-                    $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage, $topic);
-                    break;
-                default:
-                    break;
-            }
-        }
+        if (request()->get('gw_id') || $isUpdate) {
+            $mqttListener = new \App\Console\Commands\MqttListener();
 
-        $feedBackArr['relay'] = $feedBackMessage;
+            $mqttListener->setMessage(json_encode($responseMessage));
+            $mqttListener->setTopic($topic);
+            $mqttListener->setIsTest(true);
 
-        if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
-            dump('publish');
-            if (!$isUpdate) {
-                $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
-                MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
-                MqttCommandController::$mqttData->save();
-                dump(MqttCommandController::$mqttData);
-            }
-            // MQTT::publish($this->topic, json_encode($feedBackArr));
-            dump($feedBackMessage, $feedBackArr, $responseMessage);
-        } else {
-            dump('No relay message', $feedBackArr);
+            $publishable = $mqttListener->processResponse();
         }
-        return phpinfo();
     } catch (Exception $e) {
         Log::error($e->getMessage());
-        return sprintf('[%s] %s', now(), $e->getMessage());
     }
-});
+
+    $publishMessage = MqttCommandController::$feedBackArray;
+    $isAlreadyPublished = MqttCommandController::$isAlreadyPublished;
+
+    return view(
+        'test.mqtt',
+        compact(
+            'publishMessage',
+            'autoFill',
+            'publishable',
+            'isAlreadyPublished',
+            'isUpdate'
+        )
+    );
+})->name('test.mqtt');
 
 Route::get('/test/sensors', function () {
     $sensors = Sensor::all();

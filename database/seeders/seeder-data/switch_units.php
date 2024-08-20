@@ -1,6 +1,6 @@
 <?php
 $switch_units = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
     'name' => 'Switch Unit 1',
@@ -14,7 +14,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:01:35',
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'name' => 'Switch Unit 2',
@@ -28,7 +28,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'Switch Unit 3',
@@ -42,7 +42,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'name' => 'Switch Unit 4',
@@ -56,7 +56,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  4 => 
+  4 =>
   array (
     'id' => 5,
     'name' => 'Switch Unit 5',
@@ -70,11 +70,11 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  5 => 
+  5 =>
   array (
     'id' => 6,
     'name' => 'Switch Unit 6',
-    'serial_number' => 'switch-unit-6',
+    'serial_number' => '26',
     'slug' => 'switch-unit-6',
     'switches' => '[{"number":"1","switchType":"1","status":"on","comment":"C1"},{"number":"2","switchType":"2","status":"on","comment":null},{"number":"3","switchType":"1","status":"on","comment":null},{"number":"4","switchType":"2","status":"on","comment":null},{"number":"5","switchType":"1","status":"on","comment":null},{"number":"6","switchType":"1","status":"on","comment":null},{"number":"7","switchType":"2","status":"on","comment":null},{"number":"8","switchType":"1","status":"on","comment":"C8"},{"number":"9","switchType":"1","status":"on","comment":null},{"number":"10","switchType":"1","status":"on","comment":"C10"},{"number":"11","switchType":"1","status":"on","comment":null},{"number":"12","switchType":"2","status":"on","comment":"C12"}]',
     'description' => NULL,
@@ -84,7 +84,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  6 => 
+  6 =>
   array (
     'id' => 7,
     'name' => 'Switch Unit 7',
@@ -98,7 +98,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  7 => 
+  7 =>
   array (
     'id' => 8,
     'name' => 'Switch Unit 8',
@@ -112,7 +112,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  8 => 
+  8 =>
   array (
     'id' => 9,
     'name' => 'Switch Unit 9',
@@ -126,7 +126,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  9 => 
+  9 =>
   array (
     'id' => 10,
     'name' => 'Switch Unit 10',
@@ -140,7 +140,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  10 => 
+  10 =>
   array (
     'id' => 11,
     'name' => 'Switch Unit 11',
@@ -154,7 +154,7 @@ $switch_units = array (
     'updated_at' => '2024-03-24 01:03:35',
     'deleted_at' => NULL,
   ),
-  11 => 
+  11 =>
   array (
     'id' => 12,
     'name' => 'Switch Unit 12',
