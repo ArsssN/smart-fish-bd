@@ -46,9 +46,9 @@ class MqttDataCrudController extends CrudController
     {
         CRUD::column('project_id');
         CRUD::addColumn([
-            'name'    => 'type',
-            'label'   => 'Type',
-            'type'    => 'closure',
+            'name' => 'type',
+            'label' => 'Type',
+            'type' => 'closure',
             'escaped' => false,
             'function' => function ($entry) {
                 return ucfirst($entry->type);
@@ -65,15 +65,15 @@ class MqttDataCrudController extends CrudController
             'type' => 'closure',
             'escaped' => false,
             'function' => function ($entry) {
-            $title = $entry->created_at->diffForHumans();
+                $title = $entry->created_at->diffForHumans();
                 return "<span title='{$title}'>{$entry->created_at->format('d-M-Y h:i:sA')}</span>";
             },
         ]);
 
         // filters
         CRUD::addFilter([
-            'name'  => 'project_id',
-            'type'  => 'select2',
+            'name' => 'project_id',
+            'type' => 'select2',
             'label' => 'Project',
         ], function () {
             return \App\Models\Project::all()->pluck('name', 'id')->toArray();
@@ -82,8 +82,8 @@ class MqttDataCrudController extends CrudController
         });
 
         CRUD::addFilter([
-            'name'  => 'type',
-            'type'  => 'select2',
+            'name' => 'type',
+            'type' => 'select2',
             'label' => 'Type',
         ], function () {
             return ['sensor' => 'Sensor', 'switch' => 'Switch'];
@@ -93,8 +93,8 @@ class MqttDataCrudController extends CrudController
 
         // date between created_at
         CRUD::addFilter([
-            'name'  => 'created_at',
-            'type'  => 'date_range',
+            'name' => 'created_at',
+            'type' => 'date_range',
             'label' => 'Created At',
         ], false, function ($value) {
             $dates = json_decode($value);
@@ -143,9 +143,9 @@ class MqttDataCrudController extends CrudController
 
         CRUD::column('project_id');
         CRUD::addColumn([
-            'name'    => 'type',
-            'label'   => 'Type',
-            'type'    => 'closure',
+            'name' => 'type',
+            'label' => 'Type',
+            'type' => 'closure',
             'escaped' => false,
             'function' => function ($entry) {
                 return ucfirst($entry->type);
@@ -176,10 +176,10 @@ class MqttDataCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
-            'name'     => 'histories',
-            'label'    => 'Histories',
-            'type'     => 'closure',
-            'escaped'  => false,
+            'name' => 'histories',
+            'label' => 'Histories',
+            'type' => 'closure',
+            'escaped' => false,
             'function' => function ($entry) {
                 $histories = $entry->histories()
                     ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType')
@@ -216,6 +216,16 @@ class MqttDataCrudController extends CrudController
                         $html .= '<tr>';
                         $html .= '<td>' . $history->pond->name . '</td>';
 
+                        $value = $history->value;
+
+                        if ($history->sensorType->remote_name === 'ph') {
+                            if ($value < 6) {
+                                $value = $value + 1.5;
+                            } else if ($value > 9) {
+                                $value = $value - 1.5;
+                            }
+                        }
+
                         if ($entry->type == 'sensor') {
                             $html .= '<td>' . optional($history->sensorUnit)->name . '</td>';
                             $html .= '<td>' . optional($history->sensorType)->name . '</td>';
@@ -224,9 +234,9 @@ class MqttDataCrudController extends CrudController
                             $html .= '<td>' . optional($history->switchType)->name . '</td>';
                         }
 
-                        $html .= '<td>' . $history->value . '</td>';
+                        $html .= '<td title="' . $history->value . '">' . $value . '</td>';
                         $html .= '<td>' . $history->message . '</td>';
-                        $html .= '<td title="'.$history->created_at->diffForHumans().'">' . $history->created_at . '</td>';
+                        $html .= '<td title="' . $history->created_at->diffForHumans() . '">' . $history->created_at . '</td>';
                         $html .= '</tr>';
                     }
                 }
