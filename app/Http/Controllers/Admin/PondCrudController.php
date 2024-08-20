@@ -220,10 +220,10 @@ class PondCrudController extends CrudController
 
                 $historiesQuery = $entry->histories();
 
-                /*
-                    $nowDate = Carbon::make('2024-05-10')->endOfDay();
-                    $lastDate = Carbon::make('2024-05-10')->startOfDay();
-                */
+
+                /*$nowDate = Carbon::make('2024-05-10')->endOfDay();
+                $lastDate = Carbon::make('2024-05-10')->startOfDay();*/
+
                 $nowDate = Carbon::now();
                 $lastDate = Carbon::now()->subDay();
 
@@ -233,13 +233,28 @@ class PondCrudController extends CrudController
                         ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
                         ->reduce(
                             function ($carry, $item) {
-                                $carry[$item->sensor_type_id] = isset($carry[$item->sensor_type_id])
-                                    ? $carry[$item->sensor_type_id] + $item->value
+                                if (!$item->value) return $carry;
+
+                                $thisSensorType = $carry[$item->sensor_type_id] ??
+                                    [
+                                        "avg" => 0,
+                                        "total" => 0,
+                                        "count" => 0,
+                                    ];
+
+                                $thisSensorType['total'] = isset($thisSensorType[$item->sensor_type_id])
+                                    ? $thisSensorType[$item->sensor_type_id] + $item->value
                                     : $item->value;
+                                $thisSensorType['count']++;
+                                $thisSensorType['avg'] = $thisSensorType['total'] / $thisSensorType['count'];
+
+                                $carry[$item->sensor_type_id] = $thisSensorType;
 
                                 return $carry;
                             }, []
                         );
+
+                dump($sensorUnitHistories);
 
                 $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories) {
                     $html .= "<tr>";
@@ -250,7 +265,7 @@ class PondCrudController extends CrudController
                     $html .= "<ul>";
                     $html .= "<li class='d-flex justify-content-between font-weight-bold mb-2'><div>Sensor Name</div><div>Avg.</div></li>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {
-                        $avg = $sensorUnitHistories[$sensorType->id] ?? 0;
+                        $avg = number_format($sensorUnitHistories[$sensorType->id]['avg'] ?? 0, 2);
                         $html .= "<li><div class='d-flex justify-content-between'><div>{$sensorType->name} <code>({$sensorType->remote_name})</code></div><div>{$avg}</div></div></li>";
                     });
                     $html .= "</ul>";
