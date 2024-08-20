@@ -78,6 +78,21 @@ class SensorType extends Model
         return $this->hasManyThrough(Project::class, Sensor::class);
     }
 
+    /**
+     * Get the mqtt data history that owns the SensorType
+     *
+     * @return HasMany
+     */
+    public function mqttDataHistories(): HasMany
+    {
+        return $this->hasMany(MqttDataHistory::class);
+    }
+
+    /**
+     * @var array|string[] $defaultSensors - Default sensors for the machine report
+     */
+    public static array $defaultSensors = ['o2', 'temp', 'tds'];
+
 
     /*
     |--------------------------------------------------------------------------

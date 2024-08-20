@@ -4,26 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
-use App\Models\Project;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\NoReturn;
 
 class MqttCommandController extends Controller
 {
     /**
-     * @var MqttData $mqttData - mqtt data
+     * @var MqttData|Model|Builder $mqttData - mqtt data
      */
-    public static MqttData $mqttData;
+    public static MqttData|Model|Builder $mqttData;
+
+    /**
+     * @var array $feedBackArray - feedback array
+     */
+    public static array $feedBackArray = [
+        'addr' => '',
+        'type' => 'sw',
+        'relay' => '000000000000',
+    ];
+
+    /**
+     * @var bool $isSaveMqttData - flag to check if the mqtt data should be saved
+     */
+    public static bool $isSaveMqttData = true;
+
+    /**
+     * @var bool $isAlreadyPublished - flag to check if the mqtt data is already published
+     */
+    public static bool $isAlreadyPublished = false;
 
     /**
      * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
      * @param $topic           string - mqtt topic
      *
-     * @return string
+     * @return void
      */
-    public static function saveMqttData(string $type, object $responseMessage, string $topic): string
+    public static function saveMqttData(string $type, object $responseMessage, string $topic): void
     {
         $newResponseMessage = new \stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
@@ -49,35 +67,52 @@ class MqttCommandController extends Controller
             })
             ->firstOrFail();
 
-        $project = $typeUnit->ponds->firstOrFail()->project;
+        $pond = $typeUnit->ponds->firstOrFail();
+
+        $switchUnit = $pond->switchUnits->firstOrFail();
+        $addr = dechex((int)$switchUnit->serial_number);
+        self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
+
+        $project = $pond->project;
 
         $switchState = array_fill(0, 12, 0);
 
         $projectID = $project->id;
-        $mqttData = MqttData::query()->create([
-            'type' => $type,
-            'project_id' => $projectID,
-            'data' => json_encode($responseMessage),
-            'publish_topic' => $topic,
-            'publish_message' => json_encode([
-                'addr' => $responseMessage->addr,
-                'type' => $responseMessage->type,
-                'relay' => implode('', $switchState),
-            ])
-        ]);
+
+        $mqttData = MqttData::query();
+        if (self::$isSaveMqttData) {
+            $mqttData = $mqttData->create([
+                'type' => $type,
+                'project_id' => $projectID,
+                'data' => json_encode($responseMessage),
+                'publish_topic' => $topic,
+                'publish_message' => json_encode([
+                    'addr' => $responseMessage->addr,
+                    'type' => $responseMessage->type,
+                    'relay' => implode('', $switchState),
+                ])
+            ]);
+        }
         self::$mqttData = $mqttData;
 
         $typeUnit->{$type . 'Types'}
             ->each(
                 function ($typeType)
-                use ($typeUnit, $type, $responseMessage, $mqttData, &$switchState) {
-                    self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, $switchState);
+                use ($typeUnit, $type, $responseMessage, &$switchState) {
+                    self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $switchState);
                 }
             );
 
-        self::changeSwitchStateOfSensorUnit($mqttData, $typeUnit->ponds, $switchState);
+        if (self::$isSaveMqttData) {
+            self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState);
+        }
 
-        return implode(', ', $switchState);
+        self::$feedBackArray['relay'] = implode('', $switchState);
+
+        // Confirms if the relay is empty or null, if empty or null then set it to 000000000000
+        if (!(bool)self::$feedBackArray['relay']) {
+            self::$feedBackArray['relay'] = implode('', array_fill(0, 12, 0));
+        }
     }
 
     /**
@@ -87,12 +122,13 @@ class MqttCommandController extends Controller
      * @param $typeUnit
      * @param $type
      * @param $responseMessage
-     * @param $mqttData
      * @param $switchState
      *
      * @return void
      */
-    private static function saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $mqttData, &$switchState): void
+    private static function saveMqttDataHistory(
+        $typeType, $typeUnit, $type, $responseMessage, &$switchState
+    ): void
     {
         $typeUnitID = $typeUnit->id;
         $typeTypeID = $typeType->id;
@@ -123,54 +159,62 @@ class MqttCommandController extends Controller
             $type_message = "No helper method found for $type: {$typeType->name}";
         }
 
-        $typeUnit->ponds->each(function ($pond) use ($type, $mqttData, $typeUnitID, $typeTypeID, $value, $type_message) {
-            $pondID = $pond->id;
+        if (self::$isSaveMqttData) {
+            $typeUnit->ponds->each(
+                function ($pond)
+                use ($type, $typeUnitID, $typeTypeID, $value, $type_message
+                ) {
+                    $pondID = $pond->id;
 
-            $mqttData->histories()->create([
-                'pond_id' => $pondID,
-                "{$type}_unit_id" => $typeUnitID,
-                "{$type}_type_id" => $typeTypeID,
-                'value' => $value,
-                'type' => $type,
-                'message' => $type_message,
-            ]);
-        });
+                    self::$mqttData->histories()->create([
+                        'pond_id' => $pondID,
+                        "{$type}_unit_id" => $typeUnitID,
+                        "{$type}_type_id" => $typeTypeID,
+                        'value' => $value,
+                        'type' => $type,
+                        'message' => $type_message,
+                    ]);
+                });
+        }
     }
 
     /**
-     * @param $mqttData
      * @param $ponds
      * @param $switchState
      *
      * @return void
      */
-    private static function changeSwitchStateOfSensorUnit($mqttData, $ponds, $switchState): void
+    private static function changeSwitchStateOfSensorUnit($ponds, $switchState): void
     {
-        $ponds->each(function ($pond) use ($mqttData, $switchState) {
+        $ponds->each(function ($pond) use ($switchState) {
             $mqttDataSwitchUnitHistories = [];
-            $pond->switchUnits->each(function ($switchUnit) use ($mqttData, $switchState, &$mqttDataSwitchUnitHistories) {
+            $pond->switchUnits->each(
+                function ($switchUnit)
+                use ($switchState, &$mqttDataSwitchUnitHistories
+                ) {
+                    $switches = collect($switchUnit->switches ?? '[]');
+                    $switches = $switches->map(function ($switch, $index) use ($switchState) {
+                        $switch['status'] = $switchState[$index]
+                            ? 'on'
+                            : 'off';
 
-                $switches = collect($switchUnit->switches ?? '[]');
-                $switches->map(function ($switch, $index) use ($switchUnit, $mqttData, $switchState) {
-                    $switch['status'] = $switchState[$index]
-                        ? 'on'
-                        : 'off';
+                        return $switch;
+                    });
 
-                    return $switch;
+                    $switchUnit->switches = $switches->toArray();
+                    $switchUnit->save();
+
+                    if (self::$mqttData->id) {
+                        $mqttDataSwitchUnitHistories[] = [
+                            'mqtt_data_id' => self::$mqttData->id,
+                            'pond_id' => $switchUnit->pivot->pond_id,
+                            'switch_unit_id' => $switchUnit->id,
+                            'switches' => json_encode($switches),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
                 });
-
-                $switchUnit->switches = $switches->toArray();
-                $switchUnit->save();
-
-                $mqttDataSwitchUnitHistories[] = [
-                    'mqtt_data_id' => $mqttData->id,
-                    'pond_id' => $switchUnit->pivot->pond_id,
-                    'switch_unit_id' => $switchUnit->id,
-                    'switches' => json_encode($switches),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            });
 
             MqttDataSwitchUnitHistory::query()->insert($mqttDataSwitchUnitHistories);
         });

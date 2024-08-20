@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
+use App\Models\MqttData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -29,59 +30,58 @@ class MqttListener extends Command
      *
      * @var string
      */
-    protected $message;
+    protected string $message;
 
     /**
      * The topic to be subscribed to.
      *
      * @var string
      */
-    protected $topic;
+    protected string $topic;
 
     /**
      * The flag to check if the message is an update.
      *
      * @var bool
      */
-    protected $isUpdate = false;
+    protected bool $isUpdate = false;
+
+    /**
+     * The flag to check if the command is in test mode.
+     *
+     * @var bool $isTest - flag to check if the command is in test mode
+     */
+    protected bool $isTest = false;
+
+    /**
+     * The current date time.
+     *
+     * @var string $currentDateTime - current date time
+     */
+    protected string $currentDateTime;
 
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return int - the status code
      */
-    public function handle()
+    public function handle(): int
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
-            $currentDateTime = now()->format('Y-m-d H:i:s');
+            $this->currentDateTime = now()->format('Y-m-d H:i:s');
             Log::info("Received message on topic [$topic]: $message");
-            echo sprintf('[%s] Received message on topic [%s]: %s', $currentDateTime, $topic, $message);
+            echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
             $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
             $this->message = $message;
 
             try {
-                $feedBackArr = $this->processResponse();
-                Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
-                echo sprintf(
-                    '[%s] Send message on topic [%s]: %s',
-                    $currentDateTime,
-                    $this->topic,
-                    $feedBackArr['relay']
-                );
-
-                if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
-                    if (!$this->isUpdate) {
-                        $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
-                        MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
-                        MqttCommandController::$mqttData->save();
-                    }
-
-                    MQTT::publish($this->topic, json_encode($feedBackArr));
+                if ($this->processResponse()) {
+                    MQTT::publish($this->topic, json_encode(MqttCommandController::$feedBackArray));
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
-                echo sprintf('[%s] %s', $currentDateTime, $e->getMessage());
+                echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
             }
         });
 
@@ -92,15 +92,20 @@ class MqttListener extends Command
     /**
      * Process the response from the MQTT server.
      *
-     * @return array
+     * @return bool
      */
-    private function processResponse(): array
+    public function processResponse(): bool
     {
+        $this->currentDateTime = $this->currentDateTime ?? now()->format('Y-m-d H:i:s');
         $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
-        $feedBackMessage = '';
+
+        if ($this->isTest) {
+            MqttCommandController::$isSaveMqttData = false;
+        }
 
         if (isset($responseMessage->update)) {
+            sleep(2);
             $this->isUpdate = true;
             $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
             $project = \App\Models\Project::query()
@@ -112,29 +117,105 @@ class MqttListener extends Command
                 ->firstOrFail();
             $responseMessage = json_decode($mqtt_data->data);
             $publishMessage = json_decode($mqtt_data->publish_message);
-            $feedBackMessage = $publishMessage->relay ?? implode('', array_fill(0, 12, 0));
+            MqttCommandController::$feedBackArray['relay'] = $publishMessage->relay
+                ?? implode('', array_fill(0, 12, 0));
         }
-
-        $feedBackArr = [
-            'addr' => $responseMessage->addr,
-            'type' => $responseMessage->type,
-        ];
 
         if (!$this->isUpdate) {
             switch ($responseMessage->type) {
                 case 'sen':
-                    $feedBackMessage = MqttCommandController::saveMqttData('sensor', $responseMessage, $this->topic);
+                    MqttCommandController::saveMqttData('sensor', $responseMessage, $this->topic);
                     break;
                 case 'swi':
-                    $feedBackMessage = MqttCommandController::saveMqttData('switch', $responseMessage, $this->topic);
+                    MqttCommandController::saveMqttData('switch', $responseMessage, $this->topic);
                     break;
                 default:
                     break;
             }
         }
 
-        $feedBackArr['relay'] = $feedBackMessage;
+        $feedBackArr = MqttCommandController::$feedBackArray;
+        Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
+        if (!$this->isTest) {
+            echo sprintf(
+                '[%s] Send message on topic [%s]: <strong>%s</strong>',
+                $this->currentDateTime,
+                $this->topic,
+                $feedBackArr['relay']
+            );
+            echo '<br/>';
+        }
 
-        return $feedBackArr;
+        $publishable = false;
+
+        if ($feedBackArr['relay'] !== implode(', ', array_fill(0, 12, 0))) {
+            if (!$this->isUpdate) {
+                $feedBackArr['relay'] = implode('', explode(', ', $feedBackArr['relay']));
+
+                if (MqttCommandController::$isSaveMqttData) {
+                    MqttCommandController::$mqttData->publish_message = json_encode($feedBackArr);
+                    MqttCommandController::$mqttData->save();
+                }
+            }
+            if (
+                $this->isUpdate
+                || (
+                    $responseMessage->type == 'sen'
+                    && !empty($responseMessage->data)
+                    && empty($responseMessage->relay)
+                )
+            ) {
+                $publishable = true;
+            }
+
+        }
+
+        MqttCommandController::$isAlreadyPublished = false;
+        if ($publishable && !$this->isUpdate) {
+            $previousMqttData = MqttData::query()
+                ->where('project_id', MqttCommandController::$mqttData->project_id)
+                ->where('id', '!=', MqttCommandController::$mqttData->id)
+                ->latest()
+                ->first();
+
+            $publishable = (MqttCommandController::$feedBackArray['relay'] ?? '')
+            !== (json_decode($previousMqttData->publish_message, true)['relay'] ?? '');
+
+            if (!$publishable) {
+                MqttCommandController::$isAlreadyPublished = true;
+
+                Log::info("Already published message on topic [$this->topic]: " . $feedBackArr['relay']);
+                if (!$this->isTest) {
+                    echo sprintf(
+                        '[%s] Already published message on topic [%s], mqtt data id: <strong>%d</strong>',
+                        $this->currentDateTime,
+                        $this->topic,
+                        $previousMqttData->id
+                    );
+                }
+            }
+        }
+
+        return $publishable;
+    }
+
+    public function setIsUpdate(bool $isUpdate): void
+    {
+        $this->isUpdate = $isUpdate;
+    }
+
+    public function setTopic(string $topic): void
+    {
+        $this->topic = $topic;
+    }
+
+    public function setMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
+    public function setIsTest(bool $isTest): void
+    {
+        $this->isTest = $isTest;
     }
 }
