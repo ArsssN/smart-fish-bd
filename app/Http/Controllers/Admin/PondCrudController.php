@@ -242,7 +242,7 @@ class PondCrudController extends CrudController
                                         "count" => 0,
                                     ];
 
-                                $thisSensorType['total'] = isset($thisSensorType[$item->sensor_type_id])
+                                $thisSensorType['total'] += isset($thisSensorType[$item->sensor_type_id])
                                     ? $thisSensorType[$item->sensor_type_id] + $item->value
                                     : $item->value;
                                 $thisSensorType['count']++;
@@ -253,8 +253,6 @@ class PondCrudController extends CrudController
                                 return $carry;
                             }, []
                         );
-
-                dump($sensorUnitHistories);
 
                 $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories) {
                     $html .= "<tr>";
