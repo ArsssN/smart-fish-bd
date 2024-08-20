@@ -254,7 +254,7 @@ class PondCrudController extends CrudController
                             }, []
                         );
 
-                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories) {
+                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $nowDate, $lastDate) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id)
                         . "'>{$sensorUnit->name}</a></td>";
@@ -262,7 +262,7 @@ class PondCrudController extends CrudController
 
                     $html .= "<table class='table table-bordered table-striped table-sm'>";
                     $html .= "<thead>";
-                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th>Avg.</th></tr>";
+                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$nowDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
                     $html .= "</thead>";
                     $html .= "<tbody>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {
