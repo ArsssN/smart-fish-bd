@@ -12,6 +12,7 @@ use App\Traits\Crud\CreatedBy;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Carbon\Carbon;
 
 /**
  * Class PondCrudController
@@ -65,14 +66,14 @@ class PondCrudController extends CrudController
 
         // sensorUnits filter
         $this->crud->addFilter([
-            'name'  => 'sensorUnits',
-            'type'  => 'select2',
+            'name' => 'sensorUnits',
+            'type' => 'select2',
             'label' => 'Sensor Units'
         ], function () {
             return SensorUnit::query()->get()
                 ->map(function ($sensorUnit) {
                     return [
-                        'id'   => $sensorUnit->id,
+                        'id' => $sensorUnit->id,
                         'name' => $sensorUnit->serial_number . ' - ' . $sensorUnit->name,
                     ];
                 })
@@ -86,14 +87,14 @@ class PondCrudController extends CrudController
 
         // project filter
         $this->crud->addFilter([
-            'name'  => 'project_id',
-            'type'  => 'select2',
+            'name' => 'project_id',
+            'type' => 'select2',
             'label' => 'Project'
         ], function () {
             return Project::query()->get()
                 ->map(function ($project) {
                     return [
-                        'id'   => $project->id,
+                        'id' => $project->id,
                         'name' => $project->name,
                     ];
                 })
@@ -124,24 +125,24 @@ class PondCrudController extends CrudController
             'class' => 'form-group col-md-6'
         ]);
         CRUD::addField([
-            'name'              => 'project_id',
-            'type'              => 'relationship',
-            'entity'            => 'project',
-            'ajax'              => true,
-            'inline_create'     => [
+            'name' => 'project_id',
+            'type' => 'relationship',
+            'entity' => 'project',
+            'ajax' => true,
+            'inline_create' => [
                 'entity' => 'project',
-                'field'  => 'name',
+                'field' => 'name',
             ],
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
             ]
         ]);
         CRUD::addField([
-            'name'              => 'sensorUnits',
-            'label'             => 'Sensor units',
-            'type'              => 'relationship',
-            'entity'            => 'sensorUnits',
-            'ajax'              => true,
+            'name' => 'sensorUnits',
+            'label' => 'Sensor units',
+            'type' => 'relationship',
+            'entity' => 'sensorUnits',
+            'ajax' => true,
             /*'inline_create' => [
                 'entity' => 'sensorUnit',
                 'field' => 'name',
@@ -151,12 +152,12 @@ class PondCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name'              => 'switchUnits',
-            'label'             => 'Switch units',
-            'type'              => 'relationship',
-            'entity'            => 'switchUnits',
-            'ajax'              => true,
-            'data_source'       => route('pond.fetchUnusedSwitchUnits'),
+            'name' => 'switchUnits',
+            'label' => 'Switch units',
+            'type' => 'relationship',
+            'entity' => 'switchUnits',
+            'ajax' => true,
+            'data_source' => route('pond.fetchUnusedSwitchUnits'),
             /*'inline_create' => [
                 'entity' => 'switchUnit',
                 'field' => 'name',
@@ -166,8 +167,8 @@ class PondCrudController extends CrudController
             ],
         ]);
         CRUD::addField([
-            'name'              => 'status',
-            'type'              => 'enum',
+            'name' => 'status',
+            'type' => 'enum',
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-12'
             ]
@@ -202,10 +203,10 @@ class PondCrudController extends CrudController
         CRUD::column('project_id');
 
         CRUD::addColumn([
-            'name'     => 'sensorUnits',
-            'label'    => 'Sensor units',
-            'type'     => 'closure',
-            'escaped'  => false,
+            'name' => 'sensorUnits',
+            'label' => 'Sensor units',
+            'type' => 'closure',
+            'escaped' => false,
             'function' => function ($entry) {
                 $html = "<table class='table table-bordered table-striped'>";
                 $html .= "<thead>";
@@ -217,16 +218,60 @@ class PondCrudController extends CrudController
                 $html .= "</thead>";
                 $html .= "<tbody>";
 
-                $entry->sensorUnits->each(function ($sensorUnit) use (&$html) {
+                $historiesQuery = $entry->histories();
+
+
+                /*$nowDate = Carbon::make('2024-05-10')->endOfDay();
+                $lastDate = Carbon::make('2024-05-10')->startOfDay();*/
+
+                $nowDate = Carbon::now();
+                $lastDate = Carbon::now()->subDay();
+
+                $sensorUnitHistories =
+                    (clone $historiesQuery)->where('sensor_unit_id', '!=', null)->latest()
+                        ->whereBetween('created_at', [$lastDate, $nowDate])
+                        ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
+                        ->reduce(
+                            function ($carry, $item) {
+                                if (!$item->value) return $carry;
+
+                                $thisSensorType = $carry[$item->sensor_type_id] ??
+                                    [
+                                        "avg" => 0,
+                                        "total" => 0,
+                                        "count" => 0,
+                                    ];
+
+                                $thisSensorType['total'] += isset($thisSensorType[$item->sensor_type_id])
+                                    ? $thisSensorType[$item->sensor_type_id] + $item->value
+                                    : $item->value;
+                                $thisSensorType['count']++;
+                                $thisSensorType['avg'] = $thisSensorType['total'] / $thisSensorType['count'];
+
+                                $carry[$item->sensor_type_id] = $thisSensorType;
+
+                                return $carry;
+                            }, []
+                        );
+
+                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $nowDate, $lastDate) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id)
-                             . "'>{$sensorUnit->name}</a></td>";
+                        . "'>{$sensorUnit->name}</a></td>";
                     $html .= "<td>";
-                    $html .= "<ul>";
-                    $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html) {
-                        $html .= "<li>{$sensorType->name} <code>({$sensorType->remote_name})</code></li>";
+
+                    $html .= "<table class='table table-bordered table-striped table-sm'>";
+                    $html .= "<thead>";
+                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$nowDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
+                    $html .= "</thead>";
+                    $html .= "<tbody>";
+                    $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {
+                        $avg = number_format($sensorUnitHistories[$sensorType->id]['avg'] ?? 0, 2);
+                        $html .= "<tr><td>{$sensorType->name}</td><td>{$sensorType->remote_name}</td><td>{$avg}</td></tr>";
                     });
-                    $html .= "</ul>";
+                    $html .= "</tbody>";
+                    $html .= "</table>";
+
                     $html .= "</td>";
                     $html .= "<td>{$sensorUnit->serial_number}</td>";
                     $html .= "</tr>";
@@ -239,10 +284,10 @@ class PondCrudController extends CrudController
             }
         ]);
         CRUD::addColumn([
-            'name'     => 'switchUnits',
-            'label'    => 'Switch units',
-            'type'     => 'closure',
-            'escaped'  => false,
+            'name' => 'switchUnits',
+            'label' => 'Switch units',
+            'type' => 'closure',
+            'escaped' => false,
             'function' => function ($entry) {
                 $html = "<table class='table table-bordered table-striped'>";
                 $html .= "<thead>";
@@ -255,38 +300,37 @@ class PondCrudController extends CrudController
                 $html .= "<tbody>";
 
                 $entry->switchUnits->each(function ($switchUnit) use (&$html) {
-                    $html     .= "<tr>";
-                    $html     .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id)
-                                 . "'>{$switchUnit->name}</a></td>";
-                    $html     .= "<td>";
-                    $html     .= "<table class='table table-bordered table-striped table-sm'>";
-                    $html     .= "<thead>";
-                    $html     .= "<tr>";
-                    $html     .= "<th>SN</th>";
-                    $html     .= "<th>Switch type</th>";
-                    $html     .= "<th>Status</th>";
-                    $html     .= "<th>Run time</th>";
+                    $html .= "<tr>";
+                    $html .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id)
+                        . "'>{$switchUnit->name}</a></td>";
+                    $html .= "<td>";
+                    $html .= "<table class='table table-bordered table-striped table-sm'>";
+                    $html .= "<thead>";
+                    $html .= "<tr>";
+                    $html .= "<th>SN</th>";
+                    $html .= "<th>Switch type</th>";
+                    $html .= "<th>Status</th>";
+                    $html .= "<th>Run time</th>";
                     $html     .= "<th>Comment</th>";
-                    $html     .= "</tr>";
-                    $html     .= "</thead>";
-                    $html     .= "<tbody>";
+                    $html .= "</tr>";
+                    $html .= "</thead>";
+                    $html .= "<tbody>";
                     $switches = collect($switchUnit->switches);
 
-                    $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
+                    $switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
                     $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
                     $aerator_slug = 'aerator';
                     $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
 
                     $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {
-                        $switch = (object) $switch;
+                        $switch = (object)$switch;
 
                         $runTime = +$switch->switchType === +$aeratorSwitchTypeID
                             ? $switch->status === 'on'
                                 ? '111'
                                 : '000'
                             : '-';
-
                         $html .= "<tr>";
                         $html .= "<td>{$switch->number}</td>";
                         $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
@@ -313,12 +357,12 @@ class PondCrudController extends CrudController
         CRUD::column('status');
 
         CRUD::addColumn([
-            'name'     => 'histories',
-            'label'    => 'Histories',
-            'type'     => 'closure',
-            'escaped'  => false,
+            'name' => 'histories',
+            'label' => 'Histories',
+            'type' => 'closure',
+            'escaped' => false,
             'function' => function ($entry) {
-                $limit          = 10;
+                $limit = 10;
                 $historiesQuery = $entry->histories()
                     ->with('pond', 'sensorUnit', 'sensorType', 'switchUnit', 'switchType');
 
@@ -331,9 +375,9 @@ class PondCrudController extends CrudController
                     "<h4>Sensor Histories <small>(Latest {$limit} data) <a target='_blank' href='" . route(
                         'mqtt-data-history.index',
                         [
-                            'pond_id'      => $entry->id,
+                            'pond_id' => $entry->id,
                             'pond_id_text' => $entry->name,
-                            'type'         => 'sensor'
+                            'type' => 'sensor'
                         ]
                     ) . "'>View all</a></small></h4>";
                 $html .= $this->getXUnitHistory('sensor', $sensorUnitHistories);
@@ -341,9 +385,9 @@ class PondCrudController extends CrudController
                 $html .= "<h4>Switch Histories <small>(Latest {$limit} data) <a target='_blank' href='" . route(
                         'mqtt-data-history.index',
                         [
-                            'pond_id'      => $entry->id,
+                            'pond_id' => $entry->id,
                             'pond_id_text' => $entry->name,
-                            'type'         => 'switch'
+                            'type' => 'switch'
                         ]
                     ) . "'>View all</a></small></h4>";
                 $html .= $this->getXUnitHistory('switch', $switchUnitHistories);
@@ -353,10 +397,10 @@ class PondCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
-            'name'     => 'switchUnitHistories',
-            'label'    => 'Switch unit histories',
-            'type'     => 'closure',
-            'escaped'  => false,
+            'name' => 'switchUnitHistories',
+            'label' => 'Switch unit histories',
+            'type' => 'closure',
+            'escaped' => false,
             'function' => function ($entry) {
                 $count = $entry->switchUnitHistories->count() ?? 0;
 

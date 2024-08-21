@@ -102,6 +102,10 @@ Route::get('/test/sensors', function () {
         }
     }
 
+    if(is_array($sensor_message)) {
+        $sensor_message = implode(', ', $sensor_message);
+    }
+
     return view('test.sensors', compact('sensors', 'sensor_message'));
 });
 
