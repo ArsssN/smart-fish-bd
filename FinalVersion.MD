@@ -22,8 +22,8 @@
 
 - [ ] **Sensor Data Display**
     - Display the average value of sensors over the last 24 hours on the home page of both
-      - [ ] The web
-      - [x] Mobile apps
+      - [x] The web
+      - [ ] Mobile apps
 
 - [ ] **Cloud Icon**
     - Highlight or enlarge the cloud icon on mobile apps.
