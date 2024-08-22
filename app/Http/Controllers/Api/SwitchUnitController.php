@@ -3,11 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MqttCommandController;
 use App\Http\Resources\Api\SwitchTypeResource;
 use App\Http\Resources\Api\SwitchUnitResource;
+use App\Models\MqttData;
+use App\Models\MqttDataSwitchUnitHistory;
+use App\Models\Pond;
 use App\Models\SwitchType;
 use App\Models\SwitchUnit;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use PhpMqtt\Client\Facades\MQTT;
 
 class SwitchUnitController extends Controller
 {
@@ -124,11 +131,21 @@ class SwitchUnitController extends Controller
 
     /**
      * @OA\Patch(
-     *     path="/api/v1/switch-unit/{switchUnit}/switches/update/status",
+     *     path="/api/v1/switch-unit/{switchUnit}/pond/{pond}/switches/update/status",
      *     operationId="switchesStatusUpdate",
      *     tags={"Switch Unit"},
      *     summary="Update the status of all switches in a switch unit",
      *     security={{"bearerAuth": {}}},
+     *      @OA\Parameter(
+     *          name="pond",
+     *          in="path",
+     *          description="Pond ID",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="integer",
+     *              format="int64"
+     *          )
+     *      ),
      *     @OA\Parameter(
      *         name="switchUnit",
      *         in="path",
@@ -178,9 +195,10 @@ class SwitchUnitController extends Controller
      * )
      *
      * @param SwitchUnit $switchUnit - The switch unit
+     * @param Pond $pond - The pond
      * @return JsonResponse
      */
-    public function switchesStatusUpdate(SwitchUnit $switchUnit): JsonResponse
+    public function switchesStatusUpdate(SwitchUnit $switchUnit, Pond $pond): JsonResponse
     {
         //$defaultStitchesStatus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
         $defaultStitchesStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -201,9 +219,42 @@ class SwitchUnitController extends Controller
         $switchUnit->switches = $newSwitches;
         $switchUnit->save();
 
-        return response()->json([
-            'message' => 'Switches status updated successfully',
-            'switchUnit' => new SwitchUnitResource($switchUnit)
-        ]);
+        try {
+            $mqttData = MqttData::query()
+                ->whereHas(
+                    'switchUnitHistories',
+                    function ($query) use ($switchUnit, $pond) {
+                        return $query->where([
+                            'switch_unit_id' => $switchUnit->id,
+                            'pond_id' => $pond->id,
+                        ]);
+                    }
+                )
+                ->latest()
+                ->first();
+            $topic = $mqttData?->publish_topic ?? '';
+
+            MqttCommandController::$feedBackArray = $mqttData?->publish_message
+                ? json_decode($mqttData?->publish_message, true)
+                : MqttCommandController::$feedBackArray;
+            MqttCommandController::$feedBackArray['relay'] = implode('', $switchesStatus);
+            MQTT::publish($topic, json_encode(MqttCommandController::$feedBackArray));
+            Log::info("Switches status updated successfully on topic [$topic]: " . MqttCommandController::$feedBackArray['relay']);
+            $res = [
+                'message' => 'Switches status updated successfully',
+                'switchUnit' => new SwitchUnitResource($switchUnit)
+            ];
+        } catch (\Exception $e) {
+            $currentDateTime = now()->format('Y-m-d H:i:s');
+            Log::info("Tries to update switches status on topic [$topic]: " . MqttCommandController::$feedBackArray['relay']);
+            Log::error($e->getMessage());
+            echo sprintf('[%s] %s', $currentDateTime, $e->getMessage());
+            $res = [
+                'message' => 'Failed to update switches status',
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($res);
     }
 }

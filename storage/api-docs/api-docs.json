@@ -981,7 +981,7 @@
                 ]
             }
         },
-        "/api/v1/switch-unit/{switchUnit}/switches/update/status": {
+        "/api/v1/switch-unit/{switchUnit}/pond/{pond}/switches/update/status": {
             "patch": {
                 "tags": [
                     "Switch Unit"
@@ -989,6 +989,16 @@
                 "summary": "Update the status of all switches in a switch unit",
                 "operationId": "switchesStatusUpdate",
                 "parameters": [
+                    {
+                        "name": "pond",
+                        "in": "path",
+                        "description": "Pond ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
                     {
                         "name": "switchUnit",
                         "in": "path",

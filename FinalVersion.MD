@@ -10,7 +10,7 @@
 - [ ] **Aerator Logic**
     - Ensure all aerators stop for 15 minutes after running for two consecutive hours.
 
-- [ ] **Mobile App Control**
+- [x] **Mobile App Control**
     - Implement on/off control for all switches (1 to 8) via the mobile app (manual override).
 
 - [x] **PH Logic**
