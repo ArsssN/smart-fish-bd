@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
-use App\Models\Pond;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -39,12 +38,10 @@ class MqttCommandController extends Controller
      * @param $type            string - unit type (sensor, switch, etc)
      * @param $responseMessage object - response message from mqtt
      * @param $topic           string - mqtt topic
-     * @param $projectID       int|null - project ID
-     * @param $pondID          int|null - pond ID
      *
      * @return void
      */
-    public static function saveMqttData(string $type, object $responseMessage, string $topic, int $projectID = null, int $pondID = null): void
+    public static function saveMqttData(string $type, object $responseMessage, string $topic): void
     {
         $newResponseMessage = new \stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
@@ -57,32 +54,30 @@ class MqttCommandController extends Controller
 
         $model = 'App\Models\\' . Str::ucfirst($type) . 'Unit';
 
+        $typeUnit = $model::query()
+            ->where('serial_number', $serialNumber)
+            ->with("{$type}Types", "ponds")
+            ->whereHas("{$type}Types", function ($query) use ($remoteNames) {
+                $query->whereIn('remote_name', $remoteNames);
+            })
+            ->whereHas("ponds", function ($query) use ($newResponseMessage) {
+                $query->whereHas("project", function ($query) use ($newResponseMessage) {
+                    $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
+                });
+            })
+            ->firstOrFail();
+
+        $pond = $typeUnit->ponds->firstOrFail();
+
+        $switchUnit = $pond->switchUnits->firstOrFail();
+        $addr = dechex((int)$switchUnit->serial_number);
+        self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
+
+        $project = $pond->project;
+
         $switchState = array_fill(0, 12, 0);
 
-        if (!$projectID) {
-            $typeUnit = $model::query()
-                ->where('serial_number', $serialNumber)
-                ->with("{$type}Types", "ponds")
-                ->whereHas("{$type}Types", function ($query) use ($remoteNames) {
-                    $query->whereIn('remote_name', $remoteNames);
-                })
-                ->whereHas("ponds", function ($query) use ($newResponseMessage) {
-                    $query->whereHas("project", function ($query) use ($newResponseMessage) {
-                        $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
-                    });
-                })
-                ->firstOrFail();
-
-            $pond = $typeUnit->ponds->firstOrFail();
-
-            $switchUnit = $pond->switchUnits->firstOrFail();
-            $addr = dechex((int)$switchUnit->serial_number);
-            self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
-
-            $project = $pond->project;
-
-            $projectID = $project->id;
-        }
+        $projectID = $project->id;
 
         $mqttData = MqttData::query();
         if (self::$isSaveMqttData) {
@@ -100,34 +95,19 @@ class MqttCommandController extends Controller
         }
         self::$mqttData = $mqttData;
 
-        if (!$projectID) {
-            $typeUnit->{$type . 'Types'}
-                ->each(
-                    function ($typeType)
-                    use ($typeUnit, $type, $responseMessage, &$switchState) {
-                        self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $switchState);
-                    }
-                );
+        $typeUnit->{$type . 'Types'}
+            ->each(
+                function ($typeType)
+                use ($typeUnit, $type, $responseMessage, &$switchState) {
+                    self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $switchState);
+                }
+            );
 
-            if (self::$isSaveMqttData) {
-                self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState);
-            }
-
-            self::$feedBackArray['relay'] = implode('', $switchState);
-        } else {
-            $mqttData->publish_message = json_encode([
-                'addr' => $responseMessage->addr,
-                'type' => $responseMessage->type,
-                'relay' => self::$feedBackArray['relay'],
-            ]);
-
-            if(self::$isSaveMqttData) {
-                $mqttData->save();
-
-                $ponds = Pond::query()->where('id', $pondID)->get();
-                self::changeSwitchStateOfSensorUnit($ponds, str_split(self::$feedBackArray['relay']));
-            }
+        if (self::$isSaveMqttData) {
+            self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState);
         }
+
+        self::$feedBackArray['relay'] = implode('', $switchState);
 
         // Confirms if the relay is empty or null, if empty or null then set it to 000000000000
         if (!(bool)self::$feedBackArray['relay']) {
