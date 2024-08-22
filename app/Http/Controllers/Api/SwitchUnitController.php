@@ -43,6 +43,44 @@ class SwitchUnitController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/api/v1/switch-unit/{switchUnit}",
+     *     operationId="getSwitchUnit",
+     *     tags={"Switch Unit"},
+     *     summary="Retrieve the details of a specific switch unit",
+     *     description="Returns the details of the specified switch unit.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="switchUnit",
+     *         in="path",
+     *         description="Switch unit ID",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Switch unit retrieved successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/SwitchUnitResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Switch unit not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
+    public function switchUnit(SwitchUnit $switchUnit): JsonResponse
+    {
+        return response()->json(new SwitchUnitResource($switchUnit));
+    }
+
+    /**
+     * @OA\Get(
      *     path="/api/v1/switch-unit/{switchUnit}/switch-type/list",
      *     operationId="switchUnitSwitchTypeList",
      *     tags={"Switch Unit"},
@@ -77,7 +115,7 @@ class SwitchUnitController extends Controller
      */
     public function switchTypeList(SwitchUnit $switchUnit): JsonResponse
     {
-        $switches = collect($switchUnit->switches);
+        $switches = collect($switchUnit->switches ?? []);
         $switchTypeIds = $switches->pluck('switchType')->unique()->toArray();
         $switchTypes = SwitchType::query()->whereIn('id', $switchTypeIds)->get();
 
@@ -85,7 +123,7 @@ class SwitchUnitController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Patch(
      *     path="/api/v1/switch-unit/{switchUnit}/switches/update/status",
      *     operationId="switchesStatusUpdate",
      *     tags={"Switch Unit"},
@@ -101,6 +139,21 @@ class SwitchUnitController extends Controller
      *             format="int64"
      *         )
      *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="switchesStatus",
+     *                 type="array",
+     *                 description="Array of statuses for the switches (0 for off, 1 for on)",
+     *                 @OA\Items(
+     *                     type="integer",
+     *                     enum={0, 1}
+     *                 ),
+     *                 example={1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Switches status updated successfully",
@@ -110,6 +163,11 @@ class SwitchUnitController extends Controller
      *                 property="message",
      *                 type="string",
      *                 example="Switches status updated successfully"
+     *             ),
+     *             @OA\Property(
+     *                 property="switchUnit",
+     *                 type="object",
+     *                 ref="#/components/schemas/SwitchUnitResource"
      *             )
      *         )
      *     ),
@@ -140,8 +198,12 @@ class SwitchUnitController extends Controller
             array_keys($switchesStatus)
         );
 
-        dd($switchesStatus, $switches->toArray(), $newSwitches);
+        $switchUnit->switches = $newSwitches;
+        $switchUnit->save();
 
-        return response()->json(['message' => 'Switches status updated successfully']);
+        return response()->json([
+            'message' => 'Switches status updated successfully',
+            'switchUnit' => new SwitchUnitResource($switchUnit)
+        ]);
     }
 }

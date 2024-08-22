@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "API Documentation",
-        "description": "API for mobile app",
+        "description": "API for mobile app <br/> <br/> Run `php artisan l5-swagger:generate` to generate updated API documentation",
         "version": "1.0.0"
     },
     "paths": {
@@ -892,6 +892,51 @@
                 ]
             }
         },
+        "/api/v1/switch-unit/{switchUnit}": {
+            "get": {
+                "tags": [
+                    "Switch Unit"
+                ],
+                "summary": "Retrieve the details of a specific switch unit",
+                "description": "Returns the details of the specified switch unit.",
+                "operationId": "getSwitchUnit",
+                "parameters": [
+                    {
+                        "name": "switchUnit",
+                        "in": "path",
+                        "description": "Switch unit ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Switch unit retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SwitchUnitResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Switch unit not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/switch-unit/{switchUnit}/switch-type/list": {
             "get": {
                 "tags": [
@@ -937,7 +982,7 @@
             }
         },
         "/api/v1/switch-unit/{switchUnit}/switches/update/status": {
-            "get": {
+            "patch": {
                 "tags": [
                     "Switch Unit"
                 ],
@@ -955,6 +1000,43 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "switchesStatus": {
+                                        "description": "Array of statuses for the switches (0 for off, 1 for on)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                0,
+                                                1
+                                            ]
+                                        },
+                                        "example": [
+                                            1,
+                                            0,
+                                            1,
+                                            0,
+                                            1,
+                                            0,
+                                            1,
+                                            0,
+                                            1,
+                                            0,
+                                            1,
+                                            0
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Switches status updated successfully",
@@ -965,6 +1047,9 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Switches status updated successfully"
+                                        },
+                                        "switchUnit": {
+                                            "$ref": "#/components/schemas/SwitchUnitResource"
                                         }
                                     },
                                     "type": "object"

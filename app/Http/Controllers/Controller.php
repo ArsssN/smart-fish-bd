@@ -13,7 +13,7 @@ use OpenApi\Annotations as OA;
  * @OA\Info(
  *      version="1.0.0",
  *      title="API Documentation",
- *      description="API for mobile app",
+ *      description="API for mobile app <br/> <br/> Run `php artisan l5-swagger:generate` to generate updated API documentation",
  * )
  */
 class Controller extends BaseController
