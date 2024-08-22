@@ -236,18 +236,30 @@ class SwitchUnitController extends Controller
                 ->first();
 
             $topic = $mqttData?->publish_topic ?? '';
-
-            MqttCommandController::$feedBackArray = $mqttData?->publish_message
-                ? json_decode($mqttData?->publish_message, true)
-                : MqttCommandController::$feedBackArray;
-            MqttCommandController::$feedBackArray['relay'] = implode('', $switchesStatus);
-            MqttCommandController::$feedBackArray['type'] = 'sw';
-
             $data = json_decode($mqttData->data);
-            $data->data = collect();
-            MqttCommandController::saveMqttData('sensor', (object)$data, $topic, $mqttData->project_id, $pond->id);
 
-            MQTT::publish($topic, json_encode(MqttCommandController::$feedBackArray));
+            $addr = dechex((int)$switchUnit->serial_number);
+            $addr = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
+
+            $newMqttData = MqttData::query()->create([
+                'type' => 'sensor',
+                'project_id' => $mqttData->project_id,
+                'data' => json_encode($data),
+                'publish_message' => json_encode([
+                    'addr' => $addr,
+                    'type' => 'sw',
+                    'relay' => implode('', $switchesStatus),
+                ]),
+                'publish_topic' => $topic,
+            ]);
+            MqttDataSwitchUnitHistory::query()->create([
+                'mqtt_data_id' => $newMqttData->id,
+                'pond_id' => $pond->id,
+                'switch_unit_id' => $switchUnit->id,
+                'switches' => json_encode($newSwitches),
+            ]);
+
+            MQTT::publish($topic, $newMqttData->publish_message);
             Log::info("Switches status updated successfully on topic [$topic]: " . MqttCommandController::$feedBackArray['relay']);
 
             $res = [

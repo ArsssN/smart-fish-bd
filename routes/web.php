@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SwitchUnitController;
 use App\Http\Controllers\MqttCommandController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\Sensor;
@@ -81,6 +82,8 @@ Route::get('/test/mqtt', function () {
         )
     );
 })->name('test.mqtt');
+
+Route::get('/test/switch-unit/{switchUnit}/pond/{pond}/switches/update/status', [SwitchUnitController::class, 'switchesStatusUpdate']);
 
 Route::get('/test/sensors', function () {
     $sensors = Sensor::all();
