@@ -7,12 +7,14 @@ use App\Http\Controllers\MqttCommandController;
 use App\Http\Resources\Api\SwitchTypeResource;
 use App\Http\Resources\Api\SwitchUnitResource;
 use App\Models\MqttData;
+use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\Pond;
 use App\Models\SwitchType;
 use App\Models\SwitchUnit;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
 
 class SwitchUnitController extends Controller
