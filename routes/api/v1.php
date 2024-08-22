@@ -54,7 +54,7 @@ Route::middleware('web')->group(function () {
         Route::prefix('/{switchUnit}')->group(function () {
             Route::get('', [SwitchUnitController::class, 'switchUnit']);
             Route::get('/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
-            Route::patch('/switches/update/status', [SwitchUnitController::class, 'switchesStatusUpdate']);
+            Route::patch('/pond/{pond}/switches/update/status', [SwitchUnitController::class, 'switchesStatusUpdate']);
         });
     });
 
