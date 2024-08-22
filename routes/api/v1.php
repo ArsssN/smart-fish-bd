@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('web')->group(function () {
     Route::prefix('/user')->group(function () {
         Route::get('/profile', [AuthController::class, 'userProfile']);
         Route::patch('/change/user-details', [ChangeController::class, 'changeUserDetails']);
@@ -51,7 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/switch-unit')->group(function () {
         Route::get('/list', [SwitchUnitController::class, 'list']);
-        Route::get('/{switchUnit}/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
+        Route::prefix('/{switchUnit}')->group(function () {
+            Route::get('/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
+            Route::get('/switches/update/status', [SwitchUnitController::class, 'switchesStatusUpdate']);
+        });
     });
 
     Route::prefix('/project')->group(function () {

@@ -935,6 +935,53 @@
                     }
                 ]
             }
+        },
+        "/api/v1/switch-unit/{switchUnit}/switches/update/status": {
+            "get": {
+                "tags": [
+                    "Switch Unit"
+                ],
+                "summary": "Update the status of all switches in a switch unit",
+                "operationId": "switchesStatusUpdate",
+                "parameters": [
+                    {
+                        "name": "switchUnit",
+                        "in": "path",
+                        "description": "Switch unit ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Switches status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Switches status updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
