@@ -120,9 +120,10 @@ class MqttCommandController extends Controller
                 'type' => $responseMessage->type,
                 'relay' => self::$feedBackArray['relay'],
             ]);
-            $mqttData->save();
 
-            if (self::$isSaveMqttData) {
+            if(self::$isSaveMqttData) {
+                $mqttData->save();
+
                 $ponds = Pond::query()->where('id', $pondID)->get();
                 self::changeSwitchStateOfSensorUnit($ponds, str_split(self::$feedBackArray['relay']));
             }
