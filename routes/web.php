@@ -131,7 +131,9 @@ Route::get('/test/mail', function () {
 
 // test route to convert mqtt_data_switch_unit_histories switches to a separate table mqtt_data_switch_unit_history_details
 Route::get('/test/convert-switches', function () {
-    $aHistoryDetail = \App\Models\MqttDataSwitchUnitHistoryDetail::query()
+    /*
+     * Checking of run time in seconds
+     * $aHistoryDetail = \App\Models\MqttDataSwitchUnitHistoryDetail::query()
         ->where([
             'history_id' => 356,
             'switch_type_id' => 1,
@@ -139,6 +141,7 @@ Route::get('/test/convert-switches', function () {
         ->orderByDesc('created_at')
         ->first();
     dd($aHistoryDetail->toArray());
+    */
 
     $switch_unit_histories = DB::table('mqtt_data_switch_unit_histories')->get();
 
@@ -153,6 +156,7 @@ Route::get('/test/convert-switches', function () {
                 'switch_type_id' => $switchDetail['switchType'] == 1 ? 1 : 2,
                 'status' => $switchDetail['status'],
                 'comment' => $switchDetail['comment'],
+                'created_at' => $switch_unit_history->created_at,
             ];
             \App\Models\MqttDataSwitchUnitHistoryDetail::query()->create($detail);
         }

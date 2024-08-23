@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MqttDataSwitchUnitHistoryDetail extends Model
@@ -29,7 +30,7 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     protected $appends = [
         'machine_on_at',
         'machine_off_at',
-        'runtime'
+        'run_time'
     ];
 
     /*
@@ -37,6 +38,34 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function getOnOffTime(MqttDataSwitchUnitHistoryDetail $modal, string $status)
+    {
+        $at = null;
+        if ($status === 'on') {
+            if ($modal->status == 'off') {
+                $beforeData = DB::table('mqtt_data_switch_unit_history_details')
+                    /*->whereNot('id', $modal->id)*/
+                    /*->whereNot('history_id', $modal->history_id)*/
+                    ->where('switch_type_id', $modal->switch_type_id)
+                    ->where('number', $modal->number)
+                    ->where('status', 'on')
+                    ->orderByDesc('history_id')
+                    ->first();
+                $at = data_get($beforeData, 'created_at');
+            } else {
+                $at = $modal->created_at;
+            }
+        } else if ($status === 'off') {
+            if ($this->status == 'on') {
+                $at = null;
+            } else {
+                $at = $this->updated_at ?: $this->created_at;
+            }
+        }
+
+        return $at;
+
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -58,53 +87,37 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     // machineOnAt
     public function machineOnAt(): Attribute
     {
-        if ($this->status == 'off') {
-            $beforeData = DB::table('mqtt_data_switch_unit_history_details')
-                /*->whereNot('id', $this->id)*/
-                /*->whereNot('history_id', $this->history_id)*/
-                ->where('switch_type_id', $this->switch_type_id)
-                ->where('number', $this->number)
-                ->where('status', 'on')
-                ->orderByDesc('history_id')
-                ->first();
-            $onAt = data_get($beforeData, 'created_at');
-        } else {
-            $onAt = $this->created_at;
-        }
-
         return Attribute::make(
-            get: fn() => $onAt,
+            get: fn() => $this->getOnOffTime($this, 'on'),
         );
     }
+
     // machineOffAt
     public function machineOffAt(): Attribute
     {
-        if ($this->status == 'on') {
-            $offAt = null;
-        } else {
-            $offAt = $this->updated_at ?: $this->created_at;
-        }
-
         return Attribute::make(
-            get: fn() => $offAt,
+            get: fn() => $this->getOnOffTime($this, 'off'),
         );
     }
 
-    // runtime
-    public function runtime(): Attribute
+    // runtime in seconds
+    public function runTime(): Attribute
     {
-        dd($this);
+        $startAt = Carbon::parse($this->getOnOffTime($this, 'on'));
+        $endAt = Carbon::parse($this->getOnOffTime($this, 'off'));
+
+        $runTime = null;
+
+        if ($startAt && $endAt) {
+            $runTime = $startAt->diffInSeconds($endAt);
+        } else if ($startAt) {
+            $runTime = $startAt->diffInSeconds(now());
+        } else if ($endAt) {
+            $runTime = $endAt->diffInSeconds(now());
+        }
+
         return Attribute::make(
-            get: function () {
-                $onAt = $this->machineOnAt;
-                $offAt = $this->machineOffAt;
-
-                if ($onAt && $offAt) {
-                    return $onAt->diff($offAt);
-                }
-
-                return null;
-            },
+            get: fn() => $runTime,
         );
     }
 
