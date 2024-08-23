@@ -220,20 +220,20 @@ class PondCrudController extends CrudController
                 $html .= "<tbody>";
 
                 $historiesQuery = $entry->histories();
-                
-                /*$nowDate = Carbon::make('2024-05-10')->endOfDay();
-                $lastDate = Carbon::make('2024-05-10')->startOfDay();*/
 
-                $nowDate = Carbon::now();
+                /*$lastDate = Carbon::make('2024-05-10')->startOfDay();
+                $laterDate = Carbon::make('2024-05-10')->endOfDay();*/
+
                 $lastDate = Carbon::now()->subDay();
+                $laterDate = Carbon::now();
 
                 $sensorUnitHistories = getSensorTypesAverageBasedOnTime(
                     (clone $historiesQuery),
                     $lastDate,
-                    $nowDate
+                    $laterDate
                 );
 
-                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $nowDate, $lastDate) {
+                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $laterDate, $lastDate) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id)
                         . "'>{$sensorUnit->name}</a></td>";
@@ -241,7 +241,7 @@ class PondCrudController extends CrudController
 
                     $html .= "<table class='table table-bordered table-striped table-sm'>";
                     $html .= "<thead>";
-                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$nowDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
+                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$laterDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
                     $html .= "</thead>";
                     $html .= "<tbody>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {

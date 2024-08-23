@@ -37,6 +37,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         enum={"active", "inactive"},
  *         default="active",
  *         description="The status of the sensor type."
+ *     ),
+ *     @OA\Property(
+ *         property="avg",
+ *         type="string",
+ *         description="The average value of last 24hrs."
  *     )
  * )
  */
@@ -57,6 +62,8 @@ class SensorTypeResource extends JsonResource
             'slug' => $this->slug, // Add this line
             'description' => $this->description,
             'status' => $this->status,
+            // 'avg' => $this->getAvgAttribute(),
+            'avg' => number_format(+$this->mqtt_data_histories_avg_value ?? 0, 2),
         ];
     }
 }
