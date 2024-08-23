@@ -12,8 +12,8 @@ $socials = array (
     'og_description' => NULL,
     'status' => 'active',
     'created_by' => 1,
-    'created_at' => '2022-10-19 01:08:28',
-    'updated_at' => '2022-10-19 01:11:52',
+    'created_at' => '2022-10-19 07:08:28',
+    'updated_at' => '2022-10-19 07:11:52',
     'deleted_at' => NULL,
   ),
   1 => 
@@ -28,8 +28,8 @@ $socials = array (
     'og_description' => NULL,
     'status' => 'active',
     'created_by' => 1,
-    'created_at' => '2022-10-19 01:10:00',
-    'updated_at' => '2022-10-19 01:11:47',
+    'created_at' => '2022-10-19 07:10:00',
+    'updated_at' => '2022-10-19 07:11:47',
     'deleted_at' => NULL,
   ),
   2 => 
@@ -44,8 +44,8 @@ $socials = array (
     'og_description' => NULL,
     'status' => 'active',
     'created_by' => 1,
-    'created_at' => '2022-10-19 01:10:47',
-    'updated_at' => '2022-10-19 01:10:47',
+    'created_at' => '2022-10-19 07:10:47',
+    'updated_at' => '2022-10-19 07:10:47',
     'deleted_at' => NULL,
   ),
   3 => 
@@ -60,8 +60,8 @@ $socials = array (
     'og_description' => NULL,
     'status' => 'active',
     'created_by' => 1,
-    'created_at' => '2022-10-19 01:11:26',
-    'updated_at' => '2022-10-19 01:11:26',
+    'created_at' => '2022-10-19 07:11:26',
+    'updated_at' => '2022-10-19 07:11:26',
     'deleted_at' => NULL,
   ),
 );

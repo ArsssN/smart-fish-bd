@@ -48,5 +48,23 @@ $model_has_roles = array (
     'model_type' => 'App\\Models\\User',
     'model_id' => 7,
   ),
+  8 => 
+  array (
+    'role_id' => 5,
+    'model_type' => 'App\\Models\\User',
+    'model_id' => 8,
+  ),
+  9 => 
+  array (
+    'role_id' => 5,
+    'model_type' => 'App\\Models\\User',
+    'model_id' => 9,
+  ),
+  10 => 
+  array (
+    'role_id' => 5,
+    'model_type' => 'App\\Models\\User',
+    'model_id' => 10,
+  ),
 );
 return $model_has_roles;

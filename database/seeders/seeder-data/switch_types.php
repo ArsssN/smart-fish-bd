@@ -10,8 +10,8 @@ $switch_types = array (
     'customer_id' => NULL,
     'remote_name' => 'aerator',
     'created_by' => 4,
-    'created_at' => '2024-03-23 23:45:34',
-    'updated_at' => '2024-03-25 00:22:54',
+    'created_at' => '2024-03-24 05:45:34',
+    'updated_at' => '2024-03-25 06:22:54',
     'deleted_at' => NULL,
   ),
   1 => 
@@ -24,8 +24,8 @@ $switch_types = array (
     'customer_id' => NULL,
     'remote_name' => 'feeder',
     'created_by' => 4,
-    'created_at' => '2024-03-23 23:45:41',
-    'updated_at' => '2024-03-25 00:22:42',
+    'created_at' => '2024-03-24 05:45:41',
+    'updated_at' => '2024-03-25 06:22:42',
     'deleted_at' => NULL,
   ),
 );

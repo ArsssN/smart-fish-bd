@@ -10,8 +10,8 @@ $sensors = array (
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
-    'created_at' => '2024-03-06 01:41:24',
-    'updated_at' => '2024-03-06 01:41:24',
+    'created_at' => '2024-03-06 07:41:24',
+    'updated_at' => '2024-03-06 07:41:24',
     'deleted_at' => NULL,
   ),
   1 => 
@@ -24,8 +24,8 @@ $sensors = array (
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
-    'created_at' => '2024-03-06 01:41:29',
-    'updated_at' => '2024-03-06 01:41:29',
+    'created_at' => '2024-03-06 07:41:29',
+    'updated_at' => '2024-03-06 07:41:29',
     'deleted_at' => NULL,
   ),
   2 => 
@@ -38,8 +38,8 @@ $sensors = array (
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
-    'created_at' => '2024-03-06 01:41:40',
-    'updated_at' => '2024-03-06 01:41:40',
+    'created_at' => '2024-03-06 07:41:40',
+    'updated_at' => '2024-03-06 07:41:40',
     'deleted_at' => NULL,
   ),
   3 => 
@@ -52,8 +52,8 @@ $sensors = array (
     'description' => NULL,
     'status' => 'active',
     'created_by' => 4,
-    'created_at' => '2024-03-06 01:41:47',
-    'updated_at' => '2024-03-06 01:41:47',
+    'created_at' => '2024-03-06 07:41:47',
+    'updated_at' => '2024-03-06 07:41:47',
     'deleted_at' => NULL,
   ),
 );

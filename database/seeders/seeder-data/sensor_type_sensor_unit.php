@@ -220,5 +220,35 @@ $sensor_type_sensor_unit = array (
     'sensor_type_id' => 1,
     'sensor_unit_id' => 4,
   ),
+  44 => 
+  array (
+    'sensor_type_id' => 1,
+    'sensor_unit_id' => 13,
+  ),
+  45 => 
+  array (
+    'sensor_type_id' => 2,
+    'sensor_unit_id' => 13,
+  ),
+  46 => 
+  array (
+    'sensor_type_id' => 3,
+    'sensor_unit_id' => 13,
+  ),
+  47 => 
+  array (
+    'sensor_type_id' => 4,
+    'sensor_unit_id' => 13,
+  ),
+  48 => 
+  array (
+    'sensor_type_id' => 5,
+    'sensor_unit_id' => 13,
+  ),
+  49 => 
+  array (
+    'sensor_type_id' => 6,
+    'sensor_unit_id' => 13,
+  ),
 );
 return $sensor_type_sensor_unit;
