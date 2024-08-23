@@ -18,7 +18,7 @@
     - If PH > 9: Adjust PH to `PH - 1.5`.
 
 - [ ] **Machine Operation**
-    - Ensure the aerator machine remains mostly moist when operating.
+    - The list should include the runtime of each aerator.
 
 - [ ] **Sensor Data Display**
     - Display the average value of sensors over the last 24 hours on the home page of both
