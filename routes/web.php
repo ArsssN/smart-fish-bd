@@ -25,6 +25,11 @@ Route::post(
     [\App\Http\Controllers\ContactUsController::class, 'submitContactUs']
 )->name('contact.submit');
 
+// home redirect to /
+Route::get('/home', function () {
+    return redirect('/');
+});
+
 // php info
 Route::get('/test/mqtt', function () {
     $topic = request()->get('topic');
@@ -102,16 +107,11 @@ Route::get('/test/sensors', function () {
         }
     }
 
-    if(is_array($sensor_message)) {
+    if (is_array($sensor_message)) {
         $sensor_message = implode(', ', $sensor_message);
     }
 
     return view('test.sensors', compact('sensors', 'sensor_message'));
-});
-
-// home redirect to /
-Route::get('/home', function () {
-    return redirect('/');
 });
 
 Route::get('/test/remove-seed', function () {
@@ -127,4 +127,26 @@ Route::get('/test/mail', function () {
     CustomerCreateJob::dispatch($password, $user->email);
 
     return 'Notification sent';
+});
+
+// test route to convert mqtt_data_switch_unit_histories switches to a separate table mqtt_data_switch_unit_history_details
+Route::get('/test/convert-switches', function () {
+    $switch_unit_histories = DB::table('mqtt_data_switch_unit_histories')->get();
+
+    foreach ($switch_unit_histories as $switch_unit_history) {
+        $switches = json_decode($switch_unit_history->switches, true);
+
+        foreach ($switches as $switchDetail) {
+            $detail = [
+                'history_id' => $switch_unit_history->id,
+                'number' => $switchDetail['number'],
+                'switch_type_id' => $switchDetail['switchType'] == 1 ? 1 : 2,
+                'status' => $switchDetail['status'],
+                'comment' => $switchDetail['comment'],
+            ];
+            \App\Models\MqttDataSwitchUnitHistoryDetail::query()->create($detail);
+        }
+    }
+
+    return 'Switches converted';
 });
