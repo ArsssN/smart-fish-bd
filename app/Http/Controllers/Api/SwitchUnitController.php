@@ -169,6 +169,12 @@ class SwitchUnitController extends Controller
      *                     enum={0, 1}
      *                 ),
      *                 example={1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 description="Status of the switch unit",
+     *                 enum={"active", "inactive"}
      *             )
      *         )
      *     ),
@@ -205,6 +211,8 @@ class SwitchUnitController extends Controller
         //$defaultStitchesStatus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
         $defaultStitchesStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         $switchesStatus = request()->switchesStatus ?? $defaultStitchesStatus;
+        $defaultStatus = "active";
+        $status = request()->status ?? $defaultStatus;
         $switches = collect($switchUnit->switches ?? [])->keyBy('number');
 
         $newSwitches = array_map(
@@ -219,6 +227,8 @@ class SwitchUnitController extends Controller
         );
 
         $switchUnit->switches = $newSwitches;
+        // it means that the switch unit is automatic or manual
+        $switchUnit->status = $status;
         $switchUnit->save();
 
         try {

@@ -1040,6 +1040,14 @@
                                             1,
                                             0
                                         ]
+                                    },
+                                    "status": {
+                                        "description": "Status of the switch unit",
+                                        "type": "string",
+                                        "enum": [
+                                            "active",
+                                            "inactive"
+                                        ]
                                     }
                                 },
                                 "type": "object"
