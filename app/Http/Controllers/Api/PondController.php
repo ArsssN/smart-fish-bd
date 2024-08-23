@@ -43,7 +43,7 @@ class PondController extends Controller
      */
     public function list(Project $project): JsonResponse
     {
-        $ponds = auth()->user()->projects()->where('id', $project->id)->with('ponds')->first()->ponds;
+        $ponds = auth()->user()->projects()->where('id', $project->id)->with('ponds')->first()?->ponds ?? collect();
 
         return response()->json(PondResource::collection($ponds));
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('mqtt_data_id')->constrained('mqtt_data')->cascadeOnDelete();
             $table->foreignId('pond_id')->constrained()->cascadeOnDelete();
             $table->foreignId('switch_unit_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->text('switches')->nullable();
+            //$table->text('switches')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

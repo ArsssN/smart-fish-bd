@@ -65,7 +65,7 @@ Route::get('/test/mqtt', function () {
 
             $mqttListener->setMessage(json_encode($responseMessage));
             $mqttListener->setTopic($topic);
-            $mqttListener->setIsTest(true);
+            //$mqttListener->setIsTest(true);
 
             $publishable = $mqttListener->processResponse();
         }

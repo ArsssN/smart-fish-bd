@@ -5,11 +5,9 @@ use App\Http\Controllers\Api\Auth\ChangeController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
-use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\MqttDataHistoryController;
 use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
-use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\Api\SensorTypeController;
 use App\Http\Controllers\Api\SensorUnitController;
 use App\Http\Controllers\Api\SwitchTypeController;
@@ -27,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('web')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/user')->group(function () {
         Route::get('/profile', [AuthController::class, 'userProfile']);
         Route::patch('/change/user-details', [ChangeController::class, 'changeUserDetails']);
