@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -48,7 +49,22 @@ class MqttData extends Model
         return $this->hasMany(MqttDataHistory::class);
     }
 
-    public function project()
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasMany
+     */
+    public function switchUnitHistories(): HasMany
+    {
+        return $this->hasMany(MqttDataSwitchUnitHistory::class);
+    }
+
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return BelongsTo
+     */
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
