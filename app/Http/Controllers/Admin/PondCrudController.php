@@ -318,18 +318,10 @@ class PondCrudController extends CrudController
                     $html .= "<tbody>";
 
                     $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
-
-                    // $switches = collect($switchUnit->switches);
                     $switches = $switchUnitHistories->switchUnitHistoryDetails;
-                    $aerator_remote_name = 'aerator';
 
-                    /*$switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
-                    $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
-
-                    $aerator_slug = 'aerator';
-                    $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;*/
-
-                    $switches->each(function ($switch) use (&$html, $aerator_remote_name /*$relatedSwitches, $aeratorSwitchTypeID*/) {
+                    $switches->each(function ($switch) use (&$html,) {
+                        $aerator_remote_name = 'aerator';
                         $switch = (object)$switch;
 
                         $runTime = $switch->switchType->remote_name == $aerator_remote_name

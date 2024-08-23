@@ -7,6 +7,7 @@ use App\Models\SwitchType;
 use App\Traits\Crud\CreatedAt;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\CarbonInterval;
 
 /**
  * Class MqttDataSwitchUnitHistoryCrudController
@@ -167,27 +168,21 @@ class MqttDataSwitchUnitHistoryCrudController extends CrudController
                 $html     .= "</tr>";
                 $html     .= "</thead>";
                 $html     .= "<tbody>";
-                $switches = collect(json_decode($entry->switches));
 
-                $switchTypeIDs   = collect($switches)->pluck('switchType')->toArray();
-                $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+                $switches = $entry->switchUnitHistoryDetails;
 
-                $aerator_slug = 'aerator';
-                $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
-
-                $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {
-                    $runTime = +$switch->switchType === +$aeratorSwitchTypeID
-                        ? $switch->status === 'on'
-                            ? '111'
-                            : '000'
-                        : '-';
-
+                $switches->each(function ($switch) use (&$html,) {
+                    $aerator_remote_name = 'aerator';
                     $switch = (object) $switch;
+
+                    $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                        ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                        : '-';
                     $html .= "<tr>";
                     $html .= "<td>{$switch->number}</td>";
-                    $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
+                    $html .= "<td>{$switch->switchType->name}</td>";
                     $html .= "<td>{$switch->status}</td>";
-                    $html .= "<td>{$runTime}</td>";
+                    $html .= "<td title='".$switch->machine_on_at. ' -> ' . ($switch->machine_off_at ?: 'Now')."'>{$runTime}</td>";
                     $html .= "<td>{$switch->comment}</td>";
                     $html .= "</tr>";
                 });

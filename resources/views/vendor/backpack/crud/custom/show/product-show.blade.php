@@ -301,23 +301,16 @@
                                                                             </thead>
                                                                             <tbody>
                                                                             @php
-                                                                                $switches = $switchUnit->switches ?? [];
-                                                                                $switches = collect($switches);
-                                                                                $switchTypeIDs = $switches->pluck('switchType')->unique()->toArray();
-                                                                                $switchTypes = \App\Models\SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
-
-                                                                                $aerator_slug = 'aerator';
-                                                                                $aeratorSwitchTypeID = $switchTypes->where('slug', $aerator_slug)->first()->id;
+                                                                                $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
+                                                                                $switches = $switchUnitHistories->switchUnitHistoryDetails;
+                                                                                $aerator_remote_name = 'aerator';
                                                                             @endphp
                                                                             @foreach($switches as $switch)
                                                                                 @php
                                                                                     $switch = (object)$switch;
-                                                                                    $runTime =
-                                                                                        +$switch->switchType === +$aeratorSwitchTypeID
-                                                                                            ? $switch->status === 'on'
-                                                                                                ? '111'
-                                                                                                : '000'
-                                                                                            : '-';
+                                                                                    $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                                                                                        ? \Carbon\CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                                                                                        : '-';
                                                                                 @endphp
                                                                                 <tr>
                                                                                     <td>
