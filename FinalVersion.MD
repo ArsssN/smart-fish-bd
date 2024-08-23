@@ -17,7 +17,7 @@
     - If PH < 6: Adjust PH to `PH + 1.5`.
     - If PH > 9: Adjust PH to `PH - 1.5`.
 
-- [ ] **Machine Operation**
+- [x] **Machine Operation**
     - The list should include the runtime of each aerator.
 
 - [x] **Sensor Data Display**
