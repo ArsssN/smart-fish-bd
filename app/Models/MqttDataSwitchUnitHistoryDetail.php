@@ -72,6 +72,13 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return BelongsTo
+     */
+    public function switchType(): BelongsTo
+    {
+        return $this->belongsTo(SwitchType::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

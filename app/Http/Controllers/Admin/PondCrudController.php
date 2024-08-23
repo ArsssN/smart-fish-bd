@@ -13,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 /**
  * Class PondCrudController
@@ -311,31 +312,34 @@ class PondCrudController extends CrudController
                     $html .= "<th>Switch type</th>";
                     $html .= "<th>Status</th>";
                     $html .= "<th>Run time</th>";
-                    $html     .= "<th>Comment</th>";
+                    $html .= "<th>Comment</th>";
                     $html .= "</tr>";
                     $html .= "</thead>";
                     $html .= "<tbody>";
-                    $switches = collect($switchUnit->switches);
 
-                    $switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
+                    $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
+
+                    // $switches = collect($switchUnit->switches);
+                    $switches = $switchUnitHistories->switchUnitHistoryDetails;
+                    $aerator_remote_name = 'aerator';
+
+                    /*$switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
                     $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
 
                     $aerator_slug = 'aerator';
-                    $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;
+                    $aeratorSwitchTypeID = $relatedSwitches->where('slug', $aerator_slug)->first()->id;*/
 
-                    $switches->each(function ($switch) use (&$html, $relatedSwitches, $aeratorSwitchTypeID) {
+                    $switches->each(function ($switch) use (&$html, $aerator_remote_name /*$relatedSwitches, $aeratorSwitchTypeID*/) {
                         $switch = (object)$switch;
 
-                        $runTime = +$switch->switchType === +$aeratorSwitchTypeID
-                            ? $switch->status === 'on'
-                                ? '111'
-                                : '000'
+                        $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                            ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
                             : '-';
                         $html .= "<tr>";
                         $html .= "<td>{$switch->number}</td>";
-                        $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
+                        $html .= "<td>{$switch->switchType->name}</td>";
                         $html .= "<td>{$switch->status}</td>";
-                        $html .= "<td>{$runTime}</td>";
+                        $html .= "<td title='".$switch->machine_on_at. ' -> ' . ($switch->machine_off_at ?: 'Now')."'>{$runTime}</td>";
                         $html .= "<td>{$switch->comment}</td>";
                         $html .= "</tr>";
                     });

@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MqttDataSwitchUnitHistory extends Model
@@ -24,6 +25,7 @@ class MqttDataSwitchUnitHistory extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $appends = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -56,6 +58,16 @@ class MqttDataSwitchUnitHistory extends Model
     public function switchUnit()
     {
         return $this->belongsTo(SwitchUnit::class);
+    }
+
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasMany
+     */
+    public function switchUnitHistoryDetails(): HasMany
+    {
+        return $this->hasMany(MqttDataSwitchUnitHistoryDetail::class, 'history_id', 'id');
     }
 
     /*
