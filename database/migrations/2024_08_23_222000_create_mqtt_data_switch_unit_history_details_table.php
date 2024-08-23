@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -20,6 +19,10 @@ return new class extends Migration
             $table->foreignId('switch_type_id')->constrained()->cascadeOnDelete();
             $table->enum('status', ['on', 'off'])->default('off');
             $table->text('comment')->nullable();
+
+            // runtime
+            $table->dateTime('on_at')->nullable();
+            $table->dateTime('off_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

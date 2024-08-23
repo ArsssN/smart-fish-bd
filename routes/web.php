@@ -131,6 +131,15 @@ Route::get('/test/mail', function () {
 
 // test route to convert mqtt_data_switch_unit_histories switches to a separate table mqtt_data_switch_unit_history_details
 Route::get('/test/convert-switches', function () {
+    $aHistoryDetail = \App\Models\MqttDataSwitchUnitHistoryDetail::query()
+        ->where([
+            'history_id' => 356,
+            'switch_type_id' => 1,
+        ])
+        ->orderByDesc('created_at')
+        ->first();
+    dd($aHistoryDetail->toArray());
+
     $switch_unit_histories = DB::table('mqtt_data_switch_unit_histories')->get();
 
     DB::table('mqtt_data_switch_unit_history_details')->truncate();
