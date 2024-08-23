@@ -296,7 +296,7 @@ class PondCrudController extends CrudController
                     $html .= "<tbody>";
 
                     $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
-                    $switches = $switchUnitHistories->switchUnitHistoryDetails;
+                    $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
 
                     $switches->each(function ($switch) use (&$html,) {
                         $aerator_remote_name = 'aerator';
