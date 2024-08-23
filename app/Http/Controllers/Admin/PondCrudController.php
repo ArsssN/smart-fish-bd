@@ -220,8 +220,7 @@ class PondCrudController extends CrudController
                 $html .= "<tbody>";
 
                 $historiesQuery = $entry->histories();
-
-
+                
                 /*$nowDate = Carbon::make('2024-05-10')->endOfDay();
                 $lastDate = Carbon::make('2024-05-10')->startOfDay();*/
 

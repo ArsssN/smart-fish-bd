@@ -1157,8 +1157,10 @@ if (!function_exists('getSensorTypesAverageBasedOnTime')) {
      * @param $laterDate
      * @return array
      */
-    function getSensorTypesAverageBasedOnTime($historiesQuery, $lastDate, $laterDate): array
+    function getSensorTypesAverageBasedOnTime($historiesQuery, $lastDate = null, $laterDate = null): array
     {
+        $lastDate = $lastDate ?? now()->subDay();
+        $laterDate = $laterDate ?? now();
         return $historiesQuery->where('sensor_unit_id', '!=', null)->latest()
             ->whereBetween('created_at', [$lastDate, $laterDate])
             ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
