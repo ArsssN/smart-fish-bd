@@ -1148,3 +1148,41 @@ if (!function_exists('mergeSwitchArray')) {
         return $merged;
     }
 }
+
+// get Sensor Types average based on time
+if (!function_exists('getSensorTypesAverageBasedOnTime')) {
+    /**
+     * @param $historiesQuery
+     * @param $lastDate
+     * @param $laterDate
+     * @return array
+     */
+    function getSensorTypesAverageBasedOnTime($historiesQuery, $lastDate, $laterDate): array
+    {
+        return $historiesQuery->where('sensor_unit_id', '!=', null)->latest()
+            ->whereBetween('created_at', [$lastDate, $laterDate])
+            ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
+            ->reduce(
+                function ($carry, $item) {
+                    if (!$item->value) return $carry;
+
+                    $thisSensorType = $carry[$item->sensor_type_id] ??
+                        [
+                            "avg" => 0,
+                            "total" => 0,
+                            "count" => 0,
+                        ];
+
+                    $thisSensorType['total'] += isset($thisSensorType[$item->sensor_type_id])
+                        ? $thisSensorType[$item->sensor_type_id] + $item->value
+                        : $item->value;
+                    $thisSensorType['count']++;
+                    $thisSensorType['avg'] = $thisSensorType['total'] / $thisSensorType['count'];
+
+                    $carry[$item->sensor_type_id] = $thisSensorType;
+
+                    return $carry;
+                }, []
+            );
+    }
+}

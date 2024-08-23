@@ -228,32 +228,11 @@ class PondCrudController extends CrudController
                 $nowDate = Carbon::now();
                 $lastDate = Carbon::now()->subDay();
 
-                $sensorUnitHistories =
-                    (clone $historiesQuery)->where('sensor_unit_id', '!=', null)->latest()
-                        ->whereBetween('created_at', [$lastDate, $nowDate])
-                        ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
-                        ->reduce(
-                            function ($carry, $item) {
-                                if (!$item->value) return $carry;
-
-                                $thisSensorType = $carry[$item->sensor_type_id] ??
-                                    [
-                                        "avg" => 0,
-                                        "total" => 0,
-                                        "count" => 0,
-                                    ];
-
-                                $thisSensorType['total'] += isset($thisSensorType[$item->sensor_type_id])
-                                    ? $thisSensorType[$item->sensor_type_id] + $item->value
-                                    : $item->value;
-                                $thisSensorType['count']++;
-                                $thisSensorType['avg'] = $thisSensorType['total'] / $thisSensorType['count'];
-
-                                $carry[$item->sensor_type_id] = $thisSensorType;
-
-                                return $carry;
-                            }, []
-                        );
+                $sensorUnitHistories = getSensorTypesAverageBasedOnTime(
+                    (clone $historiesQuery),
+                    $lastDate,
+                    $nowDate
+                );
 
                 $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $nowDate, $lastDate) {
                     $html .= "<tr>";
@@ -331,7 +310,7 @@ class PondCrudController extends CrudController
                         $html .= "<td>{$switch->number}</td>";
                         $html .= "<td>{$switch->switchType->name}</td>";
                         $html .= "<td>{$switch->status}</td>";
-                        $html .= "<td title='".$switch->machine_on_at. ' -> ' . ($switch->machine_off_at ?: 'Now')."'>{$runTime}</td>";
+                        $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . "'>{$runTime}</td>";
                         $html .= "<td>{$switch->comment}</td>";
                         $html .= "</tr>";
                     });
