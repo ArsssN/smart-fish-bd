@@ -133,6 +133,7 @@ Route::get('/test/mail', function () {
 Route::get('/test/convert-switches', function () {
     $switch_unit_histories = DB::table('mqtt_data_switch_unit_histories')->get();
 
+    DB::table('mqtt_data_switch_unit_history_details')->truncate();
     foreach ($switch_unit_histories as $switch_unit_history) {
         $switches = json_decode($switch_unit_history->switches, true);
 
