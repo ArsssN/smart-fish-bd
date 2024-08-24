@@ -1,6 +1,6 @@
 @extends('layouts.test')
 
-@section('title', 'MQTT | Welcome')
+@section('title', 'Home | Welcome')
 
 @section('content')
     <div class="container mb-5">
