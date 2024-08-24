@@ -196,6 +196,10 @@ class MqttListener extends Command
             }
         }
 
+        if (MqttCommandController::$switchUnitStatus !== 'active'){
+            $publishable = false;
+        }
+
         return $publishable;
     }
 
