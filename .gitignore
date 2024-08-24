@@ -18,3 +18,5 @@ frontend
 public/uploads/.tmb
 public/phpmyadmin
 /public/uploads/
+.phpstorm.meta.php
+_ide_helper.php
