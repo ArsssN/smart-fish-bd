@@ -5,11 +5,9 @@ use App\Http\Controllers\Api\Auth\ChangeController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RecoveryController;
-use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\MqttDataHistoryController;
 use App\Http\Controllers\Api\PondController;
 use App\Http\Controllers\Api\ProjectController;
-use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\Api\SensorTypeController;
 use App\Http\Controllers\Api\SensorUnitController;
 use App\Http\Controllers\Api\SwitchTypeController;
@@ -51,7 +49,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/switch-unit')->group(function () {
         Route::get('/list', [SwitchUnitController::class, 'list']);
-        Route::get('/{switchUnit}/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
+        Route::prefix('/{switchUnit}')->group(function () {
+            Route::get('', [SwitchUnitController::class, 'switchUnit']);
+            Route::get('/switch-type/list', [SwitchUnitController::class, 'switchTypeList']);
+            Route::patch('/pond/{pond}/switches/update/status', [SwitchUnitController::class, 'switchesStatusUpdate']);
+        });
     });
 
     Route::prefix('/project')->group(function () {

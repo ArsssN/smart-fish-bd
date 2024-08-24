@@ -11,8 +11,8 @@ $footer_link_groups = array (
     'rgt' => 7,
     'depth' => 1,
     'created_by' => 1,
-    'created_at' => '2022-10-19 21:41:50',
-    'updated_at' => '2022-10-20 01:30:22',
+    'created_at' => '2022-10-20 03:41:50',
+    'updated_at' => '2022-10-20 07:30:22',
     'deleted_at' => NULL,
   ),
   1 => 
@@ -26,8 +26,8 @@ $footer_link_groups = array (
     'rgt' => 5,
     'depth' => 1,
     'created_by' => 1,
-    'created_at' => '2022-10-19 21:42:07',
-    'updated_at' => '2023-01-14 21:23:52',
+    'created_at' => '2022-10-20 03:42:07',
+    'updated_at' => '2023-01-15 03:23:52',
     'deleted_at' => NULL,
   ),
   2 => 
@@ -41,8 +41,8 @@ $footer_link_groups = array (
     'rgt' => 9,
     'depth' => 1,
     'created_by' => 1,
-    'created_at' => '2022-10-19 21:42:17',
-    'updated_at' => '2022-10-20 01:30:22',
+    'created_at' => '2022-10-20 03:42:17',
+    'updated_at' => '2022-10-20 07:30:22',
     'deleted_at' => NULL,
   ),
   3 => 
@@ -56,8 +56,8 @@ $footer_link_groups = array (
     'rgt' => 3,
     'depth' => 1,
     'created_by' => 1,
-    'created_at' => '2022-10-19 21:42:26',
-    'updated_at' => '2022-10-20 01:30:22',
+    'created_at' => '2022-10-20 03:42:26',
+    'updated_at' => '2022-10-20 07:30:22',
     'deleted_at' => NULL,
   ),
 );

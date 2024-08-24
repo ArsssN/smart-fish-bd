@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class SensorType extends Model
 {
@@ -35,6 +36,7 @@ class SensorType extends Model
         "separator"     => "-", // The separator that will be used to separate the words
         "slug-field"    => "slug", // The field that will be used to store the slug
     ];
+    protected $appends = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -105,6 +107,23 @@ class SensorType extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    // average
+    public function getAvgAttribute()
+    {
+        /*$lastDate = Carbon::make('2024-05-10')->startOfDay();
+        $laterDate = Carbon::make('2024-05-10')->endOfDay();*/
+
+        $lastDate = Carbon::now()->subDay();
+        $laterDate = Carbon::now();
+
+        $mqttDataHistory = $this->mqttDataHistories()
+            ->whereBetween('created_at', [$lastDate, $laterDate])
+            ->whereNotNull('value')
+            ->where('value', "!=", "")
+            ->get();
+
+        return number_format(+($mqttDataHistory->average('value') ?? 0), 2);
+    }
 
     /*
     |--------------------------------------------------------------------------

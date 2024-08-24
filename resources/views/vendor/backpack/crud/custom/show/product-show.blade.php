@@ -20,7 +20,7 @@
                 .</small>
             @if ($crud->hasAccess('list'))
                 <small class=""><a href="{{ url($crud->route) }}" class="font-sm"><i
-                                class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
+                            class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
                         <span>{{ $crud->entity_name_plural }}</span></a></small>
             @endif
         </h2>
@@ -295,24 +295,30 @@
                                                                                 <th>SN</th>
                                                                                 <th>Switch type</th>
                                                                                 <th>Status</th>
+                                                                                <th>Run time</th>
                                                                                 <th>Comment</th>
                                                                             </tr>
                                                                             </thead>
                                                                             <tbody>
                                                                             @php
-                                                                                $switches = $switchUnit->switches ?? [];
-                                                                                $switches = collect($switches);
-                                                                                $switchTypeIDs = $switches->pluck('switchType')->unique()->toArray();
-                                                                                $switchTypes = \App\Models\SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+                                                                                $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
+                                                                                $switches = $switchUnitHistories->switchUnitHistoryDetails;
+                                                                                $aerator_remote_name = 'aerator';
                                                                             @endphp
                                                                             @foreach($switches as $switch)
-                                                                                @php($switch = (object)$switch)
+                                                                                @php
+                                                                                    $switch = (object)$switch;
+                                                                                    $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                                                                                        ? \Carbon\CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                                                                                        : '-';
+                                                                                @endphp
                                                                                 <tr>
                                                                                     <td>
                                                                                         {{ $switch->number }}
                                                                                     </td>
                                                                                     <td>{{ $switchTypes[$switch->switchType]->name ?? '-' }}</td>
                                                                                     <td>{{ $switch->status }}</td>
+                                                                                    <td>{{ $runTime }}</td>
                                                                                     <td>{{ $switch->comment }}</td>
                                                                                 </tr>
                                                                             @endforeach

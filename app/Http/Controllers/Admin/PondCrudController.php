@@ -13,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 /**
  * Class PondCrudController
@@ -220,41 +221,19 @@ class PondCrudController extends CrudController
 
                 $historiesQuery = $entry->histories();
 
+                /*$lastDate = Carbon::make('2024-05-10')->startOfDay();
+                $laterDate = Carbon::make('2024-05-10')->endOfDay();*/
 
-                /*$nowDate = Carbon::make('2024-05-10')->endOfDay();
-                $lastDate = Carbon::make('2024-05-10')->startOfDay();*/
-
-                $nowDate = Carbon::now();
                 $lastDate = Carbon::now()->subDay();
+                $laterDate = Carbon::now();
 
-                $sensorUnitHistories =
-                    (clone $historiesQuery)->where('sensor_unit_id', '!=', null)->latest()
-                        ->whereBetween('created_at', [$lastDate, $nowDate])
-                        ->get(['id', 'sensor_type_id', 'sensor_unit_id', 'created_at', 'value'])
-                        ->reduce(
-                            function ($carry, $item) {
-                                if (!$item->value) return $carry;
+                $sensorUnitHistories = getSensorTypesAverageBasedOnTime(
+                    (clone $historiesQuery),
+                    $lastDate,
+                    $laterDate
+                );
 
-                                $thisSensorType = $carry[$item->sensor_type_id] ??
-                                    [
-                                        "avg" => 0,
-                                        "total" => 0,
-                                        "count" => 0,
-                                    ];
-
-                                $thisSensorType['total'] += isset($thisSensorType[$item->sensor_type_id])
-                                    ? $thisSensorType[$item->sensor_type_id] + $item->value
-                                    : $item->value;
-                                $thisSensorType['count']++;
-                                $thisSensorType['avg'] = $thisSensorType['total'] / $thisSensorType['count'];
-
-                                $carry[$item->sensor_type_id] = $thisSensorType;
-
-                                return $carry;
-                            }, []
-                        );
-
-                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $nowDate, $lastDate) {
+                $entry->sensorUnits->each(function ($sensorUnit) use (&$html, $sensorUnitHistories, $laterDate, $lastDate) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('sensor-unit.show', $sensorUnit->id)
                         . "'>{$sensorUnit->name}</a></td>";
@@ -262,7 +241,7 @@ class PondCrudController extends CrudController
 
                     $html .= "<table class='table table-bordered table-striped table-sm'>";
                     $html .= "<thead>";
-                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$nowDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
+                    $html .= "<tr class='font-weight-bold'><th>Name</th><th>Remote name</th><th title='{$laterDate->format('d-M-Y h:i:sA')} -> {$lastDate->format('d-M-Y h:i:sA')}'>Avg.</th></tr>";
                     $html .= "</thead>";
                     $html .= "<tbody>";
                     $sensorUnit->sensorTypes->each(function ($sensorType) use (&$html, $sensorUnitHistories) {
@@ -310,21 +289,27 @@ class PondCrudController extends CrudController
                     $html .= "<th>SN</th>";
                     $html .= "<th>Switch type</th>";
                     $html .= "<th>Status</th>";
+                    $html .= "<th>Run time</th>";
                     $html .= "<th>Comment</th>";
                     $html .= "</tr>";
                     $html .= "</thead>";
                     $html .= "<tbody>";
-                    $switches = collect($switchUnit->switches);
 
-                    $switchTypeIDs = collect($switches)->pluck('switchType')->toArray();
-                    $relatedSwitches = SwitchType::query()->whereIn('id', $switchTypeIDs)->get()->keyBy('id');
+                    $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
+                    $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
 
-                    $switches->each(function ($switch) use (&$html, $relatedSwitches) {
+                    $switches->each(function ($switch) use (&$html,) {
+                        $aerator_remote_name = 'aerator';
                         $switch = (object)$switch;
+
+                        $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                            ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                            : '-';
                         $html .= "<tr>";
                         $html .= "<td>{$switch->number}</td>";
-                        $html .= "<td>{$relatedSwitches[$switch->switchType]->name}</td>";
+                        $html .= "<td>{$switch->switchType->name}</td>";
                         $html .= "<td>{$switch->status}</td>";
+                        $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . "'>{$runTime}</td>";
                         $html .= "<td>{$switch->comment}</td>";
                         $html .= "</tr>";
                     });

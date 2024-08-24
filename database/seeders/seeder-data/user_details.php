@@ -14,8 +14,8 @@ $user_details = array (
     'n_id_photos' => NULL,
     'account_holder_id' => NULL,
     'created_by' => NULL,
-    'created_at' => '2021-01-01 00:00:00',
-    'updated_at' => '2023-01-22 15:24:48',
+    'created_at' => '2021-01-01 06:00:00',
+    'updated_at' => '2023-01-22 21:24:48',
   ),
   1 => 
   array (
@@ -31,8 +31,8 @@ $user_details = array (
     'n_id_photos' => NULL,
     'account_holder_id' => NULL,
     'created_by' => NULL,
-    'created_at' => '2021-01-01 00:00:00',
-    'updated_at' => '2021-01-01 00:00:00',
+    'created_at' => '2021-01-01 06:00:00',
+    'updated_at' => '2021-01-01 06:00:00',
   ),
   2 => 
   array (
@@ -48,8 +48,8 @@ $user_details = array (
     'n_id_photos' => NULL,
     'account_holder_id' => NULL,
     'created_by' => NULL,
-    'created_at' => '2021-01-01 00:00:00',
-    'updated_at' => '2021-01-01 00:00:00',
+    'created_at' => '2021-01-01 06:00:00',
+    'updated_at' => '2021-01-01 06:00:00',
   ),
   3 => 
   array (
@@ -65,8 +65,8 @@ $user_details = array (
     'n_id_photos' => NULL,
     'account_holder_id' => NULL,
     'created_by' => NULL,
-    'created_at' => '2021-01-01 00:00:00',
-    'updated_at' => '2021-01-01 00:00:00',
+    'created_at' => '2021-01-01 06:00:00',
+    'updated_at' => '2021-01-01 06:00:00',
   ),
   4 => 
   array (
@@ -82,8 +82,8 @@ $user_details = array (
     'n_id_photos' => '"null"',
     'account_holder_id' => 'Expedita et soluta s',
     'created_by' => 4,
-    'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-25 14:28:26',
+    'created_at' => '2024-03-19 06:51:56',
+    'updated_at' => '2024-03-25 20:28:26',
   ),
   5 => 
   array (
@@ -99,8 +99,8 @@ $user_details = array (
     'n_id_photos' => '"null"',
     'account_holder_id' => 'Expedita et soluta s',
     'created_by' => 4,
-    'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-25 14:29:36',
+    'created_at' => '2024-03-19 06:51:56',
+    'updated_at' => '2024-03-25 20:29:36',
   ),
   6 => 
   array (
@@ -116,8 +116,59 @@ $user_details = array (
     'n_id_photos' => '"null"',
     'account_holder_id' => 'Expedita et soluta',
     'created_by' => 4,
-    'created_at' => '2024-03-19 00:51:56',
-    'updated_at' => '2024-03-25 14:29:22',
+    'created_at' => '2024-03-19 06:51:56',
+    'updated_at' => '2024-03-25 20:29:22',
+  ),
+  7 => 
+  array (
+    'id' => 8,
+    'user_id' => 8,
+    'first_name' => 'Sumon',
+    'last_name' => 'dev',
+    'farm_name' => 'AAAAAAA',
+    'phone' => '34543534',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka',
+    'photo' => 'uploads/s1.jpeg',
+    'n_id_photos' => '"null"',
+    'account_holder_id' => '32423AA',
+    'created_by' => 2,
+    'created_at' => '2024-04-22 20:42:39',
+    'updated_at' => '2024-04-22 20:42:39',
+  ),
+  8 => 
+  array (
+    'id' => 9,
+    'user_id' => 9,
+    'first_name' => 'Test',
+    'last_name' => 'Customer',
+    'farm_name' => 'Nil Farm',
+    'phone' => '01717366663',
+    'phone_verified_at' => NULL,
+    'address' => 'Dhaka, Bangladesh',
+    'photo' => 'uploads/astronaut.png',
+    'n_id_photos' => '"[\\"uploads\\\\\\/s3.jpeg\\"]"',
+    'account_holder_id' => '397387379837',
+    'created_by' => 2,
+    'created_at' => '2024-04-23 02:48:35',
+    'updated_at' => '2024-04-23 02:57:35',
+  ),
+  9 => 
+  array (
+    'id' => 10,
+    'user_id' => 10,
+    'first_name' => 'Erfan',
+    'last_name' => 'Tushar',
+    'farm_name' => 'my_test_firm',
+    'phone' => '01748799745',
+    'phone_verified_at' => NULL,
+    'address' => 'Kha-48/14, South Bot Tola, Khilkhet,',
+    'photo' => 'uploads/Jol Rong.jpg',
+    'n_id_photos' => '"null"',
+    'account_holder_id' => '7498541234569875',
+    'created_by' => 2,
+    'created_at' => '2024-04-23 04:17:47',
+    'updated_at' => '2024-04-23 04:17:47',
   ),
 );
 return $user_details;

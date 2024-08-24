@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SwitchUnit extends Model
@@ -68,6 +69,16 @@ class SwitchUnit extends Model
     public function ponds(): BelongsToMany
     {
         return $this->belongsToMany(Pond::class);
+    }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return HasMany
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(MqttDataSwitchUnitHistory::class);
     }
 
 

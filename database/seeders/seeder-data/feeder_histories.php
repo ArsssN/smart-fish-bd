@@ -10,8 +10,8 @@ $feeder_histories = array (
     'amount' => '12.00',
     'unit' => 'kg',
     'created_by' => 4,
-    'created_at' => '2024-03-16 00:47:14',
-    'updated_at' => '2024-03-16 00:47:14',
+    'created_at' => '2024-03-16 06:47:14',
+    'updated_at' => '2024-03-16 06:47:14',
     'deleted_at' => NULL,
   ),
   1 => 
@@ -24,8 +24,8 @@ $feeder_histories = array (
     'amount' => '13.00',
     'unit' => 'kg',
     'created_by' => 4,
-    'created_at' => '2024-03-16 00:47:29',
-    'updated_at' => '2024-03-16 00:47:29',
+    'created_at' => '2024-03-16 06:47:29',
+    'updated_at' => '2024-03-16 06:47:29',
     'deleted_at' => NULL,
   ),
 );

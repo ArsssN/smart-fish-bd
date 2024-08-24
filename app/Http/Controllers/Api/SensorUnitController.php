@@ -7,6 +7,7 @@ use App\Http\Resources\Api\SensorTypeResource;
 use App\Http\Resources\Api\SensorUnitResource;
 use App\Models\SensorUnit;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 
 class SensorUnitController extends Controller
 {
@@ -76,7 +77,24 @@ class SensorUnitController extends Controller
      */
     public function sensorTypeList(SensorUnit $sensorUnit): JsonResponse
     {
-        $sensorTypes = $sensorUnit->sensorTypes;
+        /*$lastDate = Carbon::make('2024-05-10')->startOfDay();
+        $laterDate = Carbon::make('2024-05-10')->endOfDay();*/
+
+        $lastDate = Carbon::now()->subDay();
+        $laterDate = Carbon::now();
+
+        $sensorTypes = $sensorUnit->sensorTypes()
+            ->withAvg(
+                [
+                    'mqttDataHistories' => function ($query) use ($laterDate, $lastDate) {
+                        $query->whereBetween('created_at', [$lastDate, $laterDate])
+                            ->whereNotNull('value')
+                            ->where('value', "!=", "");
+                    }
+                ],
+                'value'
+            )
+            ->get();
 
         return response()->json(SensorTypeResource::collection($sensorTypes));
     }

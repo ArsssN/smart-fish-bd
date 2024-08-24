@@ -179,7 +179,7 @@ class MqttListener extends Command
                 ->first();
 
             $publishable = (MqttCommandController::$feedBackArray['relay'] ?? '')
-            !== (json_decode($previousMqttData->publish_message, true)['relay'] ?? '');
+                !== (json_decode($previousMqttData->publish_message, true)['relay'] ?? '');
 
             if (!$publishable) {
                 MqttCommandController::$isAlreadyPublished = true;
@@ -194,6 +194,10 @@ class MqttListener extends Command
                     );
                 }
             }
+        }
+
+        if (MqttCommandController::$switchUnitStatus !== 'active'){
+            $publishable = false;
         }
 
         return $publishable;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
+use App\Models\MqttDataSwitchUnitHistoryDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -28,6 +29,11 @@ class MqttCommandController extends Controller
      * @var bool $isSaveMqttData - flag to check if the mqtt data should be saved
      */
     public static bool $isSaveMqttData = true;
+
+    /**
+     * @var string $switchUnitStatus - switch unit status
+     */
+    public static string $switchUnitStatus = 'active';
 
     /**
      * @var bool $isAlreadyPublished - flag to check if the mqtt data is already published
@@ -72,7 +78,7 @@ class MqttCommandController extends Controller
         $switchUnit = $pond->switchUnits->firstOrFail();
         $addr = dechex((int)$switchUnit->serial_number);
         self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
-
+        self::$switchUnitStatus = $switchUnit->status;
         $project = $pond->project;
 
         $switchState = array_fill(0, 12, 0);
@@ -205,18 +211,36 @@ class MqttCommandController extends Controller
                     $switchUnit->save();
 
                     if (self::$mqttData->id) {
-                        $mqttDataSwitchUnitHistories[] = [
+                        $mqttDataSwitchUnitHistory = [
                             'mqtt_data_id' => self::$mqttData->id,
                             'pond_id' => $switchUnit->pivot->pond_id,
                             'switch_unit_id' => $switchUnit->id,
-                            'switches' => json_encode($switches),
+                            //'switches' => json_encode($switches),
+                            'switches' => json_encode(collect()),
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];
-                    }
-                });
 
-            MqttDataSwitchUnitHistory::query()->insert($mqttDataSwitchUnitHistories);
+                        $mqttDataSwitchUnitHistories[] = $mqttDataSwitchUnitHistory;
+                        $newMqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create($mqttDataSwitchUnitHistory);
+                        //dd($newMqttDataSwitchUnitHistory, $switches);
+
+                        foreach ($switchUnit->switches as $switchDetail) {
+                            $detail = [
+                                'history_id' => $newMqttDataSwitchUnitHistory->id,
+                                'number' => $switchDetail['number'],
+                                'switch_type_id' => $switchDetail['switchType'] == 1 ? 1 : 2,
+                                'status' => $switchDetail['status'],
+                                'comment' => $switchDetail['comment'],
+                                'created_at' => $newMqttDataSwitchUnitHistory->created_at,
+                            ];
+                            MqttDataSwitchUnitHistoryDetail::query()->create($detail);
+                        }
+                    }
+                }
+            );
+
+            //MqttDataSwitchUnitHistory::query()->insert($mqttDataSwitchUnitHistories);
         });
     }
 }

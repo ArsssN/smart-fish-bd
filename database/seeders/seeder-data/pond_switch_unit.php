@@ -50,5 +50,25 @@ $pond_switch_unit = array (
     'pond_id' => 10,
     'switch_unit_id' => 3,
   ),
+  10 => 
+  array (
+    'pond_id' => 1,
+    'switch_unit_id' => 5,
+  ),
+  11 => 
+  array (
+    'pond_id' => 1,
+    'switch_unit_id' => 7,
+  ),
+  12 => 
+  array (
+    'pond_id' => 1,
+    'switch_unit_id' => 10,
+  ),
+  13 => 
+  array (
+    'pond_id' => 11,
+    'switch_unit_id' => 13,
+  ),
 );
 return $pond_switch_unit;
