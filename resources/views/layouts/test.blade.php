@@ -24,6 +24,18 @@
 </head>
 <body class="antialiased">
 @include('test.partial.nav')
+
+<div class="container">
+    @if(Session::has('message'))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <div>
+                {!! Session::get('message') !!}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+</div>
+
 @yield('content')
 {{-- Bootstrap 5 latest CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

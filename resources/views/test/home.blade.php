@@ -3,7 +3,7 @@
 @section('title', 'MQTT | Welcome')
 
 @section('content')
-    <div class="container">
+    <div class="container mb-5">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-center mt-3">Welcome to the MQTT</h1>
