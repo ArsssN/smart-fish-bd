@@ -23,6 +23,27 @@
             margin     : 0;
             background : #fafafa;
         }
+
+        #swagger-ui {
+            .wrapper > section:has(.opblock-tag-section) {
+                border: 1px solid #c1c3c7;
+                border-radius: 0.35rem;
+
+                .opblock-tag-section {
+                    > .opblock-tag {
+                        margin-bottom: 0;
+                    }
+
+                    > .no-margin {
+                        padding-top: 1rem !important;
+                        padding-left: 1rem !important;
+                        padding-right: 1rem !important;
+                        border-bottom: 1px solid #c1c3c7;
+                        background: white;
+                    }
+                }
+            }
+        }
     </style>
 </head>
 
@@ -37,7 +58,10 @@
 <script src="{{ l5_swagger_asset($documentation, 'swagger-ui-bundle.js') }}"></script>
 <script src="{{ l5_swagger_asset($documentation, 'swagger-ui-standalone-preset.js') }}"></script>
 <script>
-    const dom_id  = "#swagger-ui"
+    const dom_id  = "#swagger-ui";
+    let authContainerModal = document?.querySelector(".auth-container");
+    let authContainerLogoutButton = authContainerModal?.querySelector(".auth:not(.authorize):not(.btn-done)");
+
     window.onload = function () {
         // Build a system
         const ui = SwaggerUIBundle({
@@ -88,10 +112,22 @@
                         authorizeToken(btnAuthorize);
                     }
                 }
+
+                authContainerModal = document?.querySelector(".auth-container");
+                authContainerLogoutButton = authContainerModal?.querySelector(".auth:not(.authorize):not(.btn-done)");
+
+                if(authContainerLogoutButton) {
+                    authContainerLogoutButton.removeEventListener('click', removeJWTToken)
+                    authContainerLogoutButton.addEventListener('click', removeJWTToken)
+                }
             });
         });
         // observe if any change in dom
         observer.observe(dom, {attributes: true, childList: true, subtree: true, characterData: true});
+    }
+
+    const removeJWTToken = function () {
+        localStorage.removeItem("jwt_token");
     }
 
     const authorizeToken = async function (openAuthFormButton) {
