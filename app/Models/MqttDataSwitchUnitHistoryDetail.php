@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @mixin IdeHelperMqttDataSwitchUnitHistoryDetail
+ */
 class MqttDataSwitchUnitHistoryDetail extends Model
 {
     use CrudTrait, SoftDeletes;

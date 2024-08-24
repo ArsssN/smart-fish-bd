@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperFishWeight
+ */
 class FishWeight extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

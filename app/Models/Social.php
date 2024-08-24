@@ -8,6 +8,9 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperSocial
+ */
 class Social extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

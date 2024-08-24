@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperFeederHistory
+ */
 class FeederHistory extends Model
 {
     use HasFactory, CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

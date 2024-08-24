@@ -8,6 +8,9 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperSwitchType
+ */
 class SwitchType extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

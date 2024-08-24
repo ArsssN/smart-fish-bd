@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperFish
+ */
 class Fish extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

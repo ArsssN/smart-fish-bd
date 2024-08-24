@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperFeeder
+ */
 class Feeder extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

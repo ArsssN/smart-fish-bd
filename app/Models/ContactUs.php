@@ -6,6 +6,9 @@ use App\Traits\CreatedByTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperContactUs
+ */
 class ContactUs extends Model
 {
     use CrudTrait, CreatedByTrait;

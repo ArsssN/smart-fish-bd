@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
+/**
+ * @mixin IdeHelperSensorType
+ */
 class SensorType extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;

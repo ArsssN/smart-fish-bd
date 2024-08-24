@@ -7,6 +7,9 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @mixin IdeHelperUserDetail
+ */
 class UserDetail extends Model
 {
     use CrudTrait, CreatedByTrait;

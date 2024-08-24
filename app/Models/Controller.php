@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperController
+ */
 class Controller extends Model
 {
     use CrudTrait, SlugGenerator, CreatedByTrait, SoftDeletes;
