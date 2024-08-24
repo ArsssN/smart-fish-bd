@@ -31,6 +31,11 @@ class MqttCommandController extends Controller
     public static bool $isSaveMqttData = true;
 
     /**
+     * @var string $switchUnitStatus - switch unit status
+     */
+    public static string $switchUnitStatus = 'active';
+
+    /**
      * @var bool $isAlreadyPublished - flag to check if the mqtt data is already published
      */
     public static bool $isAlreadyPublished = false;
@@ -73,7 +78,7 @@ class MqttCommandController extends Controller
         $switchUnit = $pond->switchUnits->firstOrFail();
         $addr = dechex((int)$switchUnit->serial_number);
         self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
-
+        self::$switchUnitStatus = $switchUnit->status;
         $project = $pond->project;
 
         $switchState = array_fill(0, 12, 0);
