@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1 class="text-center">MQTT</h1>
+                <h1 class="text-center">Test MQTT</h1>
             </div>
         </div>
         <div class="row">
@@ -171,4 +171,9 @@
             </div>
         </div>
     </div>
+    <style>
+        .sf-dump {
+            border-radius: var(--bs-border-radius, 0.375rem);
+        }
+    </style>
 @endsection

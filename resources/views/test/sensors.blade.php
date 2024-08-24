@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <div class="row d-none">
             <div class="col-md-12">
                 <h1 class="text-center">Sensors</h1>
                 <table class="table table-bordered table-striped">
@@ -29,7 +29,7 @@
                 </table>
             </div>
         </div>
-        <hr/>
+        <hr class="d-none"/>
         <div class="row">
             <div class="col-12 col-lg-4 offset-lg-4">
                 <h1 class="text-center">Test Sensors</h1>
@@ -53,7 +53,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="value">Sensor</label>
+                        <label for="value">Value</label>
                         <input class="form-control ds-input" type="text" name="value" id="value"
                                value="{{ request('value') }}"
                                placeholder="Enter Sensor Value">
