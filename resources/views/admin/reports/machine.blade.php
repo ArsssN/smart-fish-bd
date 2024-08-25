@@ -13,32 +13,19 @@
             <div class="col-md-12">
                 <div class="d-flex justify-content-between my-2">
                     <div class="card mb-0 px-3 py-4 justify-content-center">
-                        <h5 class="m-0">Machine Run Status: <strong>On</strong></h5>
+                        <h5 class="m-0">Machine Run Status: <strong>{{ $machineStatus }}</strong></h5>
                     </div>
                     <div class="card mb-0 px-3 py-3">
                         <div class="rounded">
                             <table class="table table-borderless table-sm m-0 table-borderless">
                                 <tbody>
-                                <tr class="border-0">
-                                    <td class="border-0 font-weight-bold">DO Level</td>
-                                    <td class="border-0">:</td>
-                                    <td class="border-0">0.0</td>
-                                </tr>
-                                <tr class="border-0">
-                                    <td class="border-0 font-weight-bold">Water Temp.</td>
-                                    <td class="border-0">:</td>
-                                    <td class="border-0">0.0</td>
-                                </tr>
-                                <tr class="border-0">
-                                    <td class="border-0 font-weight-bold">TDS
-                                    <td class="border-0">:</td>
-                                    <td class="border-0">0.0</td>
-                                </tr>
-                                <tr class="border-0">
-                                    <td class="border-0 font-weight-bold">PH</td>
-                                    <td class="border-0">:</td>
-                                    <td class="border-0">0.0</td>
-                                </tr>
+                                @foreach($labelList as $remote_name => $label)
+                                    <tr class="border-0">
+                                        <td class="border-0 font-weight-bold">{{ $label }}</td>
+                                        <td class="border-0">:</td>
+                                        <td class="border-0">{{ $sensorTypeAverages[$remote_name] ?? '0.0' }}</td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -67,13 +54,13 @@
                                 </li>
                                 <li class="nav-item my-auto" title="Start Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('start_date') ?? \Illuminate\Support\Carbon::now()->startOfWeek()->format('Y-m-d H:i:s') }}"
+                                           value="{{ request()->get('start_date') ?? $start_date ?? \Illuminate\Support\Carbon::now()->startOfDay()->format('Y-m-d H:i:s') }}"
                                            name="start_date" id="start_date" class="form-control"
                                            placeholder="Start Date">
                                 </li>
                                 <li class="nav-item my-auto" title="End Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('end_date') ?? \Illuminate\Support\Carbon::now()->format('Y-m-d H:i:s') }}"
+                                           value="{{ request()->get('end_date') ?? $end_date ?? \Illuminate\Support\Carbon::now()->endOfDay()->format('Y-m-d H:i:s') }}"
                                            name="end_date" id="end_date" class="form-control"
                                            placeholder="End Date">
                                 </li>
@@ -91,7 +78,8 @@
                                 </li>--}}
                                 @foreach($sensors as $sensor)
                                     <li class="nav-item my-auto" title="Sensors">
-                                        <label class="m-0" for="sensor_{{$sensor->remote_name}}" style="color:{{$colors[$sensor->remote_name]}}">
+                                        <label class="m-0" for="sensor_{{$sensor->remote_name}}"
+                                               style="color:{{$colors[$sensor->remote_name]}}">
                                             <input type="checkbox" name="sensors[]"
                                                    id="sensor_{{$sensor->remote_name}}"
                                                    value="{{$sensor->remote_name}}" {{in_array($sensor->remote_name, request()->get('sensors') ?? []) ? 'checked' : ''}}>

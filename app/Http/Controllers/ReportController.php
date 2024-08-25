@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MqttDataHistory;
 use App\Models\Pond;
 use App\Models\SensorType;
 use Backpack\CRUD\app\Library\Widget;
@@ -26,8 +27,8 @@ class ReportController extends Controller
         }
 
         $pond_id = request()->get('pond_id');
-        $start_date = request()->get('start_date') ?? Carbon::now()->startOfWeek()->format('Y-m-d');
-        $end_date = request()->get('end_date') ?? Carbon::now()->format('Y-m-d');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
 
         $defaultSensors = SensorType::$defaultSensors;
         $sensors = SensorType::query()
@@ -59,6 +60,7 @@ class ReportController extends Controller
             'o2' => 'DO Level',
             'tds' => 'TDS',
             'temp' => 'Water Temperature',
+            'ph' => 'pH Level',
         ];
 
         $graphData = SensorType::query()
@@ -123,6 +125,8 @@ class ReportController extends Controller
             ];
         });
 
+        $machineStatus = 'On';
+
         return view(
             'admin.reports.machine',
             compact(
@@ -132,7 +136,10 @@ class ReportController extends Controller
                 'ponds',
                 'sensors',
                 'labelList',
-                'colors'
+                'colors',
+                'start_date',
+                'end_date',
+                'machineStatus'
             )
         );
     }
