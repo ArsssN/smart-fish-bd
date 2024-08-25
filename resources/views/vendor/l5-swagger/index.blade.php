@@ -173,7 +173,7 @@
             tokenInput.dispatchEvent(inputEvent);
             authButton.click();
             closeButton.click();
-        }, 500);
+        }, 501);
     }
 </script>
 </body>
