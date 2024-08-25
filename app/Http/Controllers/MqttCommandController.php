@@ -153,11 +153,12 @@ class MqttCommandController extends Controller
             ));
 
             // if array
-            if (is_array($type_message) && $typeType->can_switch_sensor) {
-                $switchState = mergeSwitchArray(
-                    $type_message,
-                    $switchState
-                );
+            if (is_array($type_message)) {
+                $switchState = $typeType->can_switch_sensor
+                    ? mergeSwitchArray(
+                        $type_message,
+                        $switchState
+                    ) : $switchState;
 
                 $type_message = implode(', ', $type_message);
             }
