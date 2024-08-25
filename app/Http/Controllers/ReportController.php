@@ -63,14 +63,30 @@ class ReportController extends Controller
             'ph' => 'pH Level',
         ];
 
-        $graphData = SensorType::query()
+        $sensorTypes = SensorType::query()
             ->whereIn('remote_name', $remote_names)
+            ->latest();
+
+        $sensorTypeAverageData = getSensorTypesAverageBasedOnTime(
+            MqttDataHistory::query()->where('pond_id', $pond_id),
+            $start_date,
+            $end_date
+        );
+        $sensorTypeAverages = (clone $sensorTypes->get())
+            ->map(function ($sensorType) use ($sensorTypeAverageData) {
+                $sensorAvg = new \stdClass();
+                $sensorAvg->avg = $sensorTypeAverageData[$sensorType->id]['avg'] ?? '0.0';
+                $sensorAvg->remote_name = $sensorType->remote_name;
+                return $sensorAvg;
+            })
+            ->pluck('avg', 'remote_name');
+
+        $graphData = $sensorTypes
             ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
                 $query->where('pond_id', $pond_id)
                     ->whereBetween('created_at', [$start_date, $end_date])
                     ->orderBy('created_at', 'asc');
             })
-            ->latest()
             ->get()
             ->map(function ($sensorType) use ($colors, $labelList) {
                 $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
@@ -137,6 +153,7 @@ class ReportController extends Controller
                 'sensors',
                 'labelList',
                 'colors',
+                'sensorTypeAverages',
                 'start_date',
                 'end_date',
                 'machineStatus'

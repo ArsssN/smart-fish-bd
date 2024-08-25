@@ -23,7 +23,7 @@
                                     <tr class="border-0">
                                         <td class="border-0 font-weight-bold">{{ $label }}</td>
                                         <td class="border-0">:</td>
-                                        <td class="border-0">{{ $sensorTypeAverages[$remote_name] ?? '0.0' }}</td>
+                                        <td class="border-0">{{ number_format($sensorTypeAverages[$remote_name] ?? 0, 2) }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
