@@ -40,6 +40,15 @@
                     <li class="nav-item">
                         <a class="nav-link"
                            style="cursor: alias"
+                           href="{{ route('l5-swagger.default.api') }}"
+                           target="_blank"
+                        >
+                            API Documentation
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           style="cursor: alias"
                            href="{{ route('backpack.dashboard') }}"
                            target="_blank"
                         >

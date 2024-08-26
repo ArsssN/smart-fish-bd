@@ -10,7 +10,7 @@
                 <h3 class="text-center mb-3">Dev<strong>Test</strong> Dashboard</h3>
                 <p class="text-center">This is your central hub for managing and monitoring MQTT topics and messages.</p>
                 <div class="text-center mt-4">
-                    <a href="{{ url('/') }}" class="btn btn-secondary">Visit Landing Page</a>
+                    <a href="{{ url('/') }}" target="_blank" class="btn btn-secondary">Visit Landing Page</a>
                 </div>
             </div>
         </div>
