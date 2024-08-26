@@ -43,7 +43,6 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     */
     public function getOnOffTime(MqttDataSwitchUnitHistoryDetail $modal, string $status)
     {
-        $at = null;
         if ($status === 'on') {
             if ($modal->status == 'off') {
                 $beforeData = DB::table('mqtt_data_switch_unit_history_details')
@@ -59,11 +58,13 @@ class MqttDataSwitchUnitHistoryDetail extends Model
                 $at = $modal->created_at;
             }
         } else if ($status === 'off') {
-            if ($this->status == 'on') {
+            if ($modal->status == 'on') {
                 $at = null;
             } else {
-                $at = $this->updated_at ?: $this->created_at;
+                $at = $modal->updated_at ?: $modal->created_at;
             }
+        } else {
+            $at = null;
         }
 
         return $at;
