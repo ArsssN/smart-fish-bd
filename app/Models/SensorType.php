@@ -41,6 +41,10 @@ class SensorType extends Model
     ];
     protected $appends = [];
 
+    /**
+     * @var array|string[] $defaultSensors - Default sensors for the machine report
+     */
+    public static array $defaultSensors = ['o2', 'temp', 'tds', 'ph'];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
@@ -92,12 +96,6 @@ class SensorType extends Model
     {
         return $this->hasMany(MqttDataHistory::class);
     }
-
-    /**
-     * @var array|string[] $defaultSensors - Default sensors for the machine report
-     */
-    public static array $defaultSensors = ['o2', 'temp', 'tds', 'ph'];
-
 
     /*
     |--------------------------------------------------------------------------
