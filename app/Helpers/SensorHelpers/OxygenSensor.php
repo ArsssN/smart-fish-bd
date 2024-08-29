@@ -11,7 +11,7 @@ if (!function_exists('getOxygenSensorUpdate')) {
             $sensorList = [0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0];
         else if ($value <= 6)
             $sensorList = [1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0];
-        else if ($value > 6 || $value < 7)
+        else if ($value > 6 && $value < 7)
             $sensorList = [0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0];
         else if ($value >= 7)
             $sensorList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

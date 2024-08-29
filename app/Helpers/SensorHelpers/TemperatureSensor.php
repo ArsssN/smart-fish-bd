@@ -15,16 +15,14 @@ if (!function_exists('getTemperatureSensorUpdate')) {
             $fishFeeder = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0];
         }*/
 
-        if ($value < 20 || $value > 38) {
-            return 'No Feed';
-        }elseif ($value >= 20 || $value <= 25) {
+        if ($value >= 20 && $value <= 25) {
             return 'Below';
-        }elseif ($value > 25 || $value <= 32) {
+        } elseif ($value > 25 && $value <= 32) {
             return 'Optimum';
-        }elseif ($value > 32 || $value <= 38) {
+        } elseif ($value > 32 && $value <= 38) {
             return 'High';
+        } else {
+            return 'No Feed';
         }
-
-        return $fishFeeder;
     }
 }
