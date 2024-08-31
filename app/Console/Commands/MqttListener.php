@@ -100,6 +100,14 @@ class MqttListener extends Command
         $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
 
+        if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
+            $o2 = convertDOValue($responseMessage->data->o2);
+            $echo = "Converted DO value: from " . $responseMessage->data->o2 . " to " . $o2;
+            echo $echo;
+            Log::info($echo);
+            $responseMessage->data->o2 = $o2;
+        }
+
         if ($this->isTest) {
             MqttCommandController::$isSaveMqttData = false;
         }
@@ -196,7 +204,7 @@ class MqttListener extends Command
             }
         }
 
-        if (MqttCommandController::$switchUnitStatus !== 'active'){
+        if (MqttCommandController::$switchUnitStatus !== 'active') {
             $publishable = false;
         }
 
