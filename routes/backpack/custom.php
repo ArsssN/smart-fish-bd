@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\AuthHelper;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -67,15 +68,15 @@ Route::group([
         'prefix' => 'reports',
     ], function () {
         Route::get('machine', [
-            \App\Http\Controllers\ReportController::class,
+            ReportController::class,
             'machine',
         ])->name('reports.machine.index');
         Route::get('sensors', [
-            \App\Http\Controllers\ReportController::class,
+            ReportController::class,
             'sensors',
         ])->name('reports.sensors.index');
         Route::get('aerators', [
-            \App\Http\Controllers\ReportController::class,
+            ReportController::class,
             'aerators',
         ])->name('reports.aerators.index');
     });

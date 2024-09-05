@@ -172,7 +172,7 @@ class ReportController extends Controller
         $ponds = Pond::query()->get(['name', 'id']);
 
         if (!request()->has('pond_id') && $ponds->count() > 0) {
-            return redirect()->route('reports.machine.index', ['pond_id' => $ponds->first()->id]);
+            return redirect()->route('reports.sensors.index', ['pond_id' => $ponds->first()->id]);
         }
 
         $pond_id = request()->get('pond_id');
@@ -189,7 +189,7 @@ class ReportController extends Controller
             ]);
         if (!request()->has('sensors')) {
             return redirect()->route(
-                'reports.machine.index',
+                'reports.sensors.index',
                 [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
             );
         }
@@ -314,13 +314,13 @@ class ReportController extends Controller
         $breadcrumbs = [
             "Admin" => url('admin/dashboard'),
             "Reports" => false,
-            "sensors" => false
+            "aerators" => false
         ];
 
         $ponds = Pond::query()->get(['name', 'id']);
 
         if (!request()->has('pond_id') && $ponds->count() > 0) {
-            return redirect()->route('reports.machine.index', ['pond_id' => $ponds->first()->id]);
+            return redirect()->route('reports.aerators.index', ['pond_id' => $ponds->first()->id]);
         }
 
         $pond_id = request()->get('pond_id');
@@ -337,7 +337,7 @@ class ReportController extends Controller
             ]);
         if (!request()->has('sensors')) {
             return redirect()->route(
-                'reports.machine.index',
+                'reports.aerators.index',
                 [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
             );
         }

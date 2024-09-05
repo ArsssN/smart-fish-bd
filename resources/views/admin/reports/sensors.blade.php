@@ -4,33 +4,13 @@
 @section('header')
     <section class="container-fluid">
         <h2>
-            <span class="text-capitalize">Machine</span>
+            <span class="text-capitalize">Sensors</span>
             <small>Reports</small>
         </h2>
     </section>
     <div class="container-fluid animated fadeIn">
         <div class="row">
             <div class="col-md-12">
-                <div class="d-flex justify-content-between my-2">
-                    <div class="card mb-0 px-3 py-4 justify-content-center">
-                        <h5 class="m-0">Machine Run Status: <strong>{{ $machineStatus }}</strong></h5>
-                    </div>
-                    <div class="card mb-0 px-3 py-3">
-                        <div class="rounded">
-                            <table class="table table-borderless table-sm m-0 table-borderless">
-                                <tbody>
-                                @foreach($labelList as $remote_name => $label)
-                                    <tr class="border-0">
-                                        <td class="border-0 font-weight-bold">{{ $label }}</td>
-                                        <td class="border-0">:</td>
-                                        <td class="border-0">{{ number_format($sensorTypeAverages[$remote_name] ?? 0, 2) }}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
                 <nav class="navbar navbar-expand-lg navbar-filters mb-0 pb-0 pt-0 my-2">
                     <a class="nav-item d-none d-lg-block"><span class="la la-filter"></span></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bp-filters-navbar"
