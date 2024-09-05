@@ -70,6 +70,14 @@ Route::group([
             \App\Http\Controllers\ReportController::class,
             'machine',
         ])->name('reports.machine.index');
+        Route::get('sensors', [
+            \App\Http\Controllers\ReportController::class,
+            'sensors',
+        ])->name('reports.sensors.index');
+        Route::get('aerators', [
+            \App\Http\Controllers\ReportController::class,
+            'aerators',
+        ])->name('reports.aerators.index');
     });
     Route::get('charts/machine-report', 'Charts\MachineReportChartController@response')->name('charts.machine-report.index');
 }); // this should be the absolute last line of this file

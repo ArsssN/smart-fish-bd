@@ -160,4 +160,301 @@ class ReportController extends Controller
             )
         );
     }
+
+    public function sensors()
+    {
+        $breadcrumbs = [
+            "Admin" => url('admin/dashboard'),
+            "Reports" => false,
+            "sensors" => false
+        ];
+
+        $ponds = Pond::query()->get(['name', 'id']);
+
+        if (!request()->has('pond_id') && $ponds->count() > 0) {
+            return redirect()->route('reports.machine.index', ['pond_id' => $ponds->first()->id]);
+        }
+
+        $pond_id = request()->get('pond_id');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+
+        $defaultSensors = SensorType::$defaultSensors;
+        $sensors = SensorType::query()
+            ->whereIn('remote_name', $defaultSensors)
+            ->get([
+                'id',
+                'name',
+                'remote_name'
+            ]);
+        if (!request()->has('sensors')) {
+            return redirect()->route(
+                'reports.machine.index',
+                [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
+            );
+        }
+        $remote_names = request()->get('sensors');
+
+        $colors = [
+            'tds' => 'blue',
+            'temp' => 'red',
+            'ph' => 'purple',
+            'do' => 'yellow',
+            'o2' => 'green',
+            'food' => 'orange',
+            'rain' => 'cyan',
+        ];
+
+        $labelList = [
+            'o2' => 'DO Level',
+            'tds' => 'TDS',
+            'temp' => 'Water Temperature',
+            'ph' => 'pH Level',
+        ];
+
+        $sensorTypes = SensorType::query()
+            ->whereIn('remote_name', $remote_names)
+            ->latest();
+
+        $sensorTypeAverageData = getSensorTypesAverageBasedOnTime(
+            MqttDataHistory::query()->where('pond_id', $pond_id),
+            $start_date,
+            $end_date
+        );
+        $sensorTypeAverages = (clone $sensorTypes->get())
+            ->map(function ($sensorType) use ($sensorTypeAverageData) {
+                $sensorAvg = new \stdClass();
+                $sensorAvg->avg = $sensorTypeAverageData[$sensorType->id]['avg'] ?? '0.0';
+                $sensorAvg->remote_name = $sensorType->remote_name;
+                return $sensorAvg;
+            })
+            ->pluck('avg', 'remote_name');
+
+        $graphData = $sensorTypes
+            ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
+                $query->where('pond_id', $pond_id)
+                    ->whereBetween('created_at', [$start_date, $end_date])
+                    ->orderBy('created_at', 'asc');
+            })
+            ->get()
+            ->map(function ($sensorType) use ($colors, $labelList) {
+                $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
+                    return [
+                        'x' => $mqttDataHistory->created_at->format('Y-m-d H:i:s'),
+                        'y' => $mqttDataHistory->value
+                    ];
+                });
+
+                $config = [
+                    'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
+                    'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
+                    'borderWidth' => 1,
+                    'tension' => 0.3,
+                ];
+
+                return [
+                    'label' => $labelList[$sensorType->remote_name] ?? $sensorType->name,
+                    'data' => $data,
+                    ...$config
+                ];
+            });
+
+        $labels = $graphData->reduce(function ($carry, $item) {
+            if (count($carry) <= $item['data']->count()) {
+                return $item['data']->pluck('x')->toArray();
+            } else {
+                return $carry;
+            }
+        }, []);
+
+        $graphData = $graphData->sortByDesc(function ($item) {
+            return count($item['data']);
+        })->values();
+
+        // take all x values from all data
+        $_labels = $graphData->pluck('data')->flatten(1)->pluck('x')->unique()->sort()->values();
+
+        // fill all data with x values or null
+        $graphData = $graphData->map(function ($item) use ($_labels) {
+            $data = $_labels->map(function ($x) use ($item) {
+                $reportData = $item['data']->firstWhere('x', $x);
+                return [
+                    'x' => $x,
+                    'y' => $reportData ? $reportData['y'] : null
+                ];
+            });
+
+            return [
+                ...$item,
+                'data' => $data
+            ];
+        });
+
+        $machineStatus = 'On';
+
+        return view(
+            'admin.reports.sensors',
+            compact(
+                'breadcrumbs',
+                'graphData',
+                'labels',
+                'ponds',
+                'sensors',
+                'labelList',
+                'colors',
+                'sensorTypeAverages',
+                'start_date',
+                'end_date',
+                'machineStatus'
+            )
+        );
+    }
+    public function aerators()
+    {
+        $breadcrumbs = [
+            "Admin" => url('admin/dashboard'),
+            "Reports" => false,
+            "sensors" => false
+        ];
+
+        $ponds = Pond::query()->get(['name', 'id']);
+
+        if (!request()->has('pond_id') && $ponds->count() > 0) {
+            return redirect()->route('reports.machine.index', ['pond_id' => $ponds->first()->id]);
+        }
+
+        $pond_id = request()->get('pond_id');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+
+        $defaultSensors = SensorType::$defaultSensors;
+        $sensors = SensorType::query()
+            ->whereIn('remote_name', $defaultSensors)
+            ->get([
+                'id',
+                'name',
+                'remote_name'
+            ]);
+        if (!request()->has('sensors')) {
+            return redirect()->route(
+                'reports.machine.index',
+                [...request()->all(), Arr::query(['sensors' => $defaultSensors])]
+            );
+        }
+        $remote_names = request()->get('sensors');
+
+        $colors = [
+            'tds' => 'blue',
+            'temp' => 'red',
+            'ph' => 'purple',
+            'do' => 'yellow',
+            'o2' => 'green',
+            'food' => 'orange',
+            'rain' => 'cyan',
+        ];
+
+        $labelList = [
+            'o2' => 'DO Level',
+            'tds' => 'TDS',
+            'temp' => 'Water Temperature',
+            'ph' => 'pH Level',
+        ];
+
+        $sensorTypes = SensorType::query()
+            ->whereIn('remote_name', $remote_names)
+            ->latest();
+
+        $sensorTypeAverageData = getSensorTypesAverageBasedOnTime(
+            MqttDataHistory::query()->where('pond_id', $pond_id),
+            $start_date,
+            $end_date
+        );
+        $sensorTypeAverages = (clone $sensorTypes->get())
+            ->map(function ($sensorType) use ($sensorTypeAverageData) {
+                $sensorAvg = new \stdClass();
+                $sensorAvg->avg = $sensorTypeAverageData[$sensorType->id]['avg'] ?? '0.0';
+                $sensorAvg->remote_name = $sensorType->remote_name;
+                return $sensorAvg;
+            })
+            ->pluck('avg', 'remote_name');
+
+        $graphData = $sensorTypes
+            ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
+                $query->where('pond_id', $pond_id)
+                    ->whereBetween('created_at', [$start_date, $end_date])
+                    ->orderBy('created_at', 'asc');
+            })
+            ->get()
+            ->map(function ($sensorType) use ($colors, $labelList) {
+                $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
+                    return [
+                        'x' => $mqttDataHistory->created_at->format('Y-m-d H:i:s'),
+                        'y' => $mqttDataHistory->value
+                    ];
+                });
+
+                $config = [
+                    'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
+                    'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
+                    'borderWidth' => 1,
+                    'tension' => 0.3,
+                ];
+
+                return [
+                    'label' => $labelList[$sensorType->remote_name] ?? $sensorType->name,
+                    'data' => $data,
+                    ...$config
+                ];
+            });
+
+        $labels = $graphData->reduce(function ($carry, $item) {
+            if (count($carry) <= $item['data']->count()) {
+                return $item['data']->pluck('x')->toArray();
+            } else {
+                return $carry;
+            }
+        }, []);
+
+        $graphData = $graphData->sortByDesc(function ($item) {
+            return count($item['data']);
+        })->values();
+
+        // take all x values from all data
+        $_labels = $graphData->pluck('data')->flatten(1)->pluck('x')->unique()->sort()->values();
+
+        // fill all data with x values or null
+        $graphData = $graphData->map(function ($item) use ($_labels) {
+            $data = $_labels->map(function ($x) use ($item) {
+                $reportData = $item['data']->firstWhere('x', $x);
+                return [
+                    'x' => $x,
+                    'y' => $reportData ? $reportData['y'] : null
+                ];
+            });
+
+            return [
+                ...$item,
+                'data' => $data
+            ];
+        });
+
+        $machineStatus = 'On';
+
+        return view(
+            'admin.reports.aerators',
+            compact(
+                'breadcrumbs',
+                'graphData',
+                'labels',
+                'ponds',
+                'sensors',
+                'labelList',
+                'colors',
+                'sensorTypeAverages',
+                'start_date',
+                'end_date',
+                'machineStatus'
+            )
+        );
+    }
 }

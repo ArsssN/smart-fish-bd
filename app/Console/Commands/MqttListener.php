@@ -102,7 +102,7 @@ class MqttListener extends Command
 
         if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
             $o2 = convertDOValue($responseMessage->data->o2);
-            $echo = "Converted DO value: from " . $responseMessage->data->o2 . " to " . $o2;
+            $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2;
             echo $echo;
             Log::info($echo);
             $responseMessage->data->o2 = $o2;
