@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('aerator:manage')->everyFiveMinutes();
+        $schedule->command('aerator:manage')->everyMinute();
     }
 
     /**
