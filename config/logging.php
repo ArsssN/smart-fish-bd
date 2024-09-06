@@ -59,7 +59,7 @@ return [
 
         'aerator_status' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/aerator_status.log'), // Custom log file
+            'path' => storage_path('logs/aerator-status.log'), // Custom log file
             'level' => 'info', // Define the log level
             'days' => 14,
         ],
