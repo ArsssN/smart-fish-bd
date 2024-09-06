@@ -57,6 +57,13 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'aerator_status' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/aerator_status.log'), // Custom log file
+            'level' => 'info', // Define the log level
+            'days' => 14,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
