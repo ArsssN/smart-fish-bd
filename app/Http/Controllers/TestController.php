@@ -27,6 +27,7 @@ class TestController extends Controller
     {
         $topic = request()->get('topic');
         $responseMessage = json_decode(json_encode(request()->except('topic')));
+        $currentTime = request()->get('currentTime') ?? now()->format('H:i');
 
         $autoFill = json_decode('{
                 "gw_id": "3083987D2528",
@@ -55,6 +56,7 @@ class TestController extends Controller
                 $mqttListener = new MqttListener();
 
                 $mqttListener->setMessage(json_encode($responseMessage));
+                $mqttListener->setCurrentTime($currentTime);
                 $mqttListener->setTopic($topic);
                 $mqttListener->setIsTest(true);
 
@@ -74,7 +76,8 @@ class TestController extends Controller
                 'autoFill',
                 'publishable',
                 'isAlreadyPublished',
-                'isUpdate'
+                'isUpdate',
+                'currentTime'
             )
         );
     }

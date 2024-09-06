@@ -48,8 +48,8 @@
                 <h2>Request</h2>
                 <hr/>
                 <form action="" class="mb-3" method="GET">
-                    <div class="mb-3">
-                        <fieldset>
+                    <div class="mb-3 d-flex gap-3">
+                        <fieldset class="w-100">
                             <legend>Topic</legend>
                             <div class="form-group mb-2">
                                 <label for="topic">Topic</label>
@@ -63,6 +63,15 @@
                                        value="{{ request('topic') }}"
                                        placeholder="Topic">
                                 <span class="input-group-text">/PUB</span>
+                            </div>
+                        </fieldset>
+                        <fieldset class="w-100">
+                            <legend>Time</legend>
+                            <div class="form-group mb-2">
+                                <label for="currentTime">Time</label>
+                                <input class="form-control ds-input" type="time" name="currentTime" id="currentTime"
+                                       value="{{ request('currentTime') ?? $currentTime }}"
+                                       placeholder="Enter Topic">
                             </div>
                         </fieldset>
                     </div>

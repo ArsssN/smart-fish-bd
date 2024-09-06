@@ -54,6 +54,13 @@ class MqttListener extends Command
     protected bool $isTest = false;
 
     /**
+     * The current time.
+     *
+     * @var string
+     */
+    protected string $currentTime;
+
+    /**
      * The current date time.
      *
      * @var string $currentDateTime - current date time
@@ -67,6 +74,8 @@ class MqttListener extends Command
      */
     public function handle(): int
     {
+        $this->currentTime = now()->format('H:i');
+
         $mqtt = MQTT::connection();
         $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
             $this->currentDateTime = now()->format('Y-m-d H:i:s');
@@ -97,12 +106,13 @@ class MqttListener extends Command
     public function processResponse(): bool
     {
         $this->currentDateTime = $this->currentDateTime ?? now()->format('Y-m-d H:i:s');
+        $this->currentTime = $this->currentTime ?? now()->format('H:i');
         $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
 
         if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
-            $o2 = convertDOValue($responseMessage->data->o2);
-            $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2;
+            $o2 = convertDOValue($responseMessage->data->o2, $this->currentTime);
+            $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2 . ' at ' . $this->currentTime . '<br>';;
             echo $echo;
             Log::info($echo);
             $responseMessage->data->o2 = $o2;
@@ -224,6 +234,11 @@ class MqttListener extends Command
     public function setMessage(string $message): void
     {
         $this->message = $message;
+    }
+
+    public function setCurrentTime(string $currentTime): void
+    {
+        $this->currentTime = $currentTime;
     }
 
     public function setIsTest(bool $isTest): void

@@ -29,9 +29,13 @@ if (!function_exists('convertDOValue')) {
             $currentTime = date('H:i');
         }
 
+        // Extract the hour and minute from currentTime
+        $hour = (int)date('H', strtotime($currentTime));
+        $minute = (int)date('i', strtotime($currentTime));
+
         // Define the conversion values based on time ranges
         $conversionValues = [
-            '05:00-05:20' => 2.80,
+            '05:01-05:20' => 2.80,
             '05:21-05:40' => 2.81,
             '05:41-06:00' => 2.82,
             '06:01-06:20' => 2.85,
@@ -53,7 +57,7 @@ if (!function_exists('convertDOValue')) {
             '11:21-11:40' => 4.88,
             '11:41-12:00' => 5.19,
 
-            '12:00-12:20' => 5.19,
+            '12:01-12:20' => 5.19,
             '12:21-12:40' => 5.63,
             '12:41-13:00' => 5.92,
             '13:01-13:20' => 7.01,
@@ -107,13 +111,26 @@ if (!function_exists('convertDOValue')) {
             '04:21-04:40' => 3.65,
             '04:41-05:00' => 3.23,
         ];
+        // Datetime range for one third hours or every 20 minutes
+        if ($minute >= 0 && $minute < 20) {
+            $timeRange = sprintf('%02d:01-%02d:20', $hour, $hour);
+        } else if ($minute >= 20 && $minute < 40) {
+            $timeRange = sprintf('%02d:21-%02d:40', $hour, $hour);
+        } else if ($minute >= 40 && $minute < 60) {
+            $timeRange = sprintf('%02d:41-%02d:00', $hour, $hour + 1);
+        } else {
+            // If minute is not within 0-59, return the original DO value
+            return $doValue;
+        }
 
-        /*$conversionValues = [
-            '5:00-6:00' => 4.2,
-            '6:00-7:00' => 4.1,
-            '7:00-8:00' => 4.4,
-            '8:00-9:00' => 5.1,
-            '9:00-10:00' => 6.2,
+        /*// Determine the time range key
+        $timeRange = sprintf('%02d:00-%02d:00', $hour, $hour + 1);
+        $conversionValues = [
+            '05:00-06:00' => 4.2,
+            '06:00-07:00' => 4.1,
+            '07:00-08:00' => 4.4,
+            '08:00-09:00' => 5.1,
+            '09:00-10:00' => 6.2,
             '10:00-11:00' => 6.8,
             '11:00-12:00' => 6.5,
             '12:00-13:00' => 6.1,
@@ -134,13 +151,6 @@ if (!function_exists('convertDOValue')) {
             '03:00-04:00' => 4.6,
             '04:00-05:00' => 4.3,
         ];*/
-
-        // Extract the hour and minute from currentTime
-        $hour = (int)date('H', strtotime($currentTime));
-        $minute = (int)date('i', strtotime($currentTime));
-
-        // Determine the time range key
-        $timeRange = sprintf('%02d:00-%02d:00', $hour, $hour + 1);
 
         // Convert DO value based on the time range
         if ($doValue < 1.5) {
