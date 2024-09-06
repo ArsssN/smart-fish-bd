@@ -30,13 +30,20 @@ class AeratorManageCommand extends Command
      */
     public function handle()
     {
+        Log::channel('aerator_status')->info('Aerator Manage Command Starting');
+
         // Get the current machine status from cache, default is 'off'
         $machineStatus = Cache::get('machine_status', 'off');
         $lastSwitchTime = Cache::get('last_switch_time', Carbon::now());
 
+        if (Cache::get('machine_status') == null && Cache::get('last_switch_time') == null) {
+            Cache::put('machine_status', $machineStatus);
+            Cache::put('last_switch_time', $lastSwitchTime);
+            Log::channel('aerator_status')->info('When empty then store off and current time machine status: '. Cache::get('machine_status'). ', last_switch_time: '. Cache::get('last_switch_time'));
+        }
+
         // Get the current time
         $currentTime = Carbon::now();
-
         // Check the time difference between now and the last switch
         $elapsedMinutes = $currentTime->diffInMinutes($lastSwitchTime);
 
