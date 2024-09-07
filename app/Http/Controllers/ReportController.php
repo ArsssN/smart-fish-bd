@@ -415,6 +415,7 @@ class ReportController extends Controller
                 'ponds',
                 'start_date',
                 'end_date',
+                'borderColors',
             )
         );
     }

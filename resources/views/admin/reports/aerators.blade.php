@@ -88,6 +88,21 @@
                                 <div class="tab-pane fade show active" id="chart" role="tabpanel"
                                      aria-labelledby="chart-tab">
                                     <div class="card no-padding no-border">
+                                        <div class="mx-3 my-2 flex">
+                                            @foreach($borderColors as $key => $borderColor)
+                                                <label for="borderColor_{{$key}}" class="mr-3"
+                                                       title="Switch: {{$key}}"
+                                                       style="color: {{$borderColor}}"
+                                                       onclick="toggleBars(event, {{+$key-1}})"
+                                                >
+                                                    <input type="checkbox" checked id="borderColor_{{$key}}"
+                                                           class="me-2">
+                                                    <strong>
+                                                        Switch: {{$key}}
+                                                    </strong>
+                                                </label>
+                                            @endforeach
+                                        </div>
                                         <canvas id="myChart"></canvas>
                                     </div>
                                 </div>
@@ -102,7 +117,7 @@
                                                     <th style="width: 5rem;">#</th>
                                                     <th>Switch</th>
                                                     <th>Runtime</th>
-                                                    {{--<th>Status</th>--}}
+                                                    <th>Status</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -122,9 +137,9 @@
                                                                 : "-"
                                                             }}
                                                         </td>
-                                                        {{--<td>
+                                                        <td>
                                                             {{$graphData[0]["status"][$index] ?? "-"}}
-                                                        </td>--}}
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -150,37 +165,108 @@
     <script>
         const ctx = document.getElementById('myChart');
         const datasets = @json($graphData);
+        const baseDatasets = @json($graphData);
         const labels = @json($labels);
 
         console.log([datasets, labels])
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                // labels: labels,
-                datasets: datasets
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        let _chart = null;
+
+        const initChart = (datasets) => {
+            _chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    // labels: labels,
+                    datasets: datasets,
                 },
-                plugins: {
-                    // zoom: {
-                    //     zoom: {
-                    //         wheel: {
-                    //             enabled: true,
-                    //         },
-                    //         pinch: {
-                    //             enabled: true
-                    //         },
-                    //         mode: 'x',
-                    //     }
-                    // }
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {}
                 }
+            });
+
+            // Store the chart instance in window for access in toggleBars
+            window.myChart = _chart;
+        }
+
+        initChart(datasets);
+
+        // Function to toggle the visibility of a specific bar
+        function toggleBars(event, barIndex, datasetIndex = 0) {
+            const chart = window.myChart;
+
+            if (!chart || !chart.data || !chart.data.datasets || !chart.data.datasets[datasetIndex]) {
+                console.error('Chart or dataset not initialized.');
+                return;
             }
-        });
+
+            const dataset = chart.data.datasets[datasetIndex];
+
+            // Determine the visibility based on the checkbox state
+            const isChecked = event.target.checked;
+
+            if (!isChecked) {
+                delete dataset['data'][`Aerator: ${barIndex + 1}`];
+                dataset['backgroundColor'].splice(barIndex, 1);
+                dataset['borderColor'].splice(barIndex, 1);
+            } else {
+                let data_keys = Object.keys(dataset['data']);
+                let data_values = Object.values(dataset['data']);
+                data_keys = [
+                    ...data_keys.slice(0, barIndex),
+                    `Aerator: ${barIndex + 1}`,
+                    ...data_keys.slice(barIndex)
+                ]
+                data_values = [
+                    ...data_values.slice(0, barIndex),
+                    baseDatasets[datasetIndex]['data'][`Aerator: ${barIndex + 1}`],
+                    ...data_values.slice(barIndex)
+                ]
+                let data = data_keys.reduce((acc, key, index) => {
+                    acc[key] = data_values[index];
+                    return acc;
+                }, {});
+                dataset['data'] = {};
+                Object.entries(data).forEach(([key, value]) => {
+                    dataset['data'][key] = value;
+                });
+                chart.update();
+
+                let backgroundColor_values = Object.values(dataset['backgroundColor']);
+                backgroundColor_values = [
+                    ...backgroundColor_values.slice(0, barIndex),
+                    baseDatasets[datasetIndex]['backgroundColor'][`${barIndex}`],
+                    ...backgroundColor_values.slice(barIndex)
+                ]
+                dataset['backgroundColor'] = [];
+                backgroundColor_values.forEach((value, index) => {
+                    dataset['backgroundColor'][index] = value;
+                });
+                chart.update();
+
+                let borderColor_values = Object.values(dataset['borderColor']);
+                borderColor_values = [
+                    ...borderColor_values.slice(0, barIndex),
+                    baseDatasets[datasetIndex]['borderColor'][`${barIndex}`],
+                    ...borderColor_values.slice(barIndex)
+                ]
+                dataset['borderColor'] = [];
+                borderColor_values.forEach((value, index) => {
+                    dataset['borderColor'][index] = value;
+                });
+                chart.update();
+            }
+
+            // destroy the chart
+            chart.destroy();
+
+            // reinitialize the chart
+            initChart(datasets);
+        }
     </script>
 @endsection
 
