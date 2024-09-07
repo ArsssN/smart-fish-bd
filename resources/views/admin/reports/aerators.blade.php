@@ -93,9 +93,11 @@
                                                 <label for="borderColor_{{$key}}" class="mr-3"
                                                        title="Switch: {{$key}}"
                                                        style="color: {{$borderColor}}"
-                                                       onclick="toggleBars(event, {{+$key-1}})"
                                                 >
-                                                    <input type="checkbox" checked id="borderColor_{{$key}}"
+                                                    <input type="checkbox"
+                                                           onclick="toggleBars(event, {{+$key-1}})"
+                                                           checked="checked"
+                                                           id="borderColor_{{$key}}"
                                                            class="me-2">
                                                     <strong>
                                                         Switch: {{$key}}
@@ -209,10 +211,14 @@
             // Determine the visibility based on the checkbox state
             const isChecked = event.target.checked;
 
+            console.log('isChecked', isChecked)
+
             if (!isChecked) {
                 delete dataset['data'][`Aerator: ${barIndex + 1}`];
                 dataset['backgroundColor'].splice(barIndex, 1);
                 dataset['borderColor'].splice(barIndex, 1);
+
+                console.log('111', dataset['borderColor'])
             } else {
                 let data_keys = Object.keys(dataset['data']);
                 let data_values = Object.values(dataset['data']);
@@ -236,11 +242,11 @@
                 });
                 chart.update();
 
-                let backgroundColor_values = Object.values(dataset['backgroundColor']);
+                let backgroundColor_values = baseDatasets[datasetIndex]['backgroundColor'];
                 backgroundColor_values = [
                     ...backgroundColor_values.slice(0, barIndex),
                     baseDatasets[datasetIndex]['backgroundColor'][`${barIndex}`],
-                    ...backgroundColor_values.slice(barIndex)
+                    ...backgroundColor_values.slice(barIndex + 1)
                 ]
                 dataset['backgroundColor'] = [];
                 backgroundColor_values.forEach((value, index) => {
@@ -248,12 +254,20 @@
                 });
                 chart.update();
 
-                let borderColor_values = Object.values(dataset['borderColor']);
+                let borderColor_values = baseDatasets[datasetIndex]['borderColor'];
                 borderColor_values = [
                     ...borderColor_values.slice(0, barIndex),
                     baseDatasets[datasetIndex]['borderColor'][`${barIndex}`],
-                    ...borderColor_values.slice(barIndex)
+                    ...borderColor_values.slice(barIndex + 1)
                 ]
+
+                console.log(
+                    "abc",
+                    borderColor_values.slice(0, barIndex),
+                    [baseDatasets[datasetIndex]['borderColor'][`${barIndex}`]],
+                    borderColor_values.slice(barIndex + 1)
+                )
+
                 dataset['borderColor'] = [];
                 borderColor_values.forEach((value, index) => {
                     dataset['borderColor'][index] = value;
