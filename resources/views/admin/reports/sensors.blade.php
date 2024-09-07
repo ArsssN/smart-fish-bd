@@ -107,14 +107,12 @@
     <script>
         const ctx = document.getElementById('myChart');
         const datasets = @json($graphData);
-        const labels = @json($labels);
 
-        console.log([datasets, labels])
+        console.log([datasets])
 
         new Chart(ctx, {
             type: 'line',
             data: {
-                // labels: labels,
                 datasets: datasets
             },
             options: {
