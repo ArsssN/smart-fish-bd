@@ -321,7 +321,7 @@ class ReportController extends Controller
                     'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
                 ];
             });
-        dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
+            //dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
         $labels = $mqttDataSwitchUnitHistoryDetail->keys()
             ->map(function ($key) {
                 return "Aerator Switch: $key";
