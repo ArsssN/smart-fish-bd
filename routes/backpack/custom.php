@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Route;
 // Routes you generate using Backpack\Generators will be placed here.
 
 Route::group([
-    'prefix'     => config('backpack.base.route_prefix', 'admin'),
+    'prefix' => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
-        (array) config('backpack.base.web_middleware', 'web'),
-        (array) config('backpack.base.middleware_key', 'admin')
+        (array)config('backpack.base.web_middleware', 'web'),
+        (array)config('backpack.base.middleware_key', 'admin')
     ),
-    'namespace'  => 'App\Http\Controllers\Admin',
+    'namespace' => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     Route::get('backup/table/{table?}', 'BackupController@backupTable')->name('backup.table');
     Route::get('remove-seed', 'BackupController@removeSeed')->name('remove.seed');
@@ -64,21 +64,10 @@ Route::group([
     Route::crud('mqtt-data-history', 'MqttDataHistoryCrudController');
     Route::crud('mqtt-data-switch-unit-history', 'MqttDataSwitchUnitHistoryCrudController');
 
-    Route::group([
-        'prefix' => 'reports',
-    ], function () {
-        Route::get('machine', [
-            ReportController::class,
-            'machine',
-        ])->name('reports.machine.index');
-        Route::get('sensors', [
-            ReportController::class,
-            'sensors',
-        ])->name('reports.sensors.index');
-        Route::get('aerators', [
-            ReportController::class,
-            'aerators',
-        ])->name('reports.aerators.index');
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('machine', [ReportController::class, 'machine'])->name('machine.index');
+        Route::get('sensors', [ReportController::class, 'sensors'])->name('sensors.index');
+        Route::get('aerators', [ReportController::class, 'aerators'])->name('aerators.index');
     });
     Route::get('charts/machine-report', 'Charts\MachineReportChartController@response')->name('charts.machine-report.index');
 }); // this should be the absolute last line of this file

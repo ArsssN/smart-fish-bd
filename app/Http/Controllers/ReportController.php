@@ -214,101 +214,61 @@ class ReportController extends Controller
 
         $sensorTypes = SensorType::query()
             ->whereIn('remote_name', $remote_names)
-            ->latest();
+            ->latest()
+            ->get()
+            ->keyBy('id');
 
-        $sensorTypeAverageData = getSensorTypesAverageBasedOnTime(
+        $sensorTypeAverageDataDaily = getSensorTypesDailyAverageBasedOnTime(
             MqttDataHistory::query()->where('pond_id', $pond_id),
             $start_date,
             $end_date
         );
-        $sensorTypeAverages = (clone $sensorTypes->get())
-            ->map(function ($sensorType) use ($sensorTypeAverageData) {
-                $sensorAvg = new \stdClass();
-                $sensorAvg->avg = $sensorTypeAverageData[$sensorType->id]['avg'] ?? '0.0';
-                $sensorAvg->remote_name = $sensorType->remote_name;
-                return $sensorAvg;
-            })
-            ->pluck('avg', 'remote_name');
 
-        $graphData = $sensorTypes
-            ->with('mqttDataHistories', function ($query) use ($pond_id, $start_date, $end_date) {
-                $query->where('pond_id', $pond_id)
-                    ->whereBetween('created_at', [$start_date, $end_date])
-                    ->orderBy('created_at', 'asc');
-            })
-            ->get()
-            ->map(function ($sensorType) use ($colors, $labelList) {
-                $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
-                    return [
-                        'x' => $mqttDataHistory->created_at->format('Y-m-d H:i:s'),
-                        'y' => $mqttDataHistory->value
-                    ];
-                });
+        $graphData = $sensorTypes->map(function ($sensorType, $sensorTypeID) use ($colors, $labelList) {
+            $data = collect();
 
-                $config = [
-                    'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
-                    'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
-                    'borderWidth' => 1,
-                    'tension' => 0.3,
-                ];
-
-                return [
-                    'label' => $labelList[$sensorType->remote_name] ?? $sensorType->name,
-                    'data' => $data,
-                    ...$config
-                ];
-            });
-
-        $labels = $graphData->reduce(function ($carry, $item) {
-            if (count($carry) <= $item['data']->count()) {
-                return $item['data']->pluck('x')->toArray();
-            } else {
-                return $carry;
-            }
-        }, []);
-
-        $graphData = $graphData->sortByDesc(function ($item) {
-            return count($item['data']);
-        })->values();
-
-        // take all x values from all data
-        $_labels = $graphData->pluck('data')->flatten(1)->pluck('x')->unique()->sort()->values();
-
-        // fill all data with x values or null
-        $graphData = $graphData->map(function ($item) use ($_labels) {
-            $data = $_labels->map(function ($x) use ($item) {
-                $reportData = $item['data']->firstWhere('x', $x);
-                return [
-                    'x' => $x,
-                    'y' => $reportData ? $reportData['y'] : null
-                ];
-            });
+            $config = [
+                'backgroundColor' => $colors[$sensorType->remote_name] ?? 'black',
+                'borderColor' => $colors[$sensorType->remote_name] ?? 'black',
+                'borderWidth' => 1,
+                'tension' => 0.3,
+            ];
 
             return [
-                ...$item,
-                'data' => $data
+                'label' => $labelList[$sensorType->remote_name] ?? $sensorType->name,
+                'data' => $data,
+                ...$config
             ];
         });
 
-        $machineStatus = 'On';
+        $sensorTypeAverageDataDaily->each(function ($sensorTypeAvgList, $date) use ($colors, $labelList, &$graphData) {
+            foreach ($sensorTypeAvgList as $sensorTypeID => $sensorTypeAvg) {
+                if (isset($graphData[$sensorTypeID])) {
+                    $graphData[$sensorTypeID]['data']->push([
+                        'x' => $date,
+                        'y' => $sensorTypeAvg['avg']
+                    ]);
+                }
+            }
+        });
+
+        $graphData = $graphData->values();
 
         return view(
             'admin.reports.sensors',
             compact(
                 'breadcrumbs',
                 'graphData',
-                'labels',
                 'ponds',
                 'sensors',
                 'labelList',
                 'colors',
-                'sensorTypeAverages',
                 'start_date',
                 'end_date',
-                'machineStatus'
             )
         );
     }
+
     public function aerators()
     {
         $breadcrumbs = [
