@@ -33,6 +33,13 @@ class MqttListener extends Command
     protected string $message;
 
     /**
+     * The original message.
+     *
+     * @var string
+     */
+    protected static string $original_message;
+
+    /**
      * The topic to be subscribed to.
      *
      * @var string
@@ -108,6 +115,8 @@ class MqttListener extends Command
         $this->currentTime = $this->currentTime ?? now()->format('H:i');
         $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
+
+        self::$original_message = $this->message;
 
         if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
             $o2 = convertDOValue($responseMessage->data->o2, $this->currentTime);
@@ -243,5 +252,10 @@ class MqttListener extends Command
     public function setIsTest(bool $isTest): void
     {
         $this->isTest = $isTest;
+    }
+
+    public static function getOriginalMessage(): string
+    {
+        return self::$original_message ?? '';
     }
 }
