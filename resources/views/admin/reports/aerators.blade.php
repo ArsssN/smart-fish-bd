@@ -46,29 +46,6 @@
                                 </li>
 
                                 <li class="nav-item pl-3 mr-3 border-right"></li>
-                                {{--<li class="nav-item my-auto d-none" title="Sensors">
-                                    <select name="sensors[]" id="sensors" class="form-control" multiple="multiple">
-                                        @foreach($sensors as $sensor)
-                                            <option
-                                                value="{{$sensor->remote_name}}" {{in_array($sensor->remote_name, request()->get('sensors') ?? []) ? 'selected' : ''}}>
-                                                {{$sensor->name}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </li>--}}
-                                @foreach($sensors as $sensor)
-                                    <li class="nav-item my-auto" title="Sensors">
-                                        <label class="m-0" for="sensor_{{$sensor->remote_name}}"
-                                               style="color:{{$colors[$sensor->remote_name]}}">
-                                            <input type="checkbox" name="sensors[]"
-                                                   id="sensor_{{$sensor->remote_name}}"
-                                                   value="{{$sensor->remote_name}}" {{in_array($sensor->remote_name, request()->get('sensors') ?? []) ? 'checked' : ''}}>
-                                            {{$labelList[$sensor->remote_name]}}
-                                        </label>
-                                    </li>
-                                @endforeach
-
-                                <li class="nav-item pl-3 mr-3 border-right"></li>
                                 <li class="nav-item my-auto">
                                     <button type="submit" class="btn btn-light border">
                                         <i class="la la-search"></i> Search
@@ -112,7 +89,7 @@
         console.log([datasets, labels])
 
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 // labels: labels,
                 datasets: datasets
