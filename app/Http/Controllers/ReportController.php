@@ -321,6 +321,7 @@ class ReportController extends Controller
                     'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
                 ];
             });
+        dump($start_date, $end_date);
         $labels = $graphData->keys()
             ->map(function ($key) use ($graphData) {
                 return "Aerator Switch: $key";
