@@ -297,7 +297,7 @@ class ReportController extends Controller
         $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
         $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
 
-        $graphData = MqttDataSwitchUnitHistoryDetail::query()
+        $mqttDataSwitchUnitHistoryDetail = MqttDataSwitchUnitHistoryDetail::query()
             ->whereHas(
                 'mqttDataSwitchUnitHistory',
                 function ($query) use ($pond_id) {
@@ -321,9 +321,9 @@ class ReportController extends Controller
                     'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
                 ];
             });
-        dump($start_date, $end_date);
-        $labels = $graphData->keys()
-            ->map(function ($key) use ($graphData) {
+        dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
+        $labels = $mqttDataSwitchUnitHistoryDetail->keys()
+            ->map(function ($key) {
                 return "Aerator Switch: $key";
             })->toArray();
 
@@ -331,13 +331,13 @@ class ReportController extends Controller
         $empty_formated_run_time = collect(array_fill(1, 12, ""));
         $empty_status = collect(array_fill(1, 12, "off"));
 
-        $formated_run_time = $graphData->map(
+        $formated_run_time = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => $item["total_formated_run_time"] ?? ""
         );
-        $status = $graphData->map(
+        $status = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => array_reverse($item["items"] ?? [])[0]["status"] ?? "off"
         );
-        $graphData = $graphData->map(
+        $graphData = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => $item["total_run_time"] ?? 0
         );
 
