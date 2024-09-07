@@ -16,6 +16,8 @@ class ReportController extends Controller
 {
     public function machine()
     {
+        $title = "Machine Report";
+
         $breadcrumbs = [
             "Admin" => url('admin/dashboard'),
             "Reports" => false,
@@ -148,6 +150,7 @@ class ReportController extends Controller
         return view(
             'admin.reports.machine',
             compact(
+                'title',
                 'breadcrumbs',
                 'graphData',
                 'labels',
@@ -165,6 +168,8 @@ class ReportController extends Controller
 
     public function sensors()
     {
+        $title = "Sensors Report";
+
         $breadcrumbs = [
             "Admin" => url('admin/dashboard'),
             "Reports" => false,
@@ -259,6 +264,7 @@ class ReportController extends Controller
         return view(
             'admin.reports.sensors',
             compact(
+                'title',
                 'breadcrumbs',
                 'graphData',
                 'ponds',
@@ -273,6 +279,8 @@ class ReportController extends Controller
 
     public function aerators()
     {
+        $title = "Aerators Report";
+
         $breadcrumbs = [
             "Admin" => url('admin/dashboard'),
             "Reports" => false,
@@ -319,12 +327,27 @@ class ReportController extends Controller
             })->toArray();
 
         $emptyGraphData = collect(array_fill(1, 12, null));
+        $empty_formated_run_time = collect(array_fill(1, 12, ""));
+        $empty_status = collect(array_fill(1, 12, "off"));
+
+        $formated_run_time = $graphData->map(
+            fn($item) => $item["total_formated_run_time"] ?? ""
+        );
+        $status = $graphData->map(
+            fn($item) => array_reverse($item["items"] ?? [])[0]["status"] ?? "off"
+        );
         $graphData = $graphData->map(
             fn($item) => $item["total_run_time"] ?? 0
         );
 
         $graphData = $emptyGraphData->mapWithKeys(
             fn($item, $key) => [$key => $graphData->get($key, null)]
+        );
+        $formated_run_time = $empty_formated_run_time->mapWithKeys(
+            fn($item, $key) => [$key => $formated_run_time->get($key, "")]
+        );
+        $status = $empty_status->mapWithKeys(
+            fn($item, $key) => [$key => $status->get($key, "-")]
         );
 
         $graphData = $graphData->reduce(function ($carry, $item, $key) {
@@ -376,12 +399,15 @@ class ReportController extends Controller
                 'tension' => 0.3,
                 // border top radius
                 'borderRadius' => 4,
+                'status' => $status,
+                'formated_run_time' => $formated_run_time
             ]
         ];
 
         return view(
             'admin.reports.aerators',
             compact(
+                'title',
                 'breadcrumbs',
                 'graphData',
                 'labels',

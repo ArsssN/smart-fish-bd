@@ -62,15 +62,81 @@
                         </div>
                     </form>
                 </nav>
+
                 <div class="">
                     <div class="row">
+                        <div class="col-12">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="chart-tab" data-toggle="tab" href="#chart" role="tab"
+                                       aria-controls="chart" aria-selected="true">Chart</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab"
+                                       aria-controls="table" aria-selected="false">Table</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tab content -->
+                    <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
-                            <div class="card no-padding no-border">
-                                <canvas id="myChart"></canvas>
+                            <div class="tab-content">
+                                <!-- Chart Tab Pane -->
+                                <div class="tab-pane fade show active" id="chart" role="tabpanel"
+                                     aria-labelledby="chart-tab">
+                                    <div class="card no-padding no-border">
+                                        <canvas id="myChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Table Tab Pane -->
+                                <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="table-tab">
+                                    <div class="card no-padding no-border m-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover m-0">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 5rem;">#</th>
+                                                    <th>Switch</th>
+                                                    <th>Runtime</th>
+                                                    {{--<th>Status</th>--}}
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @php($index = 0)
+                                                @foreach($graphData[0]["data"] as $key => $runtime)
+                                                    <tr>
+                                                        <td>
+                                                            {{++$index}}
+                                                        </td>
+                                                        <td>
+                                                            {{$runtime ? "Aerator" : "Feeder"}}
+                                                        </td>
+                                                        <td>
+                                                            {{
+                                                                $runtime
+                                                                ? $graphData[0]["formated_run_time"][$index] ?? "-"
+                                                                : "-"
+                                                            }}
+                                                        </td>
+                                                        {{--<td>
+                                                            {{$graphData[0]["status"][$index] ?? "-"}}
+                                                        </td>--}}
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
