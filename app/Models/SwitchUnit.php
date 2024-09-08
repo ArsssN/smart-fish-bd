@@ -34,12 +34,15 @@ class SwitchUnit extends Model
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
-        "target-field"  => "name", // The field that will be used to generate the slug
-        "separator"     => "-", // The separator that will be used to separate the words
-        "slug-field"    => "slug", // The field that will be used to store the slug
+        "target-field" => "name", // The field that will be used to generate the slug
+        "separator" => "-", // The separator that will be used to separate the words
+        "slug-field" => "slug", // The field that will be used to store the slug
     ];
     protected $casts = [
-        'switches' => 'array',
+        // 'switches' => 'array',
+    ];
+    protected $appends = [
+        'switches'
     ];
 
     /*
@@ -106,6 +109,26 @@ class SwitchUnit extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return array
+     */
+    public function getSwitchesAttribute(): array
+    {
+        return (
+            $this->switchUnitSwitches?->map(function ($switch) {
+                return [
+                    'number' => $switch->number,
+                    'switchType' => $switch->switchType,
+                    'status' => $switch->status,
+                    'comment' => $switch->comment,
+                ];
+            })
+            ?? collect()
+        )->toArray();
+    }
 
     /*
     |--------------------------------------------------------------------------

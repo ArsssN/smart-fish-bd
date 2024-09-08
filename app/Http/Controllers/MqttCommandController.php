@@ -210,8 +210,19 @@ class MqttCommandController extends Controller
                         return $switch;
                     });
 
-                    $switchUnit->switches = $switches->toArray();
-                    $switchUnit->save();
+                    $switches->each(
+                        function ($switch, $index) use ($switchUnit) {
+                            $switchUnit->switchUnitSwitches()->updateOrCreate(
+                                ['number' => $index + 1],
+                                [
+                                    'switchType' => $switch['switchType'] == 1 ? 1 : 2,
+                                    'status' => $switch['status'],
+                                    'comment' => $switch['comment'],
+                                ]
+                            );
+                        }
+                    );
+
 
                     if (self::$mqttData->id) {
                         $mqttDataSwitchUnitHistory = [
