@@ -34,12 +34,12 @@ class AeratorManageCommand extends Command
     /**
      * @var int - start after time in min: 40
      */
-    const onAfterOff = 1 * 60; // seconds
+    const onAfterOff = 40 * 60; // seconds
 
     /**
      * @var int - stop after time in min: 80
      */
-    const offAfterOn = 1 * 60; // seconds
+    const offAfterOn = 80 * 60; // seconds
 
     /**
      * Execute the console command.
@@ -64,7 +64,7 @@ class AeratorManageCommand extends Command
         Log::channel('aerator_status')->info('Last Switch Time: ' . $lastSwitchTime);
 
         // Check the time difference between now and the last switch time
-        $elapsedSeconds = Carbon::parse($lastSwitchTime)->subSeconds(5)->diffInSeconds(now());
+        $elapsedSeconds = Carbon::parse($lastSwitchTime)->subSeconds(2)->diffInSeconds(now());
 
         Log::channel('aerator_status')->info('Elapsed Seconds: ' . $elapsedSeconds);
 
