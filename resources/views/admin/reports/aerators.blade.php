@@ -127,7 +127,7 @@
                                                     <th>Start At</th>
                                                     <th>End At</th>
                                                     <th>Interval Runtime</th>
-                                                    <th>Total Runtime</th>
+                                                    <th title="Total runtime of last on-off cycle">Last Runtime</th>
                                                     <th>Status</th>
                                                 </tr>
                                                 </thead>
