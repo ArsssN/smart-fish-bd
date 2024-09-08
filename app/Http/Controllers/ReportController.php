@@ -321,7 +321,7 @@ class ReportController extends Controller
                     'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
                 ];
             });
-            //dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
+        //dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
         $labels = $mqttDataSwitchUnitHistoryDetail->keys()
             ->map(function ($key) {
                 return "Aerator Switch: $key";
@@ -330,12 +330,22 @@ class ReportController extends Controller
         $emptyGraphData = collect(array_fill(1, 12, null));
         $empty_formated_run_time = collect(array_fill(1, 12, ""));
         $empty_status = collect(array_fill(1, 12, "off"));
+        $empty_on_off = collect(array_fill(1, 12, [
+            'on' => null,
+            'off' => null
+        ]));
 
         $formated_run_time = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => $item["total_formated_run_time"] ?? ""
         );
         $status = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => array_reverse($item["items"] ?? [])[0]["status"] ?? "off"
+        );
+        $on_off = $mqttDataSwitchUnitHistoryDetail->map(
+            fn($item) => [
+                'on' => ($top1 = array_reverse($item["items"] ?? [])[0])["machine_on_at"] ?? null,
+                'off' => $top1["machine_off_at"] ?? null
+            ]
         );
         $graphData = $mqttDataSwitchUnitHistoryDetail->map(
             fn($item) => $item["total_run_time"] ?? 0
@@ -349,6 +359,9 @@ class ReportController extends Controller
         );
         $status = $empty_status->mapWithKeys(
             fn($item, $key) => [$key => $status->get($key, "-")]
+        );
+        $on_off = $empty_on_off->mapWithKeys(
+            fn($item, $key) => [$key => $on_off->get($key, ["on" => null, "off" => null])]
         );
 
         $graphData = $graphData->reduce(function ($carry, $item, $key) {
@@ -416,6 +429,7 @@ class ReportController extends Controller
                 'start_date',
                 'end_date',
                 'borderColors',
+                'on_off',
             )
         );
     }
