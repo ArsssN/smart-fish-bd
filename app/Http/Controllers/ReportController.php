@@ -414,7 +414,8 @@ class ReportController extends Controller
                 // border top radius
                 'borderRadius' => 4,
                 'status' => $status,
-                'formated_run_time' => $formated_run_time
+                'formated_run_time' => $formated_run_time,
+                'on_off' => $on_off
             ]
         ];
 
@@ -429,7 +430,6 @@ class ReportController extends Controller
                 'start_date',
                 'end_date',
                 'borderColors',
-                'on_off',
             )
         );
     }

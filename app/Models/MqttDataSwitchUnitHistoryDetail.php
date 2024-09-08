@@ -53,15 +53,15 @@ class MqttDataSwitchUnitHistoryDetail extends Model
                     ->where('status', 'on')
                     ->orderByDesc('history_id')
                     ->first();
-                $at = data_get($beforeData, 'created_at');
+                $at = Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s');
             } else {
-                $at = $modal->created_at;
+                $at = Carbon::parse($modal->created_at)->format('Y-m-d H:i:s');
             }
         } else if ($status === 'off') {
             if ($modal->status == 'on') {
                 $at = null;
             } else {
-                $at = $modal->updated_at ?: $modal->created_at;
+                $at = Carbon::parse($modal->updated_at ?: $modal->created_at)->format('Y-m-d H:i:s');
             }
         } else {
             $at = null;

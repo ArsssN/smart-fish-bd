@@ -1,6 +1,11 @@
 {{--@extends('backpack::layouts.top_left')--}}
 @extends('backpack::blank')
 
+@php
+    $_start_date = request()->get('start_date') ?? $start_date ?? \Illuminate\Support\Carbon::now()->startOfDay()->format('Y-m-d H:i:s');;
+    $_end_date = request()->get('end_date') ?? $end_date ?? \Illuminate\Support\Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+@endphp
+
 @section('header')
     <section class="container-fluid">
         <h2>
@@ -34,13 +39,13 @@
                                 </li>
                                 <li class="nav-item my-auto" title="Start Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('start_date') ?? $start_date ?? \Illuminate\Support\Carbon::now()->startOfDay()->format('Y-m-d H:i:s') }}"
+                                           value="{{ $_start_date }}"
                                            name="start_date" id="start_date" class="form-control"
                                            placeholder="Start Date">
                                 </li>
                                 <li class="nav-item my-auto" title="End Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('end_date') ?? $end_date ?? \Illuminate\Support\Carbon::now()->endOfDay()->format('Y-m-d H:i:s') }}"
+                                           value="{{ $_end_date }}"
                                            name="end_date" id="end_date" class="form-control"
                                            placeholder="End Date">
                                 </li>
@@ -121,42 +126,49 @@
                                                     <th>Switch</th>
                                                     <th>Start At</th>
                                                     <th>End At</th>
-                                                    <th>Runtime</th>
+                                                    <th>Interval Runtime</th>
+                                                    <th>Total Runtime</th>
                                                     <th>Status</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 @php($index = 0)
                                                 @foreach($graphData[0]["data"] as $key => $runtime)
-                                                    @php($status = $graphData[0]["status"][$index+1] ?? '')
+                                                    @php(++$index)
+                                                    @php($status = $graphData[0]["status"][$index] ?? '')
                                                     @php($isOn = $status == 'on')
                                                     <tr
                                                         class="{{$isOn ? 'table-success' : 'table-danger'}}"
                                                     >
                                                         <td>
-                                                            {{++$index}}
+                                                            {{$index}}
                                                         </td>
                                                         <td>
                                                             {{$runtime ? "Aerator" : "-"}}
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $on_off[$index]['on']
-                                                                ? \Illuminate\Support\Carbon::make($on_off[$index]['on'])->format('Y-m-d H:i:s')
+                                                                $graphData[0]['on_off'][$index]['on']
+                                                                ? \Illuminate\Support\Carbon::make($graphData[0]['on_off'][$index]['on'])->format('Y-m-d H:i:s')
                                                                 : '-'
                                                             }}
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $on_off[$index]['off']
-                                                                ? \Illuminate\Support\Carbon::make($on_off[$index]['off'])->format('Y-m-d H:i:s')
+                                                                $graphData[0]['on_off'][$index]['off']
+                                                                ? \Illuminate\Support\Carbon::make($graphData[0]['on_off'][$index]['off'])->format('Y-m-d H:i:s')
                                                                 : '-'
+                                                            }}
+                                                        </td>
+                                                        <td>
+                                                            {{
+                                                                getIntervalRuntime($runtime, $index, $graphData[0], [$_start_date, $_end_date])
                                                             }}
                                                         </td>
                                                         <td>
                                                             {{
                                                                 $runtime
-                                                                ? $graphData[0]["formated_run_time"][$index+1] ?? "-"
+                                                                ? $graphData[0]["formated_run_time"][$index] ?? "-"
                                                                 : "-"
                                                             }}
                                                         </td>

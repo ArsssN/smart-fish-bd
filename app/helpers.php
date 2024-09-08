@@ -6,6 +6,7 @@ use Backpack\PermissionManager\app\Models\Permission;
 use Backpack\PermissionManager\app\Models\Role;
 use App\Models\Setting as BackpackSetting;
 use App\Models\SiteSetting as SiteSetting;
+use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -1231,5 +1232,49 @@ if (!function_exists('getSensorTypesDailyAverageBasedOnTime')) {
                     }, []
                 );
             });
+    }
+}
+
+if (!function_exists('getIntervalRuntime')) {
+    /**
+     * @param $runtime
+     * @param $index
+     * @param $graphData
+     * @param $start_date_end_date
+     */
+    function getIntervalRuntime($runtime, $index, $graphData, $start_date_end_date)
+    {
+        $_start_date = \Illuminate\Support\Carbon::make($start_date_end_date[0] ?: null);
+        $_end_date = \Illuminate\Support\Carbon::make($start_date_end_date[1] ?: null);
+
+        $_on_date = \Illuminate\Support\Carbon::make($graphData['on_off'][$index]['on'] ?: null);
+        $_off_date = \Illuminate\Support\Carbon::make($graphData['on_off'][$index]['off'] ?: null);
+
+        $_on_date_in_range = $_on_date?->between($_start_date, $_end_date) ?? null;
+        $_off_date_in_range = $_off_date?->between($_start_date, $_end_date) ?? null;
+        if (
+            !$_on_date_in_range &&
+            !$_off_date_in_range
+        ) {
+            $_on_date = null;
+            $_off_date = null;
+        } elseif (
+            $_on_date_in_range &&
+            !$_off_date_in_range
+        ) {
+            $_off_date = $_end_date;
+        } elseif (
+            !$_on_date_in_range &&
+            $_off_date_in_range
+        ) {
+            $_on_date = $_start_date;
+        }
+
+        // sub off date from on date in seconds
+        $interval = $_off_date > $_on_date
+            ? $_off_date?->diffInSeconds($_on_date) ?? 0
+            : 0;
+
+        return $interval ? CarbonInterval::second($interval ?? 0)->cascade()->forHumans(['short' => true]) : '-';
     }
 }
