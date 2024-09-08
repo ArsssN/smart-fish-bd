@@ -31,8 +31,8 @@ class ReportController extends Controller
         }
 
         $pond_id = request()->get('pond_id');
-        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
-        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i');
 
         $defaultSensors = SensorType::$defaultSensors;
         $sensors = SensorType::query()
@@ -183,8 +183,8 @@ class ReportController extends Controller
         }
 
         $pond_id = request()->get('pond_id');
-        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
-        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i');
 
         $defaultSensors = SensorType::$defaultSensors;
         $sensors = SensorType::query()
@@ -294,8 +294,8 @@ class ReportController extends Controller
         }
 
         $pond_id = request()->get('pond_id');
-        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i:s');
-        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i');
+        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i');
 
         $mqttDataSwitchUnitHistoryDetail = MqttDataSwitchUnitHistoryDetail::query()
             ->whereHas(
