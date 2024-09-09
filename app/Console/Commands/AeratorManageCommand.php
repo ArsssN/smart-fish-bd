@@ -145,7 +145,7 @@ class AeratorManageCommand extends Command
             /*->whereHas('switchType', function ($query) {
                 $query->where('remote_name', 'aerator');
             })*/
-            //->whereNotNull('run_status_updated_at')
+            ->whereNotNull('run_status_updated_at')
             ->get();
 
         $switchUnitSwitchesBySwitchUnitID = $switchUnitSwitches->groupBy('switch_unit_id');
@@ -186,7 +186,7 @@ class AeratorManageCommand extends Command
                     } else if ($run_status === 'off' && $onAbleTime) {
                         $switchUnitSwitch->update([
                             'run_status' => 'on',
-                            // 'run_status_updated_at' => null,
+                            'run_status_updated_at' => null,
                         ]);
                     }
                 }
@@ -232,7 +232,7 @@ class AeratorManageCommand extends Command
                     $mqttDataSwitchUnitHistory->switchUnitHistoryDetails()->createMany($historyDetails);
                 });
 
-                // MQTT::publish($publish_topic, json_encode($publish_message));
+                MQTT::publish($publish_topic, json_encode($publish_message));
             }
         }
     }
