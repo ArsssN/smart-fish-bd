@@ -118,12 +118,12 @@ class AeratorManageCommand extends Command
     /**
      * @var int - start after time in min: 40
      */
-    const onAfterOff = 40 * 60; // seconds
+    const onAfterOff = 20 * 60; // seconds
 
     /**
      * @var int - stop after time in min: 80
      */
-    const offAfterOn = 80 * 60; // seconds
+    const offAfterOn = 40 * 60; // seconds
 
     /**
      * @var int - aerator switch type
