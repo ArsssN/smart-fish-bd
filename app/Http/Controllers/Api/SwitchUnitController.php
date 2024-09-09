@@ -262,12 +262,14 @@ class SwitchUnitController extends Controller
                 ]),
                 'publish_topic' => $topic,
             ]);
-            MqttDataSwitchUnitHistory::query()->create([
+            $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
                 'mqtt_data_id' => $newMqttData->id,
                 'pond_id' => $pond->id,
                 'switch_unit_id' => $switchUnit->id,
-                'switches' => json_encode($newSwitches),
+                // 'switches' => json_encode($newSwitches),
             ]);
+
+            $mqttDataSwitchUnitHistory->switchUnitHistoryDetails()->createMany($newSwitches);
 
             MQTT::publish($topic, $newMqttData->publish_message);
             Log::info("Switches status updated successfully on topic [$topic]: " . MqttCommandController::$feedBackArray['relay']);
