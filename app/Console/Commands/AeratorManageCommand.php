@@ -208,6 +208,7 @@ class AeratorManageCommand extends Command
                     'type' => 'sensor',
                     'project_id' => $mqttData->project_id,
                     'data' => $mqttData->data,
+                    'original_data' => $mqttData?->original_data ?? $mqttData?->data,
                     'publish_message' => json_encode($publish_message),
                     'publish_topic' => $publish_topic,
                 ]);
