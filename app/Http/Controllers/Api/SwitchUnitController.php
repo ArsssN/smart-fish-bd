@@ -253,11 +253,11 @@ class SwitchUnitController extends Controller
                         ]);
                     }
                 )
-                ->latest()
+                ->orderByDesc('id')
                 ->first();
 
             $topic = $mqttData?->publish_topic ?? '';
-            $data = json_decode($mqttData->data);
+            $data = json_decode($mqttData?->data ?? '{}');
 
             $addr = dechex((int)$switchUnit->serial_number);
             $addr = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
