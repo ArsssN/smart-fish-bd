@@ -34,13 +34,13 @@
                                 </li>
                                 <li class="nav-item my-auto" title="Start Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('start_date') ?? $start_date ?? \Illuminate\Support\Carbon::now()->startOfDay()->format('Y-m-d H:i:s') }}"
+                                           value="{{ request()->get('start_date') ?? $start_date ?? \Illuminate\Support\Carbon::now()->startOfDay()->format('Y-m-d H:i') }}"
                                            name="start_date" id="start_date" class="form-control"
                                            placeholder="Start Date">
                                 </li>
                                 <li class="nav-item my-auto" title="End Date">
                                     <input type="datetime-local"
-                                           value="{{ request()->get('end_date') ?? $end_date ?? \Illuminate\Support\Carbon::now()->endOfDay()->format('Y-m-d H:i:s') }}"
+                                           value="{{ request()->get('end_date') ?? $end_date ?? \Illuminate\Support\Carbon::now()->endOfDay()->format('Y-m-d H:i') }}"
                                            name="end_date" id="end_date" class="form-control"
                                            placeholder="End Date">
                                 </li>

@@ -117,7 +117,7 @@ class MqttListener extends Command
         $lastSwitchTime = Cache::get('last_switch_time', now());
         $elapsedSeconds = Carbon::parse($lastSwitchTime)->subSeconds(2)->diffInSeconds(now());
 
-        if ($machineStatus == 'off') {
+        /*if ($machineStatus == 'off') {
             $info = 'Machine is off' . '. Elapsed seconds: ' . $elapsedSeconds . '. Last switch time: ' . $lastSwitchTime . '.' . PHP_EOL . 'No action taken.';
             echo $info;
             Log::info($info);
@@ -126,7 +126,7 @@ class MqttListener extends Command
             $info = 'Machine is on' . '. Elapsed seconds: ' . $elapsedSeconds . '. Last switch time: ' . $lastSwitchTime . '.' . PHP_EOL;
             echo $info;
             Log::info($info);
-        }
+        }*/
 
         $this->currentDateTime = $this->currentDateTime ?? now()->format('Y-m-d H:i:s');
         $this->currentTime = $this->currentTime ?? now()->format('H:i');

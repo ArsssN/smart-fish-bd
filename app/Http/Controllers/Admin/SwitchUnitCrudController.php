@@ -84,7 +84,7 @@ class SwitchUnitCrudController extends CrudController
         ]);
         $switchType = SwitchType::pluck('name', 'id')->toArray();
         CRUD::addField([
-            'name'           => 'switches',
+            'name'           => 'switchUnitSwitches',
             'label'          => 'Switches',
             'type'           => 'repeatable',
             'fields'         => [

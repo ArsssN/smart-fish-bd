@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BackupController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
 use App\Models\Sensor;
+use App\Models\SwitchUnitSwitch;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -170,22 +171,22 @@ class TestController extends Controller
         dd($aHistoryDetail->toArray());
         */
 
-        $switch_unit_histories = DB::table('mqtt_data_switch_unit_histories')->get();
+        $switch_units = DB::table('switch_units')->get();
 
-        DB::table('mqtt_data_switch_unit_history_details')->truncate();
-        foreach ($switch_unit_histories as $switch_unit_history) {
-            $switches = json_decode($switch_unit_history->switches, true);
+        DB::table('switch_unit_switches')->truncate();
+        foreach ($switch_units as $switch_unit) {
+            $switches = json_decode($switch_unit->switches, true);
 
             foreach ($switches as $switchDetail) {
                 $detail = [
-                    'history_id' => $switch_unit_history->id,
+                    'switch_unit_id' => $switch_unit->id,
                     'number' => $switchDetail['number'],
-                    'switch_type_id' => $switchDetail['switchType'] == 1 ? 1 : 2,
+                    'switchType' => $switchDetail['switchType'] == 1 ? 1 : 2,
                     'status' => $switchDetail['status'],
                     'comment' => $switchDetail['comment'],
-                    'created_at' => $switch_unit_history->created_at,
+                    'created_at' => $switch_unit->created_at,
                 ];
-                MqttDataSwitchUnitHistoryDetail::query()->create($detail);
+                SwitchUnitSwitch::query()->create($detail);
             }
         }
 
