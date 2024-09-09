@@ -201,8 +201,8 @@ class MqttCommandController extends Controller
                 function ($switchUnit)
                 use ($switchState, &$mqttDataSwitchUnitHistories
                 ) {
-                    $switches = collect($switchUnit->switches ?? '[]');
-                    $switches = $switches->map(function ($switch, $index) use ($switchState) {
+                    $switchUnitSwitches = collect($switchUnit->switchUnitSwitches ?? '[]');
+                    $switchUnitSwitches = $switchUnitSwitches->map(function ($switch, $index) use ($switchState) {
                         $switch['status'] = $switchState[$index]
                             ? 'on'
                             : 'off';
@@ -210,15 +210,28 @@ class MqttCommandController extends Controller
                         return $switch;
                     });
 
-                    $switchUnit->switches = $switches->toArray();
-                    $switchUnit->save();
+                    $switchUnitSwitches->each(
+                        function ($switch, $index) use ($switchUnit) {
+                            $switchUnit->switchUnitSwitches()->updateOrCreate(
+                                ['number' => $index + 1],
+                                [
+                                    'switchType' => $switch['switchType'] == 1 ? 1 : 2,
+                                    'status' => $switch['status'],
+                                    'comment' => $switch['comment'],
+                                ]
+                            );
+                        }
+                    );
 
                     if (self::$mqttData->id) {
+                        // get updated switches
+                        $switchUnitSwitches = $switchUnit->switchUnitSwitches()->get();
+
                         $mqttDataSwitchUnitHistory = [
                             'mqtt_data_id' => self::$mqttData->id,
                             'pond_id' => $switchUnit->pivot->pond_id,
                             'switch_unit_id' => $switchUnit->id,
-                            //'switches' => json_encode($switches),
+                            //'switches' => json_encode($switchUnitSwitches),
                             'switches' => json_encode(collect()),
                             'created_at' => now(),
                             'updated_at' => now(),
@@ -226,9 +239,8 @@ class MqttCommandController extends Controller
 
                         $mqttDataSwitchUnitHistories[] = $mqttDataSwitchUnitHistory;
                         $newMqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create($mqttDataSwitchUnitHistory);
-                        //dd($newMqttDataSwitchUnitHistory, $switches);
 
-                        foreach ($switchUnit->switches as $switchDetail) {
+                        foreach ($switchUnitSwitches as $switchDetail) {
                             $detail = [
                                 'history_id' => $newMqttDataSwitchUnitHistory->id,
                                 'number' => $switchDetail['number'],

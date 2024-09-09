@@ -29,11 +29,11 @@ class SwitchUnitRequest extends FormRequest
             'serial_number' => 'nullable|string',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'switches' => 'required|array',
-            'switches.*.number' => 'required|integer',
-            'switches.*.switchType' => 'required|exists:switch_types,id',
-            'switches.*.status' => 'required|in:on,off',
-            'switches.*.comment' => 'nullable|string',
+            'switchUnitSwitches' => 'required|array',
+            'switchUnitSwitches.*.number' => 'required|integer',
+            'switchUnitSwitches.*.switchType' => 'required|exists:switch_types,id',
+            'switchUnitSwitches.*.status' => 'required|in:on,off',
+            'switchUnitSwitches.*.comment' => 'nullable|string',
         ];
     }
 

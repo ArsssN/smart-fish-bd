@@ -2,11 +2,9 @@
 
 namespace App\Console;
 
-use App\Jobs\DailyEventScheduleJob;
-use App\Models\Event;
-use App\Models\InvitationOtp;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Cache;
 
 class Kernel extends ConsoleKernel
 {

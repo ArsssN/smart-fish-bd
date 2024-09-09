@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
@@ -111,6 +113,21 @@ class MqttListener extends Command
      */
     public function processResponse(): bool
     {
+        $machineStatus = Cache::get('machine_status', 'on');
+        $lastSwitchTime = Cache::get('last_switch_time', now());
+        $elapsedSeconds = Carbon::parse($lastSwitchTime)->subSeconds(2)->diffInSeconds(now());
+
+        /*if ($machineStatus == 'off') {
+            $info = 'Machine is off' . '. Elapsed seconds: ' . $elapsedSeconds . '. Last switch time: ' . $lastSwitchTime . '.' . PHP_EOL . 'No action taken.';
+            echo $info;
+            Log::info($info);
+            return false;
+        } else {
+            $info = 'Machine is on' . '. Elapsed seconds: ' . $elapsedSeconds . '. Last switch time: ' . $lastSwitchTime . '.' . PHP_EOL;
+            echo $info;
+            Log::info($info);
+        }*/
+
         $this->currentDateTime = $this->currentDateTime ?? now()->format('Y-m-d H:i:s');
         $this->currentTime = $this->currentTime ?? now()->format('H:i');
         $this->isUpdate = false;
