@@ -226,10 +226,21 @@ class SwitchUnitController extends Controller
             array_keys($switchesStatus)
         );
 
-        $switchUnit->switches = $newSwitches;
+        // $switchUnit->switches = $newSwitches;
         // it means that the switch unit is automatic or manual
         $switchUnit->status = $status;
         $switchUnit->save();
+
+        foreach ($newSwitches as $newSwitch) {
+            $switchUnit->switchUnitSwitches()->updateOrCreate(
+                ['number' => $newSwitch['number']],
+                [
+                    'status' => $newSwitch['status'],
+                    'comment' => $newSwitch['comment'],
+                    'switchType' => $newSwitch['switchType'],
+                ]
+            );
+        }
 
         try {
             $mqttData = MqttData::query()
