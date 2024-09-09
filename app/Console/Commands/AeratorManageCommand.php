@@ -137,6 +137,7 @@ class AeratorManageCommand extends Command
      */
     public function handle(): void
     {
+        Log::channel('aerator_status')->info('Aerator Manage Command Starting');
         $switchUnitSwitches = SwitchUnitSwitch::query()
             ->whereHas('switchUnit.ponds', function ($query) {
                 $query->where('status', 'active');
@@ -164,8 +165,7 @@ class AeratorManageCommand extends Command
             $publish_message = json_decode($mqttData->publish_message ?? '{}');
             $publish_topic = $mqttData->publish_topic;
             $previous_relay = $publish_message->relay
-                ? $publish_message->relay
-                : implode('', array_fill(1, 12, 0));
+                ?: implode('', array_fill(1, 12, 0));
 
             $historyDetails = self::defaultSwitches;
 
