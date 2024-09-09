@@ -171,10 +171,10 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <input type="submit" value="Submit" class="btn btn-primary"/>
-                            <a href="{{ route('test.mqtt', \Illuminate\Support\Arr::query($autoFill ?? [])) }}"
+                            <a href="{{ route('test.mqtt.index', \Illuminate\Support\Arr::query($autoFill ?? [])) }}"
                                class="btn btn-light">Auto Fill</a>
                         </div>
-                        <a href="{{ route('test.mqtt') }}" class="btn btn-danger">Reset</a>
+                        <a href="{{ route('test.mqtt.index') }}" class="btn btn-danger">Reset</a>
                     </div>
                 </form>
             </div>

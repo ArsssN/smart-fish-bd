@@ -10,32 +10,32 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.home') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       href="{{ route('test.home') }}">Home</a>
+                    <a class="nav-link {{ request()->routeIs('test.home.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       href="{{ route('test.home.index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.mqtt') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       href="{{ route('test.mqtt') }}">MQTT</a>
+                    <a class="nav-link {{ request()->routeIs('test.mqtt.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       href="{{ route('test.mqtt.index') }}">MQTT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.sensors') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       href="{{ route('test.sensors') }}">Sensors</a>
+                    <a class="nav-link {{ request()->routeIs('test.sensors.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       href="{{ route('test.sensors.index') }}">Sensors</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.aerator-manage') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       onclick="handleNavLinkClick(event)" href="{{ route('test.aerator-manage') }}">Aerator Manage</a>
+                    <a class="nav-link {{ request()->routeIs('test.aerator-manage.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       onclick="handleNavLinkClick(event)" href="{{ route('test.aerator-manage.index') }}">Aerator Manage</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.remove-seed') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       onclick="handleNavLinkClick(event)" href="{{ route('test.remove-seed') }}">Remove Seed</a>
+                    <a class="nav-link {{ request()->routeIs('test.remove-seed.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       onclick="handleNavLinkClick(event)" href="{{ route('test.remove-seed.index') }}">Remove Seed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.mail') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       onclick="handleNavLinkClick(event)" href="{{ route('test.mail') }}">Mail</a>
+                    <a class="nav-link {{ request()->routeIs('test.mail.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       onclick="handleNavLinkClick(event)" href="{{ route('test.mail.index') }}">Mail</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('test.convert-switches') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
-                       onclick="handleNavLinkClick(event)" href="{{ route('test.convert-switches') }}">Convert
+                    <a class="nav-link {{ request()->routeIs('test.convert-switches.index') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       onclick="handleNavLinkClick(event)" href="{{ route('test.convert-switches.index') }}">Convert
                         Switches</a>
                 </li>
             </ul>
