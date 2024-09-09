@@ -1498,6 +1498,11 @@
                         "description": "Additional comment about the switch",
                         "type": "string",
                         "nullable": true
+                    },
+                    "run_time": {
+                        "description": "The runtime of the switch",
+                        "type": "string",
+                        "nullable": false
                     }
                 },
                 "type": "object"

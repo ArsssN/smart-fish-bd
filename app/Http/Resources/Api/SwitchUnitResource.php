@@ -29,6 +29,7 @@ class SwitchUnitResource extends JsonResource
      *     @OA\Property(property="switchType", type="string", description="The type of the switch"),
      *     @OA\Property(property="status", type="string", description="The status of the switch (e.g., on/off)"),
      *     @OA\Property(property="comment", type="string", nullable=true, description="Additional comment about the switch"),
+     *     @OA\Property(property="run_time", type="string", nullable=false, description="The runtime of the switch"),
      * )
      * Transform the resource into an array.
      *
@@ -38,13 +39,23 @@ class SwitchUnitResource extends JsonResource
      */
     public function toArray($request)
     {
+        $switches = $this->history->switchUnitHistoryDetails->map(function ($switchUnitHistoryDetail) {
+            return [
+                'number' => $switchUnitHistoryDetail->number,
+                'switchType' => $switchUnitHistoryDetail->switch_type_id,
+                'status' => $switchUnitHistoryDetail->status,
+                'comment' => $switchUnitHistoryDetail->comment,
+                'run_time' => \Carbon\CarbonInterval::second($switchUnitHistoryDetail->run_time ?? 0)->cascade()->forHumans(['short' => true]),
+            ];
+        });
+
         $switchUnit = [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
             'status' => $this->status,
-            'switches' => $this->switches,
+            'switches' => $switches,
         ];
 
         return $switchUnit;

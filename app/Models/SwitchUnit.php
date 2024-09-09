@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -85,6 +86,16 @@ class SwitchUnit extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(MqttDataSwitchUnitHistory::class);
+    }
+
+    /**
+     * Get the project that owns the Controller
+     *
+     * @return HasOne
+     */
+    public function history(): HasOne
+    {
+        return $this->hasOne(MqttDataSwitchUnitHistory::class)->orderByDesc('id');
     }
 
     /**
