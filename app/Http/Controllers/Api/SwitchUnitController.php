@@ -225,6 +225,8 @@ class SwitchUnitController extends Controller
             function ($switchStatus, $index) use ($switches) {
                 $switch = $switches[$index + 1];
                 $switch['status'] = $switchStatus === 1 ? 'on' : 'off';
+                $switch['switch_type_id'] = $switch['switchType'];
+                unset($switch['switchType']);
 
                 return $switch;
             },
@@ -243,7 +245,7 @@ class SwitchUnitController extends Controller
                 [
                     'status' => $newSwitch['status'],
                     'comment' => $newSwitch['comment'],
-                    'switchType' => $newSwitch['switchType'],
+                    'switchType' => $newSwitch['switch_type_id'],
                 ]
             );
         }
