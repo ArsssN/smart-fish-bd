@@ -94,6 +94,7 @@ class SensorUnitController extends Controller
                 ],
                 'value'
             )
+            ->with('mqttDataHistory')
             ->get();
 
         return response()->json(SensorTypeResource::collection($sensorTypes));

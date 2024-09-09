@@ -42,7 +42,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         property="avg",
  *         type="string",
  *         description="The average value of last 24hrs."
- *     )
+ *     ),
+ *     @OA\Property(
+ *         property="value",
+ *         type="string",
+ *         description="The latest value of mqtt data history",
+ *     ),
  * )
  */
 class SensorTypeResource extends JsonResource
@@ -64,6 +69,7 @@ class SensorTypeResource extends JsonResource
             'status' => $this->status,
             // 'avg' => $this->getAvgAttribute(),
             'avg' => number_format(+$this->mqtt_data_histories_avg_value ?? 0, 2),
+            'value' => $this->mqttDataHistory->value ?? ''
         ];
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -35,9 +36,9 @@ class SensorType extends Model
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
-        "target-field"  => "name", // The field that will be used to generate the slug
-        "separator"     => "-", // The separator that will be used to separate the words
-        "slug-field"    => "slug", // The field that will be used to store the slug
+        "target-field" => "name", // The field that will be used to generate the slug
+        "separator" => "-", // The separator that will be used to separate the words
+        "slug-field" => "slug", // The field that will be used to store the slug
     ];
     protected $appends = [];
 
@@ -95,6 +96,16 @@ class SensorType extends Model
     public function mqttDataHistories(): HasMany
     {
         return $this->hasMany(MqttDataHistory::class);
+    }
+
+    /**
+     * Get the mqtt data history that owns the SensorType
+     *
+     * @return HasOne
+     */
+    public function mqttDataHistory(): HasOne
+    {
+        return $this->hasOne(MqttDataHistory::class)->orderByDesc('id');
     }
 
     /*
