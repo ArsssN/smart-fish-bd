@@ -517,6 +517,7 @@ if (!function_exists('userHasPermission')) {
             'show' => 'show',
             'showDetailsRow' => 'show',
             'reorder' => 'reorder',
+            'sensors' => 'sensors',
             'popup' => 'popup',
             'theme' => 'theme',
             'connector' => 'connector',
