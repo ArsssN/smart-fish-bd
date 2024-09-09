@@ -207,6 +207,12 @@ class SwitchUnitController extends Controller
      */
     public function switchesStatusUpdate(SwitchUnit $switchUnit, Pond $pond): JsonResponse
     {
+        if ($pond->status === 'inactive') {
+            return response()->json([
+                'message' => 'Pond is inactive'
+            ]);
+        }
+
         $topic = '';
         //$defaultStitchesStatus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
         $defaultStitchesStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -262,9 +268,15 @@ class SwitchUnitController extends Controller
             $addr = dechex((int)$switchUnit->serial_number);
             $addr = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
 
+            $project_id = $mqttData?->project_id ?? null;
+
+            if (!$project_id) {
+                $project_id = $pond->project()->first()->id;
+            }
+
             $newMqttData = MqttData::query()->create([
                 'type' => 'sensor',
-                'project_id' => $mqttData->project_id,
+                'project_id' => $project_id,
                 'data' => json_encode($data),
                 'publish_message' => json_encode([
                     'addr' => $addr,
