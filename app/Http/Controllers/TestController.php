@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Commands\AeratorManageCommand;
 use App\Console\Commands\MqttListener;
 use App\Http\Controllers\Admin\BackupController;
 use App\Jobs\CustomerCreateJob;
@@ -80,6 +81,17 @@ class TestController extends Controller
                 'currentTime'
             )
         );
+    }
+
+    // aerator-manage
+    public function aeratorManage()
+    {
+        $aeratorManageCommand = new AeratorManageCommand();
+        $aeratorManageCommand->handle();
+
+        $message = 'Aerator managed';
+        Session::flash('message', $message);
+        return redirect()->back();
     }
 
     //sensors

@@ -22,6 +22,10 @@
                        href="{{ route('test.sensors') }}">Sensors</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('test.aerator-manage') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
+                       onclick="handleNavLinkClick(event)" href="{{ route('test.aerator-manage') }}">Aerator Manage</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('test.remove-seed') ? 'active text-success bg-white rounded-top border-bottom border-success border-3' : '' }}"
                        onclick="handleNavLinkClick(event)" href="{{ route('test.remove-seed') }}">Remove Seed</a>
                 </li>

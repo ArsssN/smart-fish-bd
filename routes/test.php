@@ -14,6 +14,8 @@ Route::group([
 
     Route::get('mqtt', [TestController::class, 'mqtt'])->name('test.mqtt');
 
+    Route::get('aerator-manage', [TestController::class, 'aeratorManage'])->name('test.aerator-manage');
+
     Route::get('sensors', [TestController::class, 'sensors'])->name('test.sensors');
 
     Route::get('remove-seed', [TestController::class, 'removeSeed'])->name('test.remove-seed');
