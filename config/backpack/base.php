@@ -2,7 +2,7 @@
 
 return [
 
-    'favicon' => 'assets/images/favicon.png',
+    'favicon' => 'uploads/favicon-admin.png',
 
     /*
     |--------------------------------------------------------------------------
