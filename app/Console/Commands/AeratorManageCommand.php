@@ -118,17 +118,17 @@ class AeratorManageCommand extends Command
     /**
      * @var int - start after time in min: 20
      */
-    const onAfterOff = 20 * 60; // seconds
+    const switchOnAfter = 20 * 60; // seconds
 
     /**
      * @var int - stop after time in min: 40
      */
-    const offAfterOn = 40 * 60; // seconds
+    const switchOffAfter = 40 * 60; // seconds
 
     /**
-     * @var int - aerator switch type
+     * @var int - switch type id (aerator)
      */
-    const aeratorSwitchType = 1;
+    const aeratorSwitchTypeID = 1;
 
     /**
      * Execute the console command.
@@ -173,9 +173,9 @@ class AeratorManageCommand extends Command
                 $run_status = $switchUnitSwitch->run_status;
                 $run_status_updated_at = $switchUnitSwitch->run_status_updated_at;
 
-                if ($switchUnitSwitch->switchType == self::aeratorSwitchType) {
-                    $onAbleTime = $run_status_updated_at->diffInSeconds(now()) >= self::onAfterOff;
-                    $offAbleTime = $run_status_updated_at->diffInSeconds(now()) >= self::offAfterOn;
+                if ($switchUnitSwitch->switchType == self::aeratorSwitchTypeID) {
+                    $onAbleTime = $run_status_updated_at->diffInSeconds(now()) >= self::switchOnAfter;
+                    $offAbleTime = $run_status_updated_at->diffInSeconds(now()) >= self::switchOffAfter;
 
                     if ($run_status === 'on' && $offAbleTime) {
                         $switchUnitSwitch->update([
