@@ -281,7 +281,8 @@ class PondCrudController extends CrudController
                 $entry->switchUnits->each(function ($switchUnit) use (&$html) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id)
-                        . "'>{$switchUnit->name}</a><br/><small class='text-capitalize'>{$switchUnit->status}</small></td>";
+                        . "'>{$switchUnit->name}</a><br/><small class='text-capitalize'>"
+                        . ($switchUnit->status == 'active' ? 'Auto' : 'Manual') . "</small></td>";
                     $html .= "<td>";
                     $html .= "<table class='table table-bordered table-striped table-sm'>";
                     $html .= "<thead>";
