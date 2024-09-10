@@ -116,12 +116,12 @@ class AeratorManageCommand extends Command
     ];
 
     /**
-     * @var int - start after time in min: 40
+     * @var int - start after time in min: 20
      */
     const onAfterOff = 20 * 60; // seconds
 
     /**
-     * @var int - stop after time in min: 80
+     * @var int - stop after time in min: 40
      */
     const offAfterOn = 40 * 60; // seconds
 
