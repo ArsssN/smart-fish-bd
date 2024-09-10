@@ -178,12 +178,14 @@ class AeratorManageCommand extends Command
                     $offAbleTime = $run_status_updated_at->diffInSeconds(now()) >= self::switchOffAfter;
 
                     if ($run_status === 'on' && $offAbleTime) {
+                        Log::channel('aerator_status')->info('When run status on and offAbleTim switch : '. $historyDetails[$index]. ', Time: '. now());
                         $switchUnitSwitch->update([
                             'run_status' => 'off',
                             'run_status_updated_at' => now(),
                             'status' => 'off'
                         ]);
                     } else if ($run_status === 'off' && $onAbleTime) {
+                        Log::channel('aerator_status')->info('When run status off and onAbleTim switch : '. $historyDetails[$index]. ', Time: '. now());
                         $switchUnitSwitch->update([
                             'run_status' => 'on',
                             'run_status_updated_at' => null,
