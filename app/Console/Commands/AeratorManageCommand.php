@@ -233,6 +233,7 @@ class AeratorManageCommand extends Command
 
                     $mqttDataSwitchUnitHistory->switchUnitHistoryDetails()->createMany($historyDetails);
                 });
+                Log::channel('aerator_status')->info('Topic : '. $publish_topic. ', Message: '. json_encode($publish_message));
 
                 MQTT::publish($publish_topic, json_encode($publish_message));
             }
