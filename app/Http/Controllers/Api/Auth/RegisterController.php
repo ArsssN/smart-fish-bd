@@ -48,7 +48,7 @@ class RegisterController extends Controller
      *                 @O-A\Property(
      *                     property="email",
      *                     type="string",
-     *                     example="johndoe@smartfishbd.com",
+     *                     example="johndoe@nexusfishnetwork.com",
      *                 ),
      *                 @O-A\Property(
      *                     property="phone",
