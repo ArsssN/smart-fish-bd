@@ -200,7 +200,7 @@ class AeratorManageCommand extends Command
                     'switch_type_id' => $switchUnitSwitch->switchType,
                 ];
 
-                $relay[$switchUnitSwitch->number] = $switchUnitSwitch->run_status === 'on' ? 1 : 0;
+                $relay[$switchUnitSwitch->number] = $switchUnitSwitch->status === 'on' ? 1 : 0;
             });
 
             if (($newRelayStr = implode('', $relay)) !== $previous_relay) {
