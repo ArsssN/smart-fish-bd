@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Smart Fish' class='mr-1 h-100 rounded'>")
+@php($logo_white = "<img src='/uploads/Smart-Fish-BD.png' alt='Nexus Fish Network' class='mr-1 h-100 rounded'>")
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -115,11 +115,11 @@
     {{-- ABOUT SECTION --}}
     <section id="about" class="about-section py-3 py-md-5">
         <div class="container">
-            <h1 class="title">About Smart Fish</h1>
+            <h1 class="title">About Nexus Fish Network</h1>
 
             <div class="row align-items-center gap-4 gap-lg-0">
                 <div class="col-lg-6">
-                    <img src="{{ asset($about->image) }}" alt="Smart Fish about"
+                    <img src="{{ asset($about->image) }}" alt="Nexus Fish Network about"
                          class="img-fluid rounded d-flex m-auto">
                 </div>
                 <div class="col-lg-6">
