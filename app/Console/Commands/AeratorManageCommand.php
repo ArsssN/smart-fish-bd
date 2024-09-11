@@ -118,12 +118,12 @@ class AeratorManageCommand extends Command
     /**
      * @var int - start after time in min: 20
      */
-    const switchOnAfter = 6 * 60; // seconds
+    const switchOnAfter = 3 * 60; // seconds
 
     /**
      * @var int - stop after time in min: 40
      */
-    const switchOffAfter = 3 * 60; // seconds
+    const switchOffAfter = 5 * 60; // seconds
 
     /**
      * @var int - switch type id (aerator)
@@ -138,7 +138,7 @@ class AeratorManageCommand extends Command
     public function handle(): void
     {
         Log::channel('aerator_status')->info('Aerator Manage Command Starting');
-        $switchUnitSwitches = SwitchUnitSwitch::query()
+        $switchUnitSwitchesList = SwitchUnitSwitch::query()
             ->whereHas('switchUnit.ponds', function ($query) {
                 $query->where('status', 'active');
             })
@@ -149,7 +149,7 @@ class AeratorManageCommand extends Command
             ->whereNotNull('run_status_updated_at')
             ->get();
 
-        $switchUnitSwitchesBySwitchUnitID = $switchUnitSwitches->groupBy('switch_unit_id');
+        $switchUnitSwitchesBySwitchUnitID = $switchUnitSwitchesList->groupBy('switch_unit_id');
 
         foreach ($switchUnitSwitchesBySwitchUnitID as $switchUnitID => $switchUnitSwitches) {
             $switchUnit = $switchUnitSwitches->first()->switchUnit;
@@ -202,6 +202,8 @@ class AeratorManageCommand extends Command
 
                 $relay[$switchUnitSwitch->number] = $switchUnitSwitch->status === 'on' ? 1 : 0;
             });
+
+            Log::channel('aerator_status')->info('Previous relay : ' . $previous_relay .', New Relay ' . implode(', ', $relay));
 
             if (($newRelayStr = implode('', $relay)) !== $previous_relay) {
                 $publish_message->relay = $newRelayStr;
