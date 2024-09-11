@@ -220,14 +220,17 @@ class MqttCommandController extends Controller
 
                     $switchUnitSwitches->each(
                         function ($switch, $index) use ($switchUnit, &$runTimeSwitchState) {
-                            $switchUnit->switchUnitSwitches()->updateOrCreate(
-                                ['number' => $index + 1],
-                                [
-                                    'switchType' => $switch['switchType'] == 1 ? 1 : 2,
-                                    'status' => $switch['status'],
-                                    'comment' => $switch['comment'],
-                                ]
-                            );
+                            $switchUnit->switchUnitSwitches()
+                                ->where([
+                                    'number' => $index + 1,
+                                    'switchType' => $switch['switchType'],
+                                ])
+                                ->update(
+                                    [
+                                        'status' => $switch['status'],
+                                        'run_status_updated_at' => $switch['run_status_updated_at'] ?? null,
+                                    ]
+                                );
 
                             $runTimeSwitchState[$index] = $switch['status'] === 'on' ? 1 : 0;
                         }
