@@ -58,7 +58,7 @@ class RegisterController extends Controller
      *                 @O-A\Property(
      *                     property="farm_name",
      *                     type="string",
-     *                     example="Smart Fish BD",
+     *                     example="Nexus Fish Network",
      *                 ),
      *                 @O-A\Property(
      *                     property="password",

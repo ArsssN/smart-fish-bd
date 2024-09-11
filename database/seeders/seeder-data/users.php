@@ -1,9 +1,9 @@
 <?php
 $users = array (
-  0 => 
+  0 =>
   array (
     'id' => 1,
-    'name' => 'Smart fish BD',
+    'name' => 'Nexus Fish Network',
     'email' => 'afzalbd1@gmail.com',
     'username' => 'afzalbd1',
     'email_verified_at' => '2023-01-19 03:05:15',
@@ -14,7 +14,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  1 => 
+  1 =>
   array (
     'id' => 2,
     'name' => 'Admin',
@@ -28,7 +28,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  2 => 
+  2 =>
   array (
     'id' => 3,
     'name' => 'User',
@@ -42,7 +42,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  3 => 
+  3 =>
   array (
     'id' => 4,
     'name' => 'Super Admin',
@@ -56,7 +56,7 @@ $users = array (
     'updated_at' => NULL,
     'deleted_at' => NULL,
   ),
-  4 => 
+  4 =>
   array (
     'id' => 5,
     'name' => 'Customer-1 Yopmail',
@@ -70,7 +70,7 @@ $users = array (
     'updated_at' => '2024-03-25 20:29:22',
     'deleted_at' => NULL,
   ),
-  5 => 
+  5 =>
   array (
     'id' => 6,
     'name' => 'Customer-2 Yopmail',
@@ -84,7 +84,7 @@ $users = array (
     'updated_at' => '2024-03-25 20:29:36',
     'deleted_at' => NULL,
   ),
-  6 => 
+  6 =>
   array (
     'id' => 7,
     'name' => 'Customer-3 Yopmail',
@@ -98,7 +98,7 @@ $users = array (
     'updated_at' => '2024-03-25 20:28:26',
     'deleted_at' => NULL,
   ),
-  7 => 
+  7 =>
   array (
     'id' => 8,
     'name' => 'Sumon dev',
@@ -112,7 +112,7 @@ $users = array (
     'updated_at' => '2024-04-22 20:42:37',
     'deleted_at' => NULL,
   ),
-  8 => 
+  8 =>
   array (
     'id' => 9,
     'name' => 'Test Customer',
@@ -126,7 +126,7 @@ $users = array (
     'updated_at' => '2024-04-23 02:57:35',
     'deleted_at' => NULL,
   ),
-  9 => 
+  9 =>
   array (
     'id' => 10,
     'name' => 'Erfan Tushar',

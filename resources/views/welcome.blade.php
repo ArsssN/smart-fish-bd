@@ -104,7 +104,7 @@
             </button>
         </div>
         <div class="container">
-            <h1 class="title">Welcome to Smart Fish BD</h1>
+            <h1 class="title">Welcome to Nexus Fish Network</h1>
             <div>
                 {!! $welcome_message !!}
             </div>
