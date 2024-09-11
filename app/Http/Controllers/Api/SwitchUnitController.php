@@ -278,6 +278,7 @@ class SwitchUnitController extends Controller
 
             $newMqttData = MqttData::query()->create([
                 'type' => 'sensor',
+                'data_source' => 'api',
                 'project_id' => $project_id,
                 'data' => json_encode($data),
                 'publish_message' => json_encode([

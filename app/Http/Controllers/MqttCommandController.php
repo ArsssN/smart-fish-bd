@@ -90,6 +90,7 @@ class MqttCommandController extends Controller
         if (self::$isSaveMqttData) {
             $mqttData = $mqttData->create([
                 'type' => $type,
+                'data_source' => 'mqtt',
                 'project_id' => $projectID,
                 'data' => json_encode($responseMessage),
                 'original_data' => MqttListener::getOriginalMessage(),
