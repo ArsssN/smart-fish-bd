@@ -31,7 +31,9 @@ class SwitchUnit extends Model
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
-    // protected $dates = [];
+     protected $dates = [
+         'run_status_updated_at'
+     ];
     protected array $slugGenerator = [
         "set-on-create" => true, // Whether to set the slug when the model is created
         "set-on-update" => false, // Whether to update the slug when the target field is updated
