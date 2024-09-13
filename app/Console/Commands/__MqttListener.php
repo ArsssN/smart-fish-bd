@@ -4,13 +4,14 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
+use App\Services\MqttListenerService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
 
-class _MqttListener extends Command
+class MqttListener extends Command
 {
     /**
      * The name and signature of the console command.
@@ -84,17 +85,12 @@ class _MqttListener extends Command
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
-            $this->currentTime = now()->format('H:i');
-            $this->currentDateTime = now()->format('Y-m-d H:i:s');
-            Log::info("Received message on topic [$topic]: $message");
-            echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
-            $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
-            $this->message = $message;
-
+            Log::channel('mqtt_listener')->info("Received message on topic [$topic]: $message");
             try {
-                if ($this->processResponse()) {
+                (new MqttListenerService())->processResponse($message, $topic);
+                /*if ($this->processResponse()) {
                     MQTT::publish($this->topic, json_encode(MqttCommandController::$feedBackArray));
-                }
+                }*/
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
@@ -112,9 +108,6 @@ class _MqttListener extends Command
      */
     public function processResponse(): bool
     {
-        $this->currentDateTime = $this->currentDateTime ?? now()->format('Y-m-d H:i:s');
-        $this->currentTime = $this->currentTime ?? now()->format('H:i');
-        $this->isUpdate = false;
         $responseMessage = json_decode($this->message);
 
         self::$original_message = $this->message;
@@ -122,8 +115,7 @@ class _MqttListener extends Command
         if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
             $o2 = convertDOValue($responseMessage->data->o2, $this->currentTime);
             $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2 . ' at ' . $this->currentTime . '<br>';;
-            echo $echo;
-            Log::info($echo);
+            Log::channel('mqtt_listener')->info($echo);
             $responseMessage->data->o2 = $o2;
         }
 
@@ -135,13 +127,10 @@ class _MqttListener extends Command
             sleep(2);
             $this->isUpdate = true;
             $gateway_serial_number_last_4digit = Str::before(Str::after($this->topic, '/'), '/');
-            $project = \App\Models\Project::query()
+            $project = \App\Models\Project::with('mqttDataLast:id,publish_topic,publish_message')
                 ->where('gateway_serial_number', 'LIKE', "%{$gateway_serial_number_last_4digit}")
                 ->firstOrFail();
-            $mqtt_data = $project->mqttData()
-                //->whereNotNull('publish_message')
-                ->orderBy('id', 'desc')
-                ->firstOrFail();
+            $mqtt_data = $project->mqttData;
             $responseMessage = json_decode($mqtt_data->data);
             $publishMessage = json_decode($mqtt_data->publish_message);
             MqttCommandController::$feedBackArray['relay'] = $publishMessage->relay
