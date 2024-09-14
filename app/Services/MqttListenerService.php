@@ -44,6 +44,11 @@ class MqttListenerService
     public static array $historyDetails;
 
     /**
+     * @var array $relayArr - relay array
+     */
+    public static array $relayArr = [];
+
+    /**
      * The message to be displayed when the command is executed.
      *
      * @var string
@@ -183,8 +188,7 @@ class MqttListenerService
         $addr = dechex((int)self::$switchUnit->serial_number);
         MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
 
-        // $switchState = array_fill(0, 12, 0);
-        // MqttPublishService::setPublishMessage(implode('', $switchState), 'relay');
+        // MqttPublishService::setPublishMessage(implode('', $relayArr), 'relay');
 
         // MqttHistoryDataService::$mqttData;
         // MqttHistoryDataService::$switchUnit = $switchUnit;
@@ -196,7 +200,11 @@ class MqttListenerService
         self::$mqttData->data = $this->message;
         self::$mqttData->data_source = 'mqtt';
         self::$mqttData->original_data = MqttListener::getOriginalMessage();
-        self::$mqttData->publish_message = ''; // TODO: publish_message is not set
+        self::$mqttData->publish_message = json_encode([
+            'addr' => $this->responseMessage->addr,
+            'type' => $this->responseMessage->type,
+            'relay' => implode('', self::$relayArr),
+        ]);
         self::$mqttData->publish_topic = self::$topic;
         self::$historyDetails = [];
 
@@ -213,9 +221,34 @@ class MqttListenerService
         return $this;
     }
 
-    public static function saveMqttDataHistoryForAllSensor()
+    /**
+     * @return $this
+     */
+    public function saveMqttDataHistoryForAllSensor(): self
     {
-        // TODO: Implement saveMqttDataHistoryForAllSensor() method.
+        self::$relayArr = array_fill(0, 12, 0);
+
+        MqttHistoryDataService::$sensorUnit->sensorTypes
+            ->each(function ($sensorType) {
+                MqttHistoryDataService::mqttDataHistorySave($sensorType, null, $this->responseMessage, self::$relayArr);
+            });
+
+        return $this;
+    }
+
+    public function updateRelay(): self
+    {
+        $relay = implode('', self::$relayArr);
+        $publishMessage = json_decode(self::$mqttData->publish_message ?? '{}');
+        $publishMessage->relay = $relay;
+        self::$mqttData->publish_message = json_encode($publishMessage);
+        // $publishTopic = self::$mqttData->publish_topic;
+        // $previousRelay = $publishMessage->relay
+        //     ?: implode('', array_fill(1, count(self::$switchUnit->switchUnitSwitches), 0));
+
+        // MqttPublishService::init($publishTopic, $relay, $publishMessage->addr, $previousRelay)->relayPublish();
+
+        return $this;
     }
 
     /**

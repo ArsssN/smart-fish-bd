@@ -109,7 +109,9 @@ class MqttListener extends Command
                     $mqttListenerService = new MqttListenerService($topic, $message);
                     $mqttListenerService->republishLastResponse()
                         ?->convertDOValue()
-                        ?->prepareDataSave();
+                        ?->prepareDataSave()
+                        ?->saveMqttDataHistoryForAllSensor()
+                        ?->updateRelay();
 
                     MqttPublishService::relayPublish();
 

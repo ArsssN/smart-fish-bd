@@ -106,24 +106,26 @@ class MqttHistoryDataService
      * @param $sensorType
      * @param $sensorUnit
      * @param $responseMessage
-     * @param $switchState
+     * @param $relayArr
      *
      * @return void
      */
-    public static function mqttDataHistorySave($sensorType, $sensorUnit, $responseMessage, &$switchState): void
+    public static function mqttDataHistorySave($sensorType, $sensorUnit, $responseMessage, &$relayArr): void
     {
         if (!isset($responseMessage->data->{$sensorType->remote_name})) {
             return;
         }
 
-        $sensorMessage = self::getSensorMessage($sensorType, $value = $responseMessage->data->{$sensorType->remote_name}, $switchState);
+        self::$sensorUnit = $sensorUnit ?? self::$sensorUnit;
+
+        $sensorMessage = self::getSensorMessage($sensorType, $value = $responseMessage->data->{$sensorType->remote_name}, $relayArr);
 
         // Save mqtt data history
         $histories = [];
-        $sensorUnit->ponds->each(function ($pond) use ($sensorUnit, $sensorType, $value, $sensorMessage, &$histories) {
+        self::$sensorUnit->ponds->each(function ($pond) use ($sensorType, $value, $sensorMessage, &$histories) {
             $histories[] = [
                 'pond_id' => $pond->id,
-                "sensor_unit_id" => $sensorUnit->id,
+                "sensor_unit_id" => self::$sensorUnit->id,
                 "sensor_type_id" => $sensorType->id,
                 'value' => $value,
                 'type' => 'sensor',
@@ -160,10 +162,10 @@ class MqttHistoryDataService
     /**
      * @param $sensorType
      * @param $value
-     * @param $switchState
+     * @param $relayArr
      * @return string
      */
-    private static function getSensorMessage($sensorType, $value, &$switchState): string
+    private static function getSensorMessage($sensorType, $value, &$relayArr): string
     {
         $typeName = Str::replace(' ', '', $sensorType->name);
         $helperMethodName = "get{$typeName}Update";
@@ -176,11 +178,11 @@ class MqttHistoryDataService
         }
         // if array
         if (is_array($sensorMessage)) {
-            $switchState = $sensorType->can_switch_sensor
+            $relayArr = $sensorType->can_switch_sensor
                 ? mergeSwitchArray(
                     $sensorMessage,
-                    $switchState
-                ) : $switchState;
+                    $relayArr
+                ) : $relayArr;
 
             $sensorMessage = implode(', ', $sensorMessage);
         }
