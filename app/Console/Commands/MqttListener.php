@@ -102,12 +102,7 @@ class MqttListener extends Command
                 echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
 
                 try {
-                    /*if ($this->processResponse()) {
-                        [$relay, $addr] = MqttCommandController::$feedBackArray;
-                        MqttPublishService::relayPublish($this->topic, $relay, $addr);
-                    }*/
-                    $mqttListenerService = new MqttListenerService($topic, $message);
-                    $mqttListenerService->republishLastResponse()
+                    (new MqttListenerService($topic, $message))->republishLastResponse()
                         ?->convertDOValue()
                         ?->prepareDataSave();
 

@@ -127,10 +127,9 @@ class MqttHistoryDataService
     {
         self::$relayArr = array_fill(0, 12, 0);
 
-        MqttHistoryDataService::$sensorUnit->sensorTypes
-            ->each(function ($sensorType) {
-                MqttHistoryDataService::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
-            });
+        MqttHistoryDataService::$sensorUnit->sensorTypes->each(function ($sensorType) {
+            MqttHistoryDataService::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
+        });
 
         return self::mqttDataPublishMessageUpdate();
     }
