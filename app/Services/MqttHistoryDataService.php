@@ -72,6 +72,8 @@ class MqttHistoryDataService
     /**
      * Save mqtt data
      *
+     * @table mqtt_data
+     *
      * @return $this
      */
     public static function mqttDataSave(): MqttHistoryDataService
@@ -91,6 +93,8 @@ class MqttHistoryDataService
 
     /**
      * Save mqtt data history
+     *
+     * @table mqtt_data_history
      *
      * @param $sensorType
      * @param $sensorUnit
@@ -124,6 +128,8 @@ class MqttHistoryDataService
 
     /**
      * Save mqtt data switch unit history
+     *
+     * @table mqtt_data_switch_unit_history
      *
      * @return MqttHistoryDataService
      */
