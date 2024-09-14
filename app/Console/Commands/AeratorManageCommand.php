@@ -5,9 +5,11 @@ namespace App\Console\Commands;
 use App\Models\SwitchUnit;
 use App\Services\MqttHistoryDataService;
 use App\Services\MqttPublishService;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AeratorManageCommand extends Command
 {
@@ -36,20 +38,17 @@ class AeratorManageCommand extends Command
     const switchOffAfter = 40 * 60; // seconds
 
     /**
-     * @var int - switch type id (aerator)
-     */
-    const aeratorSwitchTypeID = 1;
-
-    /**
      * Execute the console command.
      *
      * @return void
+     * @throws Throwable
      */
-    public function handle()
+    public function handle(): void
     {
         Log::channel('aerator_status')->info('Aerator Manage Command Starting');
 
-        $switchUnits = SwitchUnit::select('id', 'run_status', 'run_status_updated_at')
+        $switchUnits = SwitchUnit::query()
+            ->select('id', 'run_status', 'run_status_updated_at')
             ->whereRelation('ponds', 'status', 'active')
             ->with(['switchUnitSwitches:id,switch_unit_id,switchType,status',
                 'history' => function ($query) {
@@ -83,7 +82,7 @@ class AeratorManageCommand extends Command
                     $previousRelay = $publishMessage->relay
                         ?: implode('', array_fill(1, count($switchUnit->switchUnitSwitches), 0));
 
-                    MqttPublishService::relayPublish($relay, $previousRelay, $publishTopic, $publishMessage->addr);
+                    MqttPublishService::relayPublish($publishTopic, $relay, $publishMessage->addr, $previousRelay);
 
                     //mqtt data and history data save
                     MqttHistoryDataService::mqttDataSave($mqttData, $publishTopic);
@@ -97,7 +96,7 @@ class AeratorManageCommand extends Command
                     ]);
                 }
                 DB::commit();
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 DB::rollBack();
                 throw $exception;
             }

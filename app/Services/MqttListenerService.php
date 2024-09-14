@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Console\Commands\MqttListener;
+use App\Console\Commands\__MqttListener;
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
 use App\Models\Project;
@@ -108,7 +108,7 @@ class MqttListenerService
 
         //TODO::history data save
 
-        MqttPublishService::relayPublish($previousRelay, '', $publishTopic, $publishMessage->addr);
+        MqttPublishService::relayPublish($publishTopic, '', $publishMessage->addr, $previousRelay);
     }
 
 
@@ -138,7 +138,7 @@ class MqttListenerService
         $switchUnit = $pond->switchUnits->firstOrFail();
         $project = $pond->project;
 
-        if ($switchUnit->status =='active' && $switchUnit->run_status == 'on'){
+        if ($switchUnit->status == 'active' && $switchUnit->run_status == 'on') {
 
         }
         $addr = dechex((int)$switchUnit->serial_number);
@@ -157,7 +157,7 @@ class MqttListenerService
                 'data_source' => 'mqtt',
                 'project_id' => $projectID,
                 'data' => json_encode($responseMessage),
-                'original_data' => MqttListener::getOriginalMessage(),
+                'original_data' => __MqttListener::getOriginalMessage(),
                 'publish_topic' => $topic,
                 'publish_message' => json_encode([
                     'addr' => $responseMessage->addr,

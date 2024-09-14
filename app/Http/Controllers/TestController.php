@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Console\Commands\AeratorManageCommand;
-use App\Console\Commands\MqttListener;
+use App\Console\Commands\__MqttListener;
 use App\Http\Controllers\Admin\BackupController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
@@ -55,7 +55,7 @@ class TestController extends Controller
 
         try {
             if (request()->get('gw_id') || $isUpdate) {
-                $mqttListener = new MqttListener();
+                $mqttListener = new __MqttListener();
 
                 $mqttListener->setMessage(json_encode($responseMessage));
                 $mqttListener->setCurrentTime($currentTime);

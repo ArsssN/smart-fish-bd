@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PhpMqtt\Client\Facades\MQTT;
 
-class MqttListener extends Command
+class __MqttListener extends Command
 {
     /**
      * The name and signature of the console command.

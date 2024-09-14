@@ -4,13 +4,19 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
+use App\Services\MqttPublishService;
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use PhpMqtt\Client\Exceptions\DataTransferException;
+use PhpMqtt\Client\Exceptions\InvalidMessageException;
+use PhpMqtt\Client\Exceptions\MqttClientException;
+use PhpMqtt\Client\Exceptions\ProtocolViolationException;
+use PhpMqtt\Client\Exceptions\RepositoryException;
 use PhpMqtt\Client\Facades\MQTT;
 
-class _MqttListener extends Command
+class MqttListener extends Command
 {
     /**
      * The name and signature of the console command.
@@ -83,25 +89,38 @@ class _MqttListener extends Command
     public function handle(): int
     {
         $mqtt = MQTT::connection();
-        $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
-            $this->currentTime = now()->format('H:i');
-            $this->currentDateTime = now()->format('Y-m-d H:i:s');
-            Log::info("Received message on topic [$topic]: $message");
-            echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
-            $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
-            $this->message = $message;
+        try {
+            $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
+                $this->currentTime = now()->format('H:i');
+                $this->currentDateTime = now()->format('Y-m-d H:i:s');
+                $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
+                $this->message = $message;
 
-            try {
-                if ($this->processResponse()) {
-                    MQTT::publish($this->topic, json_encode(MqttCommandController::$feedBackArray));
+                Log::info("Received message on topic [$topic]: $message");
+                echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
+
+                try {
+                    if ($this->processResponse()) {
+                        [$relay, $addr] = MqttCommandController::$feedBackArray;
+                        MqttPublishService::relayPublish($this->topic, $relay, $addr);
+                    }
+                } catch (Exception $e) {
+                    Log::error($e->getMessage());
+                    echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
                 }
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
-            }
-        });
+            });
+        } catch (DataTransferException|RepositoryException $e) {
+            Log::error($e->getMessage());
+            echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
+        }
 
-        $mqtt->loop(true);
+        try {
+            $mqtt->loop();
+        } catch (DataTransferException|InvalidMessageException|ProtocolViolationException|MqttClientException $e) {
+            Log::error($e->getMessage());
+            echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
+        }
+
         return Command::SUCCESS;
     }
 
