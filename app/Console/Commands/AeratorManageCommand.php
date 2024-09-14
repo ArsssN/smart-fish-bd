@@ -55,7 +55,8 @@ class AeratorManageCommand extends Command
                     $query->select('id', 'mqtt_data_id', 'switch_unit_id')
                         ->with('mqttData:id,publish_topic,publish_message,project_id,original_data,data');
                 }
-            ])->whereNotNull('run_status_updated_at')
+            ])
+            ->whereNotNull('run_status_updated_at')
             ->get();
 
         foreach ($switchUnits as $switchUnit) {
@@ -82,9 +83,10 @@ class AeratorManageCommand extends Command
                     $previousRelay = $publishMessage->relay
                         ?: implode('', array_fill(1, count($switchUnit->switchUnitSwitches), 0));
 
-                    MqttPublishService::relayPublish($publishTopic, $relay, $publishMessage->addr, $previousRelay);
+                    // mqtt publish
+                    MqttPublishService::init($publishTopic, $relay, $publishMessage->addr, $previousRelay)->relayPublish();
 
-                    //mqtt data and history data save
+                    // mqtt data and history data save
                     MqttHistoryDataService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
                         ->mqttDataSave()
                         ->mqttDataSwitchUnitHistorySave();

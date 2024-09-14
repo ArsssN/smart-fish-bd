@@ -29,25 +29,6 @@ class MqttListenerService
     public static MqttData|Model|Builder $mqttData;
 
     /**
-     * MqttListenerService constructor.
-     *
-     * @param string $message
-     * @param string $topic
-     */
-    public function __construct(string $topic, string $message)
-    {
-        $this->message = $message;
-        $this->responseMessage = json_decode($message ?: '{}');
-        $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
-
-        self::$publishMessageArr = [
-            'addr' => '',
-            'type' => 'sw',
-            'relay' => implode('', array_fill(0, 12, 0)),
-        ];
-    }
-
-    /**
      * The message to be displayed when the command is executed.
      *
      * @var string
@@ -105,19 +86,26 @@ class MqttListenerService
      */
     protected string $currentDateTime;
 
-    public function processResponse(): void
+    /**
+     * MqttListenerService constructor.
+     *
+     * @param string $message
+     * @param string $topic
+     */
+    public function __construct(string $topic, string $message)
     {
+        $this->message = $message;
+        $this->responseMessage = json_decode($message ?: '{}');
+        $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
+
+        self::$publishMessageArr = [
+            'addr' => '',
+            'type' => 'sw',
+            'relay' => implode('', array_fill(0, 12, 0)),
+        ];
+
         $this->currentTime = now()->format('H:i');
         $this->currentDateTime = now()->format('Y-m-d H:i:s');
-
-        if (isset($this->responseMessage->update)) {
-            $this->isUpdateResponse();
-            return;
-        }
-
-        $this->convertDOValue()->saveData();
-
-        return $this->saveMqttData($this->responseMessage);
     }
 
     /**
@@ -137,10 +125,14 @@ class MqttListenerService
     }
 
     /**
-     * @return void
+     * @return $this|null
      */
-    public function isUpdateResponse(): void
+    public function republishLastResponse(): self|null
     {
+        if (isset($this->responseMessage->update) && !$this->responseMessage->update) {
+            return null;
+        }
+
         sleep(2);
         $gatewaySerialNumberLast4Digit = Str::before(Str::after($this->topic, '/'), '/');
         $project = Project::query()
@@ -156,14 +148,10 @@ class MqttListenerService
             $previousRelay = $publishMessage->relay
                 ?: implode('', array_fill(1, 12, 0));
 
-            MqttPublishService::$publishMessage = [
-                'relay' => $publishMessage->relay,
-                'type' => $publishMessage->type ?? 'sw',
-                'addr' => $publishMessage->addr,
-            ];
-
-            MqttPublishService::relayPublish($publishTopic, '', $publishMessage->addr, $previousRelay);
+            MqttPublishService::init($publishTopic, $publishMessage->relay, $publishMessage->addr, $previousRelay);
         }
+
+        return $this;
     }
 
     /**
@@ -172,140 +160,34 @@ class MqttListenerService
      *
      * @return void
      */
-    public function saveData(): void
+    public function prepareDataSave(): void
     {
-        $newResponseMessage = new \stdClass();
-        $newResponseMessage->gateway_serial_number = $this->responseMessage->gw_id;
-        $newResponseMessage->type = 'sensor';
-        $newResponseMessage->serial_number = hexdec($this->responseMessage->addr);
-        $newResponseMessage->data = $this->responseMessage->data;
-
         $remoteNames = collect($this->responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec($this->responseMessage->addr);
 
-        $sensorUnit = SensorUnit::query()
+        MqttHistoryDataService::$sensorUnit = SensorUnit::query()
             ->where('serial_number', $serialNumber)
             ->with(['sensorTypes', 'ponds'])
             ->whereHas('sensorTypes', fn($q) => $q->whereIn('remote_name', $remoteNames))
-            ->whereHas('ponds', function ($query) use ($newResponseMessage) {
-                $query->whereHas('project', function ($query) use ($newResponseMessage) {
-                    $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
+            ->whereHas('ponds', function ($query) {
+                $query->whereHas('project', function ($query) {
+                    $query->where('gateway_serial_number', $this->responseMessage->gw_id);
                 });
             })
             ->firstOrFail();
 
-        $pond = $sensorUnit->ponds->firstOrFail();
-
+        $pond = MqttHistoryDataService::$sensorUnit->ponds->firstOrFail();
         $switchUnit = $pond->switchUnits->firstOrFail();
 
         $addr = dechex((int)$switchUnit->serial_number);
         self::$publishMessageArr['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
+        MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
 
         $switchState = array_fill(0, 12, 0);
         self::$publishMessageArr['relay'] = implode('', $switchState);
+        MqttPublishService::setPublishMessage(implode('', $switchState), 'relay');
 
         self::$switchUnitStatus = $switchUnit->status;
-
-        $project = $pond->project;
-        $projectID = $project->id;
-
-        self::$mqttData = MqttData::query();
-        self::$mqttData = self::$mqttData->create([
-            'type' => 'sensor',
-            'data_source' => 'mqtt',
-            'project_id' => $projectID,
-            'data' => json_encode($this->responseMessage),
-            'original_data' => __MqttListener::getOriginalMessage(),
-            'publish_topic' => $this->topic,
-            'publish_message' => json_encode(self::$publishMessageArr)
-        ]);
-
-        $sensorUnit
-            ->sensorTypes
-            ->each(function ($sensorType) use ($sensorUnit, $newResponseMessage, &$switchState) {
-                MqttHistoryDataService::mqttDataHistorySave($sensorType, $sensorUnit, $newResponseMessage, $switchState);
-            });
-
-        $runTimeSwitchState = $switchState;
-        self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState, $runTimeSwitchState);
-    }
-
-    public function saveMqttData($responseMessage, $type = 'sensor')
-    {
-        $newResponseMessage = new stdClass();
-        $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
-        $newResponseMessage->type = $type;
-        $newResponseMessage->serial_number = hexdec($responseMessage->addr);
-        $newResponseMessage->data = $responseMessage->data;
-
-        $remoteNames = collect($responseMessage->data)->keys()->toArray();
-        $serialNumber = hexdec($responseMessage->addr);
-
-        $typeUnit = SensorUnit::query()
-            ->where('serial_number', $serialNumber)
-            ->with(['sensorTypes', 'ponds'])
-            ->whereHas('sensorTypes', fn($q) => $q->whereIn('remote_name', $remoteNames))
-            ->whereHas('ponds', function ($query) use ($newResponseMessage) {
-                $query->whereHas('project', function ($query) use ($newResponseMessage) {
-                    $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
-                });
-            })
-            ->firstOrFail();
-
-        $pond = $typeUnit->ponds->firstOrFail();
-        $switchUnit = $pond->switchUnits->firstOrFail();
-        $project = $pond->project;
-
-        if ($switchUnit->status == 'active' && $switchUnit->run_status == 'on') {
-
-        }
-        $addr = dechex((int)$switchUnit->serial_number);
-//        self::$feedBackArray['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
-//        self::$switchUnitStatus = $switchUnit->status;
-
-
-        $switchState = array_fill(0, 12, 0);
-
-        $projectID = $project->id;
-
-        $mqttData = MqttData::query();
-        if (self::$isSaveMqttData) {
-            $mqttData = $mqttData->create([
-                'type' => $type,
-                'data_source' => 'mqtt',
-                'project_id' => $projectID,
-                'data' => json_encode($responseMessage),
-                'original_data' => __MqttListener::getOriginalMessage(),
-                'publish_topic' => $topic,
-                'publish_message' => json_encode([
-                    'addr' => $responseMessage->addr,
-                    'type' => $responseMessage->type,
-                    'relay' => implode('', $switchState),
-                ])
-            ]);
-        }
-        self::$mqttData = $mqttData;
-
-        $typeUnit->{$type . 'Types'}
-            ->each(
-                function ($typeType)
-                use ($typeUnit, $type, $responseMessage, &$switchState) {
-                    self::saveMqttDataHistory($typeType, $typeUnit, $type, $responseMessage, $switchState);
-                }
-            );
-
-        $runTimeSwitchState = $switchState;
-
-        if (self::$isSaveMqttData) {
-            self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState, $runTimeSwitchState);
-        }
-
-        self::$feedBackArray['relay'] = implode('', $runTimeSwitchState);
-
-        // Confirms if the relay is empty or null, if empty or null then set it to 000000000000
-        if (!(bool)self::$feedBackArray['relay']) {
-            self::$feedBackArray['relay'] = implode('', array_fill(0, 12, 0));
-        }
     }
 
     /**

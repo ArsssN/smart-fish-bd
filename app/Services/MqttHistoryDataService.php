@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
+use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -35,6 +36,11 @@ class MqttHistoryDataService
     public static Builder|SwitchUnit $switchUnit;
 
     /**
+     * @var Builder|SensorUnit
+     */
+    public static Builder|SensorUnit $sensorUnit;
+
+    /**
      * Mqtt data switch unit history details
      *
      * @var array
@@ -58,7 +64,7 @@ class MqttHistoryDataService
             'data' => $mqttData->data,
             'data_source' => $dataSource,
             'original_data' => $mqttData->original_data ?? $mqttData->data,
-            'publish_message' => json_encode(MqttPublishService::$publishMessage),
+            'publish_message' => json_encode(MqttPublishService::getPublishMessage()),
             'publish_topic' => $publishTopic,
         ];
         self::$switchUnit = $switchUnit;
@@ -179,5 +185,13 @@ class MqttHistoryDataService
         }
 
         return $sensorMessage;
+    }
+
+    /**
+     * @return void
+     */
+    public static function switchUnitSwitchesStatusUpdate()
+    {
+        //TODO: Implement this method
     }
 }

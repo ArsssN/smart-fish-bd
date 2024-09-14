@@ -7,39 +7,81 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class MqttPublishService
 {
-    public static array $publishMessage = [
+    private static array $publishMessage = [
         'addr' => '',
         'type' => '',
         'relay' => '',
     ];
 
     /**
-     * Publish mqtt if in production mode
-     *
+     * @var string
+     */
+    private static string $topic;
+
+    /**
+     * @var string
+     */
+    private static string $previousRelay;
+
+    /**
+     * @param string $topic
      * @param string $relay
-     * @param string $previousRelay
-     * @param string $publishTopic
      * @param string $addr
      * @param string $type
-     * @return void
+     * @param string $previousRelay
+     * @return MqttPublishService
      */
-    public static function relayPublish(string $publishTopic, string $relay, string $addr, string $previousRelay = '', string $type = 'sw'): void
+    public static function init(string $topic, string $relay, string $addr, string $previousRelay = '', string $type = 'sw'): MqttPublishService
     {
+        self::$topic = $topic;
+        self::$previousRelay = $previousRelay;
         self::$publishMessage = [
             'relay' => $relay,
+            'addr' => $addr,
             'type' => $type,
-            'addr' => $addr
         ];
 
-        if ($relay === $previousRelay) {
+        return new self();
+    }
+
+    /**
+     * Publish mqtt if in production mode
+     *
+     * @return void
+     */
+    public static function relayPublish(): void
+    {
+        if (self::$publishMessage['relay'] === self::$previousRelay) {
             return;
         }
 
         $publishMessageStr = json_encode(self::$publishMessage);
 
-        Log::channel('aerator_status')->info('Publish Topics : ' . $publishTopic . '--' . ', Message: ' . $publishMessageStr);
+        Log::channel('aerator_status')->info('Publish Topics : ' . self::$topic . '--' . ', Message: ' . $publishMessageStr);
         if (config('app.env') === 'production') {
-            MQTT::publish($publishTopic, $publishMessageStr);
+            MQTT::publish(self::$topic, $publishMessageStr);
+        }
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public static function getPublishMessage(): array
+    {
+        return self::$publishMessage;
+    }
+
+    /**
+     * @param string|string[] $value
+     * @param string|null $key
+     * @return void
+     */
+    public static function setPublishMessage(array|string $value, string $key = null): void
+    {
+        if ($key) {
+            self::$publishMessage[$key] = $value;
+        } else {
+            self::$publishMessage = $value;
         }
     }
 }
