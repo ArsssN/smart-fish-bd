@@ -203,14 +203,6 @@ class MqttListenerService
         self::$mqttData->publish_topic = self::$topic;
         self::$historyDetails = [];
 
-        /*MqttHistoryDataService::init(
-            self::$topic,
-            self::$mqttData,
-            self::$switchUnit,
-            self::$historyDetails,
-            'mqtt'
-        );*/
-
         self::$switchUnitStatus = self::$switchUnit->status;
 
         return $this;

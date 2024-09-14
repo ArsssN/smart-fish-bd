@@ -123,6 +123,7 @@ class AeratorManageCommand extends Command
             $relay[] = $switchUnitSwitch->status === 'off' ? 0 : 1;
 
             $historyDetails[$index] = [
+                'number' => $switchUnitSwitch->number,
                 'status' => $switchUnitSwitch->status,
                 'comment' => $switchUnitSwitch->comment,
                 'switch_type_id' => $switchUnitSwitch->switchType,

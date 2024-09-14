@@ -211,17 +211,15 @@ class MqttHistoryDataService
      */
     public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
     {
-        self::$switchUnit
-            ->ponds
-            ->each(function ($pond) {
-                $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
-                    'mqtt_data_id' => self::$newMqttDataBuilder->id,
-                    'pond_id' => $pond->id,
-                    'switch_unit_id' => self::$switchUnit->id,
-                ]);
+        self::$switchUnit->ponds->each(function ($pond) {
+            $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
+                'mqtt_data_id' => self::$newMqttDataBuilder->id,
+                'pond_id' => $pond->id,
+                'switch_unit_id' => self::$switchUnit->id,
+            ]);
 
-                $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
-            });
+            $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
+        });
 
         return new self();
     }
