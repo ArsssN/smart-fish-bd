@@ -7,8 +7,11 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class MqttPublishService
 {
-
-    public static array $publishMessage;
+    public static array $publishMessage = [
+        'addr' => '',
+        'type' => '',
+        'relay' => '',
+    ];
 
     /**
      * Publish mqtt if in production mode

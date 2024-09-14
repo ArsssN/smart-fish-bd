@@ -85,8 +85,9 @@ class AeratorManageCommand extends Command
                     MqttPublishService::relayPublish($publishTopic, $relay, $publishMessage->addr, $previousRelay);
 
                     //mqtt data and history data save
-                    MqttHistoryDataService::mqttDataSave($mqttData, $publishTopic);
-                    MqttHistoryDataService::mqttDataSwitchUnitHistorySave($switchUnit, $historyDetails);
+                    MqttHistoryDataService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
+                        ->mqttDataSave()
+                        ->mqttDataSwitchUnitHistorySave();
 
                 } else if ($runStatus === 'off' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOnAfter) {
                     Log::channel('aerator_status')->info('When run status off and onAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());

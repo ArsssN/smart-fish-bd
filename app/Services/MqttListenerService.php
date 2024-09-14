@@ -156,6 +156,12 @@ class MqttListenerService
             $previousRelay = $publishMessage->relay
                 ?: implode('', array_fill(1, 12, 0));
 
+            MqttPublishService::$publishMessage = [
+                'relay' => $publishMessage->relay,
+                'type' => $publishMessage->type ?? 'sw',
+                'addr' => $publishMessage->addr,
+            ];
+
             MqttPublishService::relayPublish($publishTopic, '', $publishMessage->addr, $previousRelay);
         }
     }
@@ -191,13 +197,16 @@ class MqttListenerService
         $pond = $sensorUnit->ponds->firstOrFail();
 
         $switchUnit = $pond->switchUnits->firstOrFail();
+
         $addr = dechex((int)$switchUnit->serial_number);
         self::$publishMessageArr['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
-        self::$switchUnitStatus = $switchUnit->status;
-        $project = $pond->project;
 
         $switchState = array_fill(0, 12, 0);
+        self::$publishMessageArr['relay'] = implode('', $switchState);
 
+        self::$switchUnitStatus = $switchUnit->status;
+
+        $project = $pond->project;
         $projectID = $project->id;
 
         self::$mqttData = MqttData::query();
@@ -208,11 +217,7 @@ class MqttListenerService
             'data' => json_encode($this->responseMessage),
             'original_data' => __MqttListener::getOriginalMessage(),
             'publish_topic' => $this->topic,
-            'publish_message' => json_encode([
-                'addr' => $this->responseMessage->addr,
-                'type' => $this->responseMessage->type,
-                'relay' => implode('', $switchState),
-            ])
+            'publish_message' => json_encode(self::$publishMessageArr)
         ]);
 
         $sensorUnit

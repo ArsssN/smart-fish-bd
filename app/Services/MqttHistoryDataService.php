@@ -4,33 +4,89 @@ namespace App\Services;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
+use App\Models\MqttDataSwitchUnitHistoryDetail;
+use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class MqttHistoryDataService
 {
     /**
-     * @var MqttData|Builder
+     * @var array
      */
-    public static MqttData|Builder $newMqttData;
+    public static array $mqttData = [
+        'type' => 'sensor',
+        'project_id' => '',
+        'data' => '',
+        'data_source' => '',
+        'original_data' => '',
+        'publish_message' => '',
+        'publish_topic' => '',
+    ];
 
     /**
-     * @param $mqttData
-     * @param $publishTopic
-     * @param string $dataSource
-     * @return void
+     * @var Builder|MqttData
      */
-    public static function mqttDataSave($mqttData, $publishTopic, string $dataSource = 'scheduler'): void
+    public static Builder|MqttData $newMqttDataBuilder;
+
+    /**
+     * @var Builder|SwitchUnit
+     */
+    public static Builder|SwitchUnit $switchUnit;
+
+    /**
+     * Mqtt data switch unit history details
+     *
+     * @var array
+     */
+    public static array $historyDetails;
+
+    /**
+     * @param string $publishTopic
+     * @param MqttData|Builder $mqttData
+     * @param Builder|SwitchUnit $switchUnit
+     * @param array $historyDetails
+     * @param string $dataSource
+     *
+     * @return MqttHistoryDataService
+     */
+    public static function init(string $publishTopic, Builder|MqttData $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttHistoryDataService
     {
-        self::$newMqttData = MqttData::query()->create([
+        self::$mqttData = [
             'type' => 'sensor',
             'project_id' => $mqttData->project_id,
             'data' => $mqttData->data,
             'data_source' => $dataSource,
-            'original_data' => $mqttData?->original_data ?? $mqttData?->data,
+            'original_data' => $mqttData->original_data ?? $mqttData->data,
             'publish_message' => json_encode(MqttPublishService::$publishMessage),
             'publish_topic' => $publishTopic,
+        ];
+        self::$switchUnit = $switchUnit;
+        self::$historyDetails = $historyDetails;
+
+        self::$newMqttDataBuilder = MqttData::query();
+
+        return new self();
+    }
+
+    /**
+     * Save mqtt data
+     *
+     * @return $this
+     */
+    public static function mqttDataSave(): MqttHistoryDataService
+    {
+        self::$newMqttDataBuilder = MqttData::query()->create([
+            'type' => self::$mqttData['type'],
+            'project_id' => self::$mqttData['project_id'],
+            'data' => self::$mqttData['data'],
+            'data_source' => self::$mqttData['data_source'],
+            'original_data' => self::$mqttData['original_data'],
+            'publish_message' => self::$mqttData['publish_message'],
+            'publish_topic' => self::$mqttData['publish_topic'],
         ]);
+
+        return new self();
     }
 
     /**
@@ -63,25 +119,29 @@ class MqttHistoryDataService
                 'message' => $sensorMessage,
             ];
         });
-        self::$newMqttData->histories()->createMany($histories);
+        self::$newMqttDataBuilder->histories()->createMany($histories);
     }
 
     /**
-     * @param $switchUnit
-     * @param $historyDetails
-     * @return void
+     * Save mqtt data switch unit history
+     *
+     * @return MqttHistoryDataService
      */
-    public static function mqttDataSwitchUnitHistorySave($switchUnit, $historyDetails): void
+    public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
     {
+        $switchUnit = self::$switchUnit;
+        $historyDetails = self::$historyDetails;
         $switchUnit->ponds->each(function ($pond) use ($switchUnit, $historyDetails) {
             $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
-                'mqtt_data_id' => self::$newMqttData->id,
+                'mqtt_data_id' => self::$newMqttDataBuilder->id,
                 'pond_id' => $pond->id,
                 'switch_unit_id' => $switchUnit->id,
             ]);
 
-            $mqttDataSwitchUnitHistory->switchUnitHistoryDetails()->createMany($historyDetails);
+            $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany($historyDetails);
         });
+
+        return new self();
     }
 
     /**
