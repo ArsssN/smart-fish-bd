@@ -3,17 +3,50 @@
 namespace App\Services;
 
 use App\Console\Commands\__MqttListener;
-use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
 use App\Models\Project;
 use App\Models\SensorUnit;
-use App\Models\SwitchUnit;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use PhpMqtt\Client\Facades\MQTT;
 
 class MqttListenerService
 {
+    /**
+     * The upper limit of the custom DO value.
+     */
+    const upperLimitOfCustomDOValue = 1.5;
+
+    /**
+     * @var string $switchUnitStatus - switch unit status
+     */
+    private static mixed $switchUnitStatus = 'active';
+
+    /**
+     * @var MqttData|Model|Builder $mqttData - mqtt data
+     */
+    public static MqttData|Model|Builder $mqttData;
+
+    /**
+     * MqttListenerService constructor.
+     *
+     * @param string $message
+     * @param string $topic
+     */
+    public function __construct(string $topic, string $message)
+    {
+        $this->message = $message;
+        $this->responseMessage = json_decode($message ?: '{}');
+        $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
+
+        self::$publishMessageArr = [
+            'addr' => '',
+            'type' => 'sw',
+            'relay' => implode('', array_fill(0, 12, 0)),
+        ];
+    }
+
     /**
      * The message to be displayed when the command is executed.
      *
@@ -22,11 +55,20 @@ class MqttListenerService
     protected string $message;
 
     /**
-     * The original message.
-     *
-     * @var string
+     * @var array $publishMessageArr - publish message array
      */
-    protected static string $originalMessage;
+    public static array $publishMessageArr = [
+        'addr' => '',
+        'type' => '',
+        'relay' => '',
+    ];
+
+    /**
+     * The original message from the mqtt in json format.
+     *
+     * @var object
+     */
+    protected object $responseMessage;
 
     /**
      * The topic to be subscribed to.
@@ -63,30 +105,35 @@ class MqttListenerService
      */
     protected string $currentDateTime;
 
-    public function processResponse($message, $topic)
+    public function processResponse(): void
     {
         $this->currentTime = now()->format('H:i');
         $this->currentDateTime = now()->format('Y-m-d H:i:s');
 
-        $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
-        $this->message = $message;
-
-        self::$originalMessage = $message;
-        $responseMessage = json_decode($this->message);
-
-        if (isset($responseMessage->update)) {
-            return $this->isUpdateResponse();
+        if (isset($this->responseMessage->update)) {
+            $this->isUpdateResponse();
+            return;
         }
 
-        if (isset($responseMessage->data->o2) && $responseMessage->data->o2 < 1.5) {
-            $o2 = convertDOValue($responseMessage->data->o2, $this->currentTime);
-            $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2 . ' at ' . $this->currentTime . '<br>';;
+        $this->convertDOValue()->saveData();
+
+        return $this->saveMqttData($this->responseMessage);
+    }
+
+    /**
+     * @return $this
+     */
+    public function convertDOValue(): self
+    {
+        if (isset($this->responseMessage->data->o2) && $this->responseMessage->data->o2 < self::upperLimitOfCustomDOValue) {
+            $o2 = convertDOValue($this->responseMessage->data->o2, $this->currentTime);
+            $echo = 'Converted DO value: from ' . $this->responseMessage->data->o2 . ' to ' . $o2 . ' at ' . $this->currentTime . '<br>';
+            echo $echo;
             Log::channel('mqtt_listener')->info($echo);
-
-            $responseMessage->data->o2 = $o2;
+            $this->responseMessage->data->o2 = $o2;
         }
 
-        return $this->saveMqttData($responseMessage);
+        return $this;
     }
 
     /**
@@ -96,25 +143,91 @@ class MqttListenerService
     {
         sleep(2);
         $gatewaySerialNumberLast4Digit = Str::before(Str::after($this->topic, '/'), '/');
-        $project = Project::select('id')->with('mqttDataLast:id,publish_topic,publish_message')
-            ->where('gateway_serial_number', 'LIKE', "%{$gatewaySerialNumberLast4Digit}")
+        $project = Project::query()
+            ->select('id')
+            ->with('mqttDataLast:id,publish_topic,publish_message')
+            ->where('gateway_serial_number', 'LIKE', "%$gatewaySerialNumberLast4Digit")
             ->firstOrFail();
 
-        $mqttData = $project->mqttData;
-        $publishMessage = json_decode($mqttData->publish_message ?? '{}');
-        $publishTopic = $mqttData->publish_topic;
-        $previousRelay = $publishMessage->relay
-            ?: implode('', array_fill(1, 12, 0));
+        $mqttData = $project->mqttDataLast ?? null;
+        if ($mqttData) {
+            $publishMessage = json_decode($mqttData->publish_message ?? '{}');
+            $publishTopic = $mqttData->publish_topic;
+            $previousRelay = $publishMessage->relay
+                ?: implode('', array_fill(1, 12, 0));
 
-        //TODO::history data save
-
-        MqttPublishService::relayPublish($publishTopic, '', $publishMessage->addr, $previousRelay);
+            MqttPublishService::relayPublish($publishTopic, '', $publishMessage->addr, $previousRelay);
+        }
     }
 
+    /**
+     * gw_id is gateway_serial_number
+     * addr is serial_number
+     *
+     * @return void
+     */
+    public function saveData(): void
+    {
+        $newResponseMessage = new \stdClass();
+        $newResponseMessage->gateway_serial_number = $this->responseMessage->gw_id;
+        $newResponseMessage->type = 'sensor';
+        $newResponseMessage->serial_number = hexdec($this->responseMessage->addr);
+        $newResponseMessage->data = $this->responseMessage->data;
+
+        $remoteNames = collect($this->responseMessage->data)->keys()->toArray();
+        $serialNumber = hexdec($this->responseMessage->addr);
+
+        $sensorUnit = SensorUnit::query()
+            ->where('serial_number', $serialNumber)
+            ->with(['sensorTypes', 'ponds'])
+            ->whereHas('sensorTypes', fn($q) => $q->whereIn('remote_name', $remoteNames))
+            ->whereHas('ponds', function ($query) use ($newResponseMessage) {
+                $query->whereHas('project', function ($query) use ($newResponseMessage) {
+                    $query->where('gateway_serial_number', $newResponseMessage->gateway_serial_number);
+                });
+            })
+            ->firstOrFail();
+
+        $pond = $sensorUnit->ponds->firstOrFail();
+
+        $switchUnit = $pond->switchUnits->firstOrFail();
+        $addr = dechex((int)$switchUnit->serial_number);
+        self::$publishMessageArr['addr'] = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
+        self::$switchUnitStatus = $switchUnit->status;
+        $project = $pond->project;
+
+        $switchState = array_fill(0, 12, 0);
+
+        $projectID = $project->id;
+
+        self::$mqttData = MqttData::query();
+        self::$mqttData = self::$mqttData->create([
+            'type' => 'sensor',
+            'data_source' => 'mqtt',
+            'project_id' => $projectID,
+            'data' => json_encode($this->responseMessage),
+            'original_data' => __MqttListener::getOriginalMessage(),
+            'publish_topic' => $this->topic,
+            'publish_message' => json_encode([
+                'addr' => $this->responseMessage->addr,
+                'type' => $this->responseMessage->type,
+                'relay' => implode('', $switchState),
+            ])
+        ]);
+
+        $sensorUnit
+            ->sensorTypes
+            ->each(function ($sensorType) use ($sensorUnit, $newResponseMessage, &$switchState) {
+                MqttHistoryDataService::mqttDataHistorySave($sensorType, $sensorUnit, $newResponseMessage, $switchState);
+            });
+
+        $runTimeSwitchState = $switchState;
+        self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState, $runTimeSwitchState);
+    }
 
     public function saveMqttData($responseMessage, $type = 'sensor')
     {
-        $newResponseMessage = new \stdClass();
+        $newResponseMessage = new stdClass();
         $newResponseMessage->gateway_serial_number = $responseMessage->gw_id;
         $newResponseMessage->type = $type;
         $newResponseMessage->serial_number = hexdec($responseMessage->addr);
@@ -188,5 +301,13 @@ class MqttListenerService
         if (!(bool)self::$feedBackArray['relay']) {
             self::$feedBackArray['relay'] = implode('', array_fill(0, 12, 0));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
     }
 }

@@ -87,7 +87,7 @@ class __MqttListener extends Command
         $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
             Log::channel('mqtt_listener')->info("Received message on topic [$topic]: $message");
             try {
-                (new MqttListenerService())->processResponse($message, $topic);
+                (new MqttListenerService($topic, $message))->processResponse();
                 /*if ($this->processResponse()) {
                     MQTT::publish($this->topic, json_encode(MqttCommandController::$feedBackArray));
                 }*/
