@@ -109,13 +109,16 @@ class MqttListener extends Command
                     $mqttListenerService = new MqttListenerService($topic, $message);
                     $mqttListenerService->republishLastResponse()
                         ?->convertDOValue()
-                        ?->prepareDataSave()
-                        ?->saveMqttDataHistoryForAllSensor()
-                        ?->updateRelay();
+                        ?->prepareDataSave();
 
                     MqttPublishService::relayPublish();
 
-                    MqttHistoryDataService::mqttDataSave();
+                    // TODO: $historyDetails is not defined
+                    MqttHistoryDataService::init($this->topic, MqttListenerService::$mqttData, MqttListenerService::$switchUnit, MqttListenerService::$historyDetails)
+                        ->mqttDataSave()
+                        ->mqttDataHistoriesSave()
+                        ->mqttDataSwitchUnitHistorySave()
+                        ->switchUnitSwitchesStatusUpdate();
                 } catch (Exception $e) {
                     Log::error($e->getMessage());
                     echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());

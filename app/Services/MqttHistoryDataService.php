@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
-use App\Models\MqttDataSwitchUnitHistoryDetail;
 use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,8 +48,13 @@ class MqttHistoryDataService
     public static array $historyDetails;
 
     /**
+     * @var array $relayArr - relay array
+     */
+    public static array $relayArr = [];
+
+    /**
      * @param string $publishTopic
-     * @param MqttData|Builder $mqttData
+     * @param Builder|MqttData|stdClass $mqttData
      * @param Builder|SwitchUnit $switchUnit
      * @param array $historyDetails
      * @param string $dataSource
@@ -99,6 +103,39 @@ class MqttHistoryDataService
     }
 
     /**
+     * Update relay
+     *
+     * @return MqttHistoryDataService
+     */
+    public static function mqttDataPublishMessageUpdate(): MqttHistoryDataService
+    {
+        $relay = implode('', self::$relayArr);
+        $publishMessage = json_decode(self::$newMqttDataBuilder->publish_message ?? '{}');
+        $publishMessage->relay = $relay;
+        self::$newMqttDataBuilder->publish_message = json_encode($publishMessage);
+        self::$newMqttDataBuilder->save();
+
+        return new self();
+    }
+
+    /**
+     * Save mqtt data history for all sensors
+     *
+     * @return MqttHistoryDataService
+     */
+    public static function mqttDataHistoriesSave(): MqttHistoryDataService
+    {
+        self::$relayArr = array_fill(0, 12, 0);
+
+        MqttHistoryDataService::$sensorUnit->sensorTypes
+            ->each(function ($sensorType) {
+                MqttHistoryDataService::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
+            });
+
+        return self::mqttDataPublishMessageUpdate();
+    }
+
+    /**
      * Save mqtt data history
      *
      * @table mqtt_data_history
@@ -136,30 +173,6 @@ class MqttHistoryDataService
     }
 
     /**
-     * Save mqtt data switch unit history
-     *
-     * @table mqtt_data_switch_unit_history
-     *
-     * @return MqttHistoryDataService
-     */
-    public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
-    {
-        self::$switchUnit
-            ->ponds
-            ->each(function ($pond) {
-                $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
-                    'mqtt_data_id' => self::$newMqttDataBuilder->id,
-                    'pond_id' => $pond->id,
-                    'switch_unit_id' => self::$switchUnit->id,
-                ]);
-
-                $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
-            });
-
-        return new self();
-    }
-
-    /**
      * @param $sensorType
      * @param $value
      * @param $relayArr
@@ -188,6 +201,30 @@ class MqttHistoryDataService
         }
 
         return $sensorMessage;
+    }
+
+    /**
+     * Save mqtt data switch unit history
+     *
+     * @table mqtt_data_switch_unit_history
+     *
+     * @return MqttHistoryDataService
+     */
+    public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
+    {
+        self::$switchUnit
+            ->ponds
+            ->each(function ($pond) {
+                $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
+                    'mqtt_data_id' => self::$newMqttDataBuilder->id,
+                    'pond_id' => $pond->id,
+                    'switch_unit_id' => self::$switchUnit->id,
+                ]);
+
+                $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
+            });
+
+        return new self();
     }
 
     /**
