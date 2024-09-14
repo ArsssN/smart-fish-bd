@@ -9,6 +9,7 @@ use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use stdClass;
 
 class MqttHistoryDataService
 {
@@ -56,7 +57,7 @@ class MqttHistoryDataService
      *
      * @return MqttHistoryDataService
      */
-    public static function init(string $publishTopic, Builder|MqttData $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttHistoryDataService
+    public static function init(string $publishTopic, Builder|MqttData|stdClass $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttHistoryDataService
     {
         self::$mqttData = [
             'type' => 'sensor',
@@ -141,17 +142,17 @@ class MqttHistoryDataService
      */
     public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
     {
-        $switchUnit = self::$switchUnit;
-        $historyDetails = self::$historyDetails;
-        $switchUnit->ponds->each(function ($pond) use ($switchUnit, $historyDetails) {
-            $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
-                'mqtt_data_id' => self::$newMqttDataBuilder->id,
-                'pond_id' => $pond->id,
-                'switch_unit_id' => $switchUnit->id,
-            ]);
+        self::$switchUnit
+            ->ponds
+            ->each(function ($pond) {
+                $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
+                    'mqtt_data_id' => self::$newMqttDataBuilder->id,
+                    'pond_id' => $pond->id,
+                    'switch_unit_id' => self::$switchUnit->id,
+                ]);
 
-            $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany($historyDetails);
-        });
+                $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
+            });
 
         return new self();
     }

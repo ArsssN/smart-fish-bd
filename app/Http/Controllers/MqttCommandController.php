@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Console\Commands\__MqttListener;
+use App\Console\Commands\MqttListener;
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
@@ -93,7 +94,7 @@ class MqttCommandController extends Controller
                 'data_source' => 'mqtt',
                 'project_id' => $projectID,
                 'data' => json_encode($responseMessage),
-                'original_data' => __MqttListener::getOriginalMessage(),
+                'original_data' => MqttListener::getOriginalMessage(),
                 'publish_topic' => $topic,
                 'publish_message' => json_encode([
                     'addr' => $responseMessage->addr,

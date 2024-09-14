@@ -74,7 +74,7 @@ class AeratorManageCommand extends Command
 
                     $historyDetails = [];
                     // switch unit switches status off
-                    $relay = $this->switchUnitSwitchesStatusOff($switchUnit->switchUnitSwitches, $historyDetails);
+                    $relay = $this->switchUnitSwitchesStatusUpdate($switchUnit->switchUnitSwitches, $historyDetails);
 
                     $mqttData = $switchUnit->history->mqttData;
 
@@ -111,13 +111,14 @@ class AeratorManageCommand extends Command
      *
      * @param $switchUnitSwitches
      * @param $historyDetails
+     * @param string $status
      * @return string
      */
-    public function switchUnitSwitchesStatusOff($switchUnitSwitches, &$historyDetails): string
+    public function switchUnitSwitchesStatusUpdate($switchUnitSwitches, &$historyDetails, string $status = 'off'): string
     {
         $relay = [];
         foreach ($switchUnitSwitches as $index => $switchUnitSwitch) {
-            $switchUnitSwitch->status = 'off';
+            $switchUnitSwitch->status = $status;
             $switchUnitSwitch->save();
             $relay[] = $switchUnitSwitch->status === 'off' ? 0 : 1;
 

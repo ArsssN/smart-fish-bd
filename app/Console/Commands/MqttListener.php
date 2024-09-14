@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
+use App\Services\MqttHistoryDataService;
 use App\Services\MqttListenerService;
 use App\Services\MqttPublishService;
 use Exception;
@@ -112,6 +113,7 @@ class MqttListener extends Command
 
                     MqttPublishService::relayPublish();
 
+                    MqttHistoryDataService::mqttDataSave();
                 } catch (Exception $e) {
                     Log::error($e->getMessage());
                     echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
