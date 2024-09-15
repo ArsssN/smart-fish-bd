@@ -76,7 +76,7 @@ class TestController extends Controller
                 $mqttListenerService = new MqttListenerService(Str::replaceLast('/PUB', '/SUB', $topic), json_encode($responseMessage));
                 $mqttListenerService
                     ->setUpdate($isUpdate)
-                    ->setTestMode(false)
+                    ->setTestMode() // false, if we want to save data.
                     ->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
@@ -90,7 +90,7 @@ class TestController extends Controller
                  *  Store must be after mqtt publish if present.
                  */
                 if ($mqttListenerService::checkIfSavable()) {
-                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
+                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'test')
                         ->mqttDataSave()
                         ->mqttDataHistoriesSave()
                         ->mqttDataSwitchUnitHistorySave()
