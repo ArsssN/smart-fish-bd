@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
+use App\Models\Pond;
 use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,10 @@ class MqttHistoryDataService
         'publish_message' => '',
         'publish_topic' => '',
     ];
+    /**
+     * @var array
+     */
+    public static array $mqttDataHistory = [];
 
     /**
      * @var Builder|MqttData
@@ -31,6 +36,12 @@ class MqttHistoryDataService
     public static Builder|MqttData $newMqttDataBuilder;
 
     /**
+     * Here we have:
+     *  - sensor unit
+     *      - sensor types array
+     *      - ponds array
+     *          - project object
+     *
      * @var Builder|SwitchUnit
      */
     public static Builder|SwitchUnit $switchUnit;
@@ -44,6 +55,11 @@ class MqttHistoryDataService
      * @var Builder|SensorUnit
      */
     public static Builder|SensorUnit $sensorUnit;
+
+    /**
+     * @var Builder|Pond
+     */
+    public static Builder|Pond $pond;
 
     /**
      * Mqtt data switch unit history details
@@ -94,7 +110,7 @@ class MqttHistoryDataService
      */
     public static function mqttDataSave(): MqttHistoryDataService
     {
-        self::$newMqttDataBuilder = MqttData::query()->create([
+        $newMqttDataBuilder = MqttData::query()->create([
             'type' => self::$mqttData['type'],
             'project_id' => self::$mqttData['project_id'],
             'data' => self::$mqttData['data'],
@@ -103,6 +119,8 @@ class MqttHistoryDataService
             'publish_message' => self::$mqttData['publish_message'],
             'publish_topic' => self::$mqttData['publish_topic'],
         ]);
+
+        self::$newMqttDataBuilder = $newMqttDataBuilder->with('project.ponds.sensorUnits.sensorTypes')->find($newMqttDataBuilder->id);
 
         return new self();
     }

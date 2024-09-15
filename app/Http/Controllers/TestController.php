@@ -10,6 +10,7 @@ use App\Models\MqttDataSwitchUnitHistoryDetail;
 use App\Models\Sensor;
 use App\Models\SwitchUnitSwitch;
 use App\Models\User;
+use App\Services\MqttListenerService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -55,14 +56,14 @@ class TestController extends Controller
 
         try {
             if (request()->get('gw_id') || $isUpdate) {
-                $mqttListener = new __MqttListener();
-
-                $mqttListener->setMessage(json_encode($responseMessage));
-                $mqttListener->setCurrentTime($currentTime);
-                $mqttListener->setTopic($topic);
-                $mqttListener->setIsTest(true);
-
-                $publishable = $mqttListener->processResponse();
+                $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
+                $mqttListenerService
+                    ->setUpdate($isUpdate)
+                    ->setTestMode()
+                    ->republishLastResponse()
+                    ?->convertDOValue()
+                    ?->prepareRelay()
+                    ?->prepareDataSave();
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
