@@ -56,6 +56,13 @@ class MqttListenerService
     public static object $responseMessage;
 
     /**
+     * The original clone of message.
+     *
+     * @var string
+     */
+    public static string $originalMessage;
+
+    /**
      * @var array $relayArr - relay array
      */
     public static array $relayArr = [];
@@ -104,6 +111,7 @@ class MqttListenerService
     public function __construct(string $topic, string $message)
     {
         $this->message = $message;
+        self::$originalMessage = $message;
         self::$responseMessage = json_decode($message ?: '{}');
         self::$topic = Str::replaceLast('/PUB', '/SUB', $topic);
 
@@ -160,9 +168,18 @@ class MqttListenerService
     /**
      * @return $this
      */
-    public function prepareRelay(): MqttListenerService
+    public function prepareData(): self
     {
-        dump(self::$responseMessage->data);
+        $this->prepareMqttDataHistory()->prepareDataSave();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function prepareMqttDataHistory(): MqttListenerService
+    {
         $remoteNames = collect(self::$responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec(self::$responseMessage->addr);
 
@@ -207,7 +224,6 @@ class MqttListenerService
             }
 
             MqttHistoryDataService::$mqttDataHistory[] = [
-                'mqtt_data_id' => null,
                 'pond_id' => MqttHistoryDataService::$pond->id,
                 'sensor_unit_id' => MqttHistoryDataService::$sensorUnit->id,
                 'sensor_type_id' => $sensorType->id,
@@ -263,17 +279,15 @@ class MqttListenerService
 
         $addr = dechex((int)self::$switchUnit->serial_number);
         MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
+        MqttPublishService::setPublishMessage('sw', 'type');
+        MqttPublishService::setPublishMessage(implode('', self::$relayArr), 'relay');
 
         self::$mqttData = new MqttData();
         self::$mqttData->project_id = MqttHistoryDataService::$pond->project->id;
-        self::$mqttData->data = $this->message;
+        self::$mqttData->data = json_encode(self::$responseMessage);
         self::$mqttData->data_source = 'mqtt';
-        self::$mqttData->original_data = MqttListener::getOriginalMessage();
-        self::$mqttData->publish_message = json_encode([
-            'addr' => self::$responseMessage->addr,
-            'type' => self::$responseMessage->type,
-            'relay' => implode('', self::$relayArr),
-        ]);
+        self::$mqttData->original_data = self::$originalMessage;
+        self::$mqttData->publish_message = json_encode(MqttPublishService::getPublishMessage());
         self::$mqttData->publish_topic = self::$topic;
         self::$historyDetails = [];
 

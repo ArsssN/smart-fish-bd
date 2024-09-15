@@ -62,8 +62,9 @@ class TestController extends Controller
                     ->setTestMode()
                     ->republishLastResponse()
                     ?->convertDOValue()
-                    ?->prepareRelay()
-                    ?->prepareDataSave();
+                    ?->prepareData();
+
+                dd($mqttListenerService::$relayArr, $mqttListenerService::$mqttData->toArray());
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
