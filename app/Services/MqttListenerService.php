@@ -29,6 +29,16 @@ class MqttListenerService
     public static MqttData|Model|Builder $mqttDataInstance;
 
     /**
+     * @var MqttData|Model|Builder $previousMqttData - mqtt data
+     */
+    public static MqttData|Model|Builder $previousMqttData;
+
+    /**
+     * @var string
+     */
+    public static string $previousRelay;
+
+    /**
      * @var Builder|SwitchUnit
      */
     public static Builder|SwitchUnit $switchUnit;
@@ -68,6 +78,15 @@ class MqttListenerService
     public static array $relayArr = [];
 
     /**
+     * @var array|string[]
+     */
+    public static array $publishMessage = [
+        'addr' => '',
+        'type' => '',
+        'relay' => '',
+    ];
+
+    /**
      * The topic to be subscribed to.
      *
      * @var string
@@ -79,7 +98,21 @@ class MqttListenerService
      *
      * @var bool
      */
-    protected bool $isUpdate = false;
+    public static bool $isUpdate = false;
+
+    /**
+     * The flag to check if the command is publishable.
+     *
+     * @var bool
+     */
+    public static bool $isPublishable = false;
+
+    /**
+     * The flag to check if the command is publishable.
+     *
+     * @var bool
+     */
+    public static bool $isSaveMqttData = true;
 
     /**
      * The flag to check if the command is in test mode.
@@ -111,12 +144,14 @@ class MqttListenerService
     public function __construct(string $topic, string $message)
     {
         $this->message = $message;
+        $this->setUpdate(false);
         self::$originalMessage = $message;
         self::$responseMessage = json_decode($message ?: '{}');
-        self::$topic = Str::replaceLast('/PUB', '/SUB', $topic);
+        self::$topic = $topic;
 
         $this->currentTime = now()->format('H:i');
         $this->currentDateTime = now()->format('Y-m-d H:i:s');
+        self::$isPublishable = true;
     }
 
     /**
@@ -145,6 +180,7 @@ class MqttListenerService
         }
 
         sleep(2);
+        $this->setUpdate();
         $gatewaySerialNumberLast4Digit = Str::before(Str::after(self::$topic, '/'), '/');
         $project = Project::query()
             ->select('id')
@@ -156,8 +192,7 @@ class MqttListenerService
         if ($mqttData) {
             $publishMessage = json_decode($mqttData->publish_message ?? '{}');
             $publishTopic = $mqttData->publish_topic;
-            $previousRelay = $publishMessage->relay
-                ?: implode('', array_fill(1, 12, 0));
+            $previousRelay = '';
 
             MqttPublishService::init($publishTopic, $publishMessage->relay, $publishMessage->addr, $previousRelay);
         }
@@ -176,6 +211,8 @@ class MqttListenerService
             ->prepareMqttDataSwitchUnitHistoryDetails();
 
         MqttStoreService::$relayArr = self::$relayArr;
+
+        MqttPublishService::init(self::$topic, self::$publishMessage['relay'], self::$publishMessage['addr'], self::$previousRelay);
 
         return [
             'relayArr' => MqttStoreService::$relayArr,
@@ -274,20 +311,30 @@ class MqttListenerService
         self::$switchUnit = MqttStoreService::$pond->switchUnits->firstOrFail();
 
         $addr = dechex((int)self::$switchUnit->serial_number);
-        MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
-        MqttPublishService::setPublishMessage('sw', 'type');
-        MqttPublishService::setPublishMessage(implode('', self::$relayArr), 'relay');
+        self::$publishMessage = [
+            'addr' => Str::startsWith($addr, '0x') ? $addr : '0x' . $addr,
+            'type' => 'sw',
+            'relay' => implode('', self::$relayArr),
+        ];
 
         self::$mqttDataInstance = new MqttData();
         self::$mqttDataInstance->project_id = MqttStoreService::$pond->project->id;
         self::$mqttDataInstance->data = json_encode(self::$responseMessage);
         self::$mqttDataInstance->data_source = 'mqtt';
         self::$mqttDataInstance->original_data = self::$originalMessage;
-        self::$mqttDataInstance->publish_message = json_encode(MqttPublishService::getPublishMessage());
+        self::$mqttDataInstance->publish_message = json_encode(self::$publishMessage);
         self::$mqttDataInstance->publish_topic = self::$topic;
         self::$historyDetails = [];
 
         self::$switchUnitStatus = self::$switchUnit->status;
+
+        // It'll help to get the previous mqtt data so that we can check relay
+        self::$previousMqttData = MqttData::query()
+            ->where('project_id', MqttStoreService::$pond->project->id)
+            ->latest()
+            ->first();
+
+        self::$previousRelay = (json_decode(self::$previousMqttData->publish_message, true)['relay'] ?? '');
 
         return $this;
     }
@@ -331,6 +378,22 @@ class MqttListenerService
     }
 
     /**
+     * @return bool
+     */
+    public static function checkIfPublishable(): bool
+    {
+        return self::$isUpdate || self::$isPublishable;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function checkIfSavable(): bool
+    {
+        return self::$isSaveMqttData;
+    }
+
+    /**
      * @return string
      */
     public function getMessage(): string
@@ -345,6 +408,8 @@ class MqttListenerService
     {
         $this->isTest = $isTest;
 
+        self::$isSaveMqttData = !$isTest; // if test mode is on, don't save mqtt data
+
         return $this;
     }
 
@@ -353,7 +418,9 @@ class MqttListenerService
      */
     public function setUpdate($isUpdate = true): MqttListenerService
     {
-        $this->isUpdate = $isUpdate;
+        self::$isUpdate = $isUpdate;
+
+        self::$isSaveMqttData = !$isUpdate; // if update mode is on, don't save mqtt data
 
         return $this;
     }

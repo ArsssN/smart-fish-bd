@@ -96,7 +96,7 @@ class MqttListener extends Command
             $mqtt->subscribe('SFBD/+/PUB', function (string $topic, string $message) {
                 $this->currentTime = now()->format('H:i');
                 $this->currentDateTime = now()->format('Y-m-d H:i:s');
-                $this->topic = Str::replaceLast('/PUB', '/SUB', $topic);
+                $this->setTopic(Str::replaceLast('/PUB', '/SUB', $topic));
                 $this->message = $message;
 
                 Log::info("Received message on topic [$topic]: $message");
@@ -104,19 +104,34 @@ class MqttListener extends Command
 
                 try {
                     DB::beginTransaction();
-                    (new MqttListenerService($topic, $message))
+                    $mqttListenerService = (new MqttListenerService($this->topic, $message));
+                    $mqttListenerService
                         ->republishLastResponse()
                         ?->convertDOValue()
-                        ?->prepareMqttData();
+                        ?->prepareData();
 
-                    MqttPublishService::relayPublish();
+                    /**
+                     * mqtt publish
+                     *
+                     * Publish must be before store if present.
+                     */
+                    if ($mqttListenerService::checkIfPublishable()) {
+                        MqttPublishService::relayPublish();
+                    }
 
-                    // TODO: $historyDetails is not defined
-                    MqttStoreService::init($this->topic, MqttListenerService::$mqttData, MqttListenerService::$switchUnit, MqttListenerService::$historyDetails)
-                        ->mqttDataSave()
-                        ->mqttDataHistoriesSave()
-                        ->mqttDataSwitchUnitHistorySave()
-                        ->switchUnitSwitchesStatusUpdate();
+                    /**
+                     * mqtt data and history data save.
+                     *
+                     * Store must be after mqtt publish if present.
+                     */
+                    if ($mqttListenerService::checkIfSavable()) {
+                        // TODO: $historyDetails is not defined
+                        MqttStoreService::init($this->topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails)
+                            ->mqttDataSave()
+                            ->mqttDataHistoriesSave()
+                            ->mqttDataSwitchUnitHistorySave()
+                            ->switchUnitSwitchesStatusUpdate();
+                    }
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();

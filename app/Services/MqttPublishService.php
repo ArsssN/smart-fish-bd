@@ -24,6 +24,8 @@ class MqttPublishService
     private static string $previousRelay;
 
     /**
+     * Mqtt publish must be initiated before store.
+     *
      * @param string $topic
      * @param string $relay
      * @param string $addr
@@ -31,7 +33,7 @@ class MqttPublishService
      * @param string $previousRelay
      * @return MqttPublishService
      */
-    public static function init(string $topic, string $relay, string $addr, string $previousRelay = '', string $type = 'sw'): MqttPublishService
+    public static function init(string $topic, string $relay, string $addr, string $previousRelay, string $type = 'sw'): MqttPublishService
     {
         self::$topic = $topic;
         self::$previousRelay = $previousRelay;
@@ -66,22 +68,12 @@ class MqttPublishService
     /**
      * @return array|string[]
      */
-    public static function getPublishMessage(): array
-    {
-        return self::$publishMessage;
-    }
-
-    /**
-     * @param string|string[] $value
-     * @param string|null $key
-     * @return void
-     */
-    public static function setPublishMessage(array|string $value, string $key = null): void
+    public static function getPublishMessage($key = null): array
     {
         if ($key) {
-            self::$publishMessage[$key] = $value;
+            return self::$publishMessage[$key];
         } else {
-            self::$publishMessage = $value;
+            return self::$publishMessage;
         }
     }
 }

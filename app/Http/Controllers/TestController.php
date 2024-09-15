@@ -82,12 +82,18 @@ class TestController extends Controller
                     ?->prepareData();
 
                 dump($preparedData);
-                MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
-                    ->mqttDataSave()
-                    ->mqttDataHistoriesSave()
-                    ->mqttDataSwitchUnitHistorySave()
-                    ->mqttDataSwitchUnitHistoryDetailsSave()
-                    ->switchUnitSwitchesStatusUpdate();
+                /**
+                 *  Publish must be before store if present.
+                 *  Store must be after mqtt publish if present.
+                 */
+                if ($mqttListenerService::checkIfSavable()) {
+                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
+                        ->mqttDataSave()
+                        ->mqttDataHistoriesSave()
+                        ->mqttDataSwitchUnitHistorySave()
+                        ->mqttDataSwitchUnitHistoryDetailsSave()
+                        ->switchUnitSwitchesStatusUpdate();
+                }
             }
             DB::commit();
         } catch (Exception $e) {
@@ -96,8 +102,9 @@ class TestController extends Controller
             throw $e;
         }
 
-        $publishMessage = MqttPublishService::getPublishMessage();
-        $isAlreadyPublished = MqttCommandController::$isAlreadyPublished;
+        $publishMessage = MqttListenerService::$publishMessage;
+        $previousRelay = MqttListenerService::$previousRelay;
+        $isAlreadyPublished = $publishMessage['relay'] === $previousRelay;
 
         return view(
             'test.mqtt',

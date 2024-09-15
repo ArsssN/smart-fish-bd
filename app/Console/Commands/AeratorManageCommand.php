@@ -83,10 +83,18 @@ class AeratorManageCommand extends Command
                     $previousRelay = $publishMessage->relay
                         ?: implode('', array_fill(1, count($switchUnit->switchUnitSwitches), 0));
 
-                    // mqtt publish
+                    /**
+                     * mqtt publish
+                     *
+                     * Publish must be before store if present.
+                     */
                     MqttPublishService::init($publishTopic, $relay, $publishMessage->addr, $previousRelay)->relayPublish();
 
-                    // mqtt data and history data save
+                    /**
+                     * mqtt data and history data save.
+                     *
+                     * Store must be after mqtt publish if present.
+                     */
                     MqttStoreService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
                         ->mqttDataSave()
                         ->mqttDataSwitchUnitHistorySave();

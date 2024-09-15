@@ -80,6 +80,8 @@ class MqttStoreService
     public static array $relayArr = [];
 
     /**
+     * Mqtt publish must be initiated before store.
+     *
      * @param string $publishTopic
      * @param Builder|MqttData|stdClass $mqttData
      * @param Builder|SwitchUnit $switchUnit
@@ -96,7 +98,7 @@ class MqttStoreService
             'data' => $mqttData->data,
             'data_source' => $dataSource,
             'original_data' => $mqttData->original_data ?? $mqttData->data,
-            'publish_message' => json_encode(MqttPublishService::getPublishMessage()),
+            'publish_message' => json_encode(MqttPublishService::getPublishMessage()), // assuming before initiating store, mqtt has been published
             'publish_topic' => $publishTopic,
         ];
         self::$switchUnit = $switchUnit;
