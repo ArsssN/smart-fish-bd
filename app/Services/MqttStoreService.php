@@ -180,6 +180,11 @@ class MqttStoreService
      */
     public static function switchUnitSwitchesStatusUpdate(): void
     {
+        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0)) {
+            self::$switchUnit->run_status_updated_at = now();
+            self::$switchUnit->save();
+        }
+
         self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) {
             $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
             $switchUnitSwitch->save();
