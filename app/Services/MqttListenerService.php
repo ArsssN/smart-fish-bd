@@ -188,8 +188,7 @@ class MqttListenerService
         $this->setUpdate();
         $gatewaySerialNumberLast4Digit = Str::before(Str::after(self::$topic, '/'), '/');
         $project = Project::query()
-            ->select('id')
-            ->with('mqttDataLast:id,publish_topic,publish_message')
+            ->with('mqttDataLast:id,publish_topic,publish_message,project_id')
             ->where('gateway_serial_number', 'LIKE', "%$gatewaySerialNumberLast4Digit")
             ->firstOrFail();
 
@@ -197,9 +196,14 @@ class MqttListenerService
         if ($mqttData) {
             $publishMessage = json_decode($mqttData->publish_message ?? '{}');
             $publishTopic = $mqttData->publish_topic;
-            $previousRelay = '';
 
-            MqttPublishService::init($publishTopic, $publishMessage->relay, $publishMessage->addr, $previousRelay);
+            self::$publishMessage = [
+                'addr' => $publishMessage->addr,
+                'type' => $publishMessage->type,
+                'relay' => $publishMessage->relay,
+            ];
+
+            MqttPublishService::init($publishTopic, $publishMessage->relay, $publishMessage->addr, '');
         }
 
         return null;

@@ -62,10 +62,10 @@ class TestController extends Controller
                 }
             }'
         );
-        // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
-        // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
+        // json_decode('{"gw_id":"4A5B3C2D2528","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+        // json_decode('{"gw_id":"4A5B3C2D2528","type":"sen","addr":"0x1A","data":{"ph":6}}');
         // json_decode('{"update":1}');
-        $autoFill->topic = 'SUB/1E4F/PUB';
+        $autoFill->topic = 'SUB/2528/PUB';
 
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
@@ -81,7 +81,7 @@ class TestController extends Controller
                     ?->convertDOValue()
                     ?->prepareData();
 
-                if ($mqttListenerService::$switchUnit?->run_status == 'off') {
+                if (isset($mqttListenerService::$switchUnit?->run_status) && $mqttListenerService::$switchUnit?->run_status == 'off') {
                     Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
                 }
 
