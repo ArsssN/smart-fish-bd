@@ -336,7 +336,7 @@ class MqttListenerService
         // It'll help to get the previous mqtt data so that we can check relay
         self::$previousMqttData = MqttData::query()
             ->where('project_id', MqttStoreService::$pond->project->id)
-            ->latest()
+            ->orderByDesc('id')
             ->first();
 
         self::$previousRelay = (json_decode(self::$previousMqttData->publish_message, true)['relay'] ?? '');

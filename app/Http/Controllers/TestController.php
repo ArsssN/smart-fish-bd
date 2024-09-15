@@ -45,8 +45,8 @@ class TestController extends Controller
     public function mqtt(): View|Factory|Application
     {
         $topic = request()->get('topic');
-        $responseMessage = json_decode(json_encode(request()->except('topic', 'currentTime')));
         $currentTime = request()->get('currentTime') ?? now()->format('H:i');
+        $responseMessage = json_decode(json_encode(request()->except('topic', 'currentTime')));
 
         $autoFill = json_decode('{
                 "gw_id": "3083987D2528",
@@ -73,10 +73,10 @@ class TestController extends Controller
         try {
             DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
-                $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
+                $mqttListenerService = new MqttListenerService(Str::replaceLast('/PUB', '/SUB', $topic), json_encode($responseMessage));
                 $mqttListenerService
                     ->setUpdate($isUpdate)
-                    ->setTestMode()
+                    ->setTestMode(false)
                     ->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
