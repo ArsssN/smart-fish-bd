@@ -11,6 +11,7 @@ use App\Models\Sensor;
 use App\Models\SwitchUnitSwitch;
 use App\Models\User;
 use App\Services\MqttListenerService;
+use App\Services\MqttStoreService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -64,7 +65,15 @@ class TestController extends Controller
                     ?->convertDOValue()
                     ?->prepareData();
 
-                dd($mqttListenerService::$relayArr, $mqttListenerService::$mqttData->toArray());
+                dd(
+                    $mqttListenerService::$relayArr,
+                    [
+                        'mqttData' => $mqttListenerService::$mqttData->toArray(),
+                        'mqttDataHistory' => MqttStoreService::$mqttDataHistory,
+                        'mqttDataSwitchUnitHistory' => MqttStoreService::$mqttDataSwitchUnitHistory,
+                        'mqttDataSwitchUnitHistoryDetails' => $mqttListenerService::$historyDetails,
+                    ]
+                );
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());

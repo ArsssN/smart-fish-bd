@@ -47,9 +47,9 @@ class MqttStoreService
     public static Builder|SwitchUnit $switchUnit;
 
     /**
-     * @var Builder|MqttDataSwitchUnitHistory
+     * @var array
      */
-    public static Builder|MqttDataSwitchUnitHistory $mqttDataSwitchUnitHistory;
+    public static array $mqttDataSwitchUnitHistory;
 
     /**
      * @var Builder|SensorUnit
@@ -234,6 +234,7 @@ class MqttStoreService
      */
     public static function mqttDataSwitchUnitHistorySave(): MqttStoreService
     {
+        // TODO: use MqttStoreService::$pond
         self::$switchUnit->ponds->each(function ($pond) {
             self::$mqttDataSwitchUnitHistory[] = MqttDataSwitchUnitHistory::query()->create([
                 'mqtt_data_id' => self::$newMqttDataBuilder->id,

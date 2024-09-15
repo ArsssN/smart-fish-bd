@@ -170,7 +170,10 @@ class MqttListenerService
      */
     public function prepareData(): self
     {
-        $this->prepareRelayAndMqttDataHistory()->prepareMqttData();
+        $this->prepareRelayAndMqttDataHistory()
+            ->prepareMqttData()
+            ->prepareMqttDataSwitchUnitHistory()
+            ->prepareMqttDataSwitchUnitHistoryDetails();
 
         return $this;
     }
@@ -185,7 +188,7 @@ class MqttListenerService
 
         MqttStoreService::$sensorUnit = SensorUnit::query()
             ->where('serial_number', $serialNumber)
-            ->with(['sensorTypes', 'ponds.project', 'ponds.switchUnits'])
+            ->with(['sensorTypes', 'ponds.project', 'ponds.switchUnits.switchUnitSwitches'])
             ->whereHas('sensorTypes', fn($q) => $q->whereIn('remote_name', $remoteNames))
             ->whereHas('ponds', function ($query) {
                 $query->whereHas('project', function ($query) {
@@ -292,6 +295,61 @@ class MqttListenerService
         self::$historyDetails = [];
 
         self::$switchUnitStatus = self::$switchUnit->status;
+
+        return $this;
+    }
+
+    /**
+     * Save mqtt data switch unit history details
+     *
+     * @table mqtt_data_switch_unit_history_details
+     *
+     * @return MqttListenerService
+     */
+    public function prepareMqttDataSwitchUnitHistoryDetails(): MqttListenerService
+    {
+        self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) {
+            self::$historyDetails[$index] = [
+                'number' => $switchUnitSwitch->number,
+                'status' => self::$relayArr[$index] ? 'on' : 'off',
+                'comment' => $switchUnitSwitch->comment,
+                'switch_type_id' => $switchUnitSwitch->switchType,
+            ];
+        });
+
+        return $this;
+    }
+
+    /**
+     * Save mqtt data switch unit history
+     *
+     * @table mqtt_data_switch_unit_history
+     *
+     * @return MqttListenerService
+     */
+    public function prepareMqttDataSwitchUnitHistory(): MqttListenerService
+    {
+        MqttStoreService::$mqttDataSwitchUnitHistory = [
+            'pond_id' => MqttStoreService::$pond->id,
+            'switch_unit_id' => self::$switchUnit->id,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Save mqtt data switch unit history
+     *
+     * @table mqtt_data_switch_unit_history
+     *
+     * @return MqttListenerService
+     */
+    public function prepareSwitchUnitSwitches(): MqttListenerService
+    {
+        MqttStoreService::$mqttDataSwitchUnitHistory = [
+            'pond_id' => MqttStoreService::$pond->id,
+            'switch_unit_id' => self::$switchUnit->id,
+        ];
 
         return $this;
     }
