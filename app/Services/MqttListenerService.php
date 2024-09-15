@@ -41,7 +41,7 @@ class MqttListenerService
     /**
      * @var bool
      */
-    public static bool $isAlreadyPublished;
+    public static bool $isAlreadyPublished = false;
 
     /**
      * @var Builder|SwitchUnit
