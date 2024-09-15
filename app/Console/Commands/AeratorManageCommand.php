@@ -58,7 +58,7 @@ class AeratorManageCommand extends Command
                         ->with('mqttData:id,publish_topic,publish_message,project_id,original_data,data');
                 }
             ])
-            //->whereNotNull('run_status_updated_at')
+            ->whereNotNull('run_status_updated_at')
             ->get();
 
         foreach ($switchUnits as $switchUnit) {
@@ -72,11 +72,6 @@ class AeratorManageCommand extends Command
 
             try {
                 DB::beginTransaction();
-                if (!$runStatusUpdatedAt) {
-                    $runStatusUpdatedAt = now();
-                    $switchUnit->run_status_updated_at = $runStatusUpdatedAt;
-                    $switchUnit->save();
-                }
 
                 if ($runStatus === 'on' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOffAfter) {
                     Log::channel('aerator_status')->info('When run status on and offAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
