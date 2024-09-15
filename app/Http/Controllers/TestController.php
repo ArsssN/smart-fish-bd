@@ -65,7 +65,14 @@ class TestController extends Controller
                     ?->convertDOValue()
                     ?->prepareData();
 
-                dd($preparedData);
+                dump($preparedData);
+
+                MqttStoreService::init($topic, $mqttListenerService::$mqttData, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
+                    ->mqttDataSave()
+                    ->mqttDataHistoriesSave()
+                    ->mqttDataSwitchUnitHistorySave()
+                    ->mqttDataSwitchUnitHistoryDetailsSave()
+                    ->switchUnitSwitchesStatusUpdate();
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());

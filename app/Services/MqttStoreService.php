@@ -36,6 +36,11 @@ class MqttStoreService
     public static Builder|MqttData $newMqttDataBuilder;
 
     /**
+     * @var Builder|MqttDataSwitchUnitHistory
+     */
+    public static Builder|MqttDataSwitchUnitHistory $newSwitchUnitHistory;
+
+    /**
      * Here we have:
      *  - sensor unit
      *      - sensor types array
@@ -148,13 +153,10 @@ class MqttStoreService
      */
     public static function mqttDataHistoriesSave(): MqttStoreService
     {
-        self::$relayArr = array_fill(0, 12, 0);
+        self::$newMqttDataBuilder->histories()->createMany(self::$mqttDataHistory);
 
-        self::$sensorUnit->sensorTypes->each(function ($sensorType) {
-            self::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
-        });
-
-        return self::mqttDataPublishMessageUpdate();
+        // self::mqttDataPublishMessageUpdate();
+        return new self();
     }
 
     /**
@@ -234,14 +236,21 @@ class MqttStoreService
      */
     public static function mqttDataSwitchUnitHistorySave(): MqttStoreService
     {
-        // TODO: use MqttStoreService::$pond
-        self::$switchUnit->ponds->each(function ($pond) {
-            self::$mqttDataSwitchUnitHistory[] = MqttDataSwitchUnitHistory::query()->create([
-                'mqtt_data_id' => self::$newMqttDataBuilder->id,
-                'pond_id' => $pond->id,
-                'switch_unit_id' => self::$switchUnit->id,
-            ]);
-        });
+        self::$newSwitchUnitHistory = self::$newMqttDataBuilder->switchUnitHistory()->createMany(self::$mqttDataSwitchUnitHistory);
+
+        return new self();
+    }
+
+    /**
+     * Save mqtt data switch unit history
+     *
+     * @table mqtt_data_switch_unit_history_details
+     *
+     * @return MqttStoreService
+     */
+    public static function mqttDataSwitchUnitHistoryDetailsSave(): MqttStoreService
+    {
+        self::$newSwitchUnitHistory->switchUnitHistoryDetails()->createMany(self::$historyDetails);
 
         return new self();
     }
@@ -249,29 +258,11 @@ class MqttStoreService
     /**
      * @return void
      */
-    public static function switchUnitSwitchesStatusUpdate()
+    public static function switchUnitSwitchesStatusUpdate(): void
     {
-        self::$sensorUnit->ponds->each(function ($pond) {
-            $pond->switchUnits->each(function ($switchUnit) {
-                $mqttDataSwitchUnitHistories = [];
-                $switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch) use ($switchUnit) {
-                    $switchUnitSwitch->update([
-                        'status' => self::$relayArr[$switchUnitSwitch->number - 1] == 1 ? 'on' : 'off',
-                    ]);
-
-                    $mqttDataSwitchUnitHistories[] = [
-                        'mqtt_data_id' => self::$mqttData->id,
-                        'pond_id' => $switchUnit->pivot->pond_id,
-                        'switch_unit_id' => $switchUnit->id,
-                        //'switches' => json_encode($switches),
-                        'switches' => json_encode(collect()),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                });
-
-                $switchUnit->switchUnitSwitchHistories()->createMany($mqttDataSwitchUnitHistories);
-            });
+        self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) {
+            $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
+            $switchUnitSwitch->save();
         });
     }
 }
