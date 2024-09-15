@@ -25,11 +25,11 @@ return new class extends Migration
 
         // Check and add columns to switch_units table if they don't exist
         Schema::table('switch_units', function (Blueprint $table) {
-            if (!Schema::hasColumn('switch_units', 'run_status')) {
-                $table->enum('run_status', ['on', 'off'])->default('on')->comment('Switch status for running the switch');
-            }
             if (!Schema::hasColumn('switch_units', 'run_status_updated_at')) {
-                $table->timestamp('run_status_updated_at')->nullable()->comment('Switch status updated at');
+                $table->timestamp('run_status_updated_at')->after('status')->nullable()->comment('Switch status updated at');
+            }
+            if (!Schema::hasColumn('switch_units', 'run_status')) {
+                $table->enum('run_status', ['on', 'off'])->after('status')->default('on')->comment('Switch status for running the switch');
             }
         });
     }
@@ -43,11 +43,11 @@ return new class extends Migration
     {
         // Check and add columns back to switch_unit_switches table if they don't exist
         Schema::table('switch_unit_switches', function (Blueprint $table) {
-            if (!Schema::hasColumn('switch_unit_switches', 'run_status')) {
-                $table->enum('run_status', ['on', 'off'])->default('on')->comment('Switch status for running the switch');
-            }
             if (!Schema::hasColumn('switch_unit_switches', 'run_status_updated_at')) {
-                $table->timestamp('run_status_updated_at')->nullable()->comment('Switch status updated at');
+                $table->timestamp('run_status_updated_at')->after('status')->nullable()->comment('Switch status updated at');
+            }
+            if (!Schema::hasColumn('switch_unit_switches', 'run_status')) {
+                $table->enum('run_status', ['on', 'off'])->after('status')->default('on')->comment('Switch status for running the switch');
             }
         });
 
