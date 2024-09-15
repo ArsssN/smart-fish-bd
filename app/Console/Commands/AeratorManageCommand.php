@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Pond;
 use App\Models\SwitchUnit;
 use App\Services\MqttStoreService;
 use App\Services\MqttPublishService;
@@ -65,8 +66,11 @@ class AeratorManageCommand extends Command
             $runStatus = $switchUnit->run_status;
             $runStatusUpdatedAt = $switchUnit->run_status_updated_at;
 
+            /** @var Pond $pond */
+            $pond = $switchUnit->ponds->firstOrFail();
+
             MqttStoreService::$mqttDataSwitchUnitHistory = [
-                'pond_id' => $switchUnit->ponds->firstOrFail()?->id,
+                'pond_id' => $pond->id,
                 'switch_unit_id' => $switchUnit->id,
             ];
 
