@@ -50,21 +50,34 @@ class AeratorManageCommand extends Command
         $switchUnits = SwitchUnit::query()
             ->select('id', 'run_status', 'run_status_updated_at')
             ->whereRelation('ponds', 'status', 'active')
-            ->with(['switchUnitSwitches:id,switch_unit_id,switchType,status',
+            ->with([
+                'switchUnitSwitches:id,number,switch_unit_id,switchType,status,comment',
+                'ponds:id',
                 'history' => function ($query) {
                     $query->select('id', 'mqtt_data_id', 'switch_unit_id')
                         ->with('mqttData:id,publish_topic,publish_message,project_id,original_data,data');
                 }
             ])
-            ->whereNotNull('run_status_updated_at')
+            //->whereNotNull('run_status_updated_at')
             ->get();
 
         foreach ($switchUnits as $switchUnit) {
             $runStatus = $switchUnit->run_status;
             $runStatusUpdatedAt = $switchUnit->run_status_updated_at;
 
+            MqttStoreService::$mqttDataSwitchUnitHistory = [
+                'pond_id' => $switchUnit->ponds->firstOrFail()?->id,
+                'switch_unit_id' => $switchUnit->id,
+            ];
+
             try {
                 DB::beginTransaction();
+                if (!$runStatusUpdatedAt) {
+                    $runStatusUpdatedAt = now();
+                    $switchUnit->run_status_updated_at = $runStatusUpdatedAt;
+                    $switchUnit->save();
+                }
+
                 if ($runStatus === 'on' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOffAfter) {
                     Log::channel('aerator_status')->info('When run status on and offAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
                     $switchUnit->update([
@@ -97,8 +110,8 @@ class AeratorManageCommand extends Command
                      */
                     MqttStoreService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
                         ->mqttDataSave()
-                        ->mqttDataSwitchUnitHistorySave();
-
+                        ->mqttDataSwitchUnitHistorySave()
+                        ->mqttDataSwitchUnitHistoryDetailsSave();
                 } else if ($runStatus === 'off' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOnAfter) {
                     Log::channel('aerator_status')->info('When run status off and onAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
                     $switchUnit->update([
@@ -139,5 +152,4 @@ class AeratorManageCommand extends Command
         }
         return implode('', $relay);
     }
-
 }
