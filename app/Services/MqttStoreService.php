@@ -8,7 +8,6 @@ use App\Models\Pond;
 use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use stdClass;
 
 class MqttStoreService
@@ -118,6 +117,7 @@ class MqttStoreService
      */
     public static function mqttDataSave(): MqttStoreService
     {
+        /** @var MqttData $newMqttData */
         $newMqttData = MqttData::query()->create([
             'type' => self::$mqttDataArr['type'],
             'project_id' => self::$mqttDataArr['project_id'],
