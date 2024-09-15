@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\SwitchUnit;
-use App\Services\MqttHistoryDataService;
+use App\Services\MqttStoreService;
 use App\Services\MqttPublishService;
 use Exception;
 use Illuminate\Console\Command;
@@ -87,7 +87,7 @@ class AeratorManageCommand extends Command
                     MqttPublishService::init($publishTopic, $relay, $publishMessage->addr, $previousRelay)->relayPublish();
 
                     // mqtt data and history data save
-                    MqttHistoryDataService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
+                    MqttStoreService::init($publishTopic, $mqttData, $switchUnit, $historyDetails)
                         ->mqttDataSave()
                         ->mqttDataSwitchUnitHistorySave();
 

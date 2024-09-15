@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\MqttCommandController;
 use App\Models\MqttData;
-use App\Services\MqttHistoryDataService;
+use App\Services\MqttStoreService;
 use App\Services\MqttListenerService;
 use App\Services\MqttPublishService;
 use Exception;
@@ -102,14 +102,15 @@ class MqttListener extends Command
                 echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
 
                 try {
-                    (new MqttListenerService($topic, $message))->republishLastResponse()
+                    (new MqttListenerService($topic, $message))
+                        ->republishLastResponse()
                         ?->convertDOValue()
-                        ?->prepareDataSave();
+                        ?->prepareMqttData();
 
                     MqttPublishService::relayPublish();
 
                     // TODO: $historyDetails is not defined
-                    MqttHistoryDataService::init($this->topic, MqttListenerService::$mqttData, MqttListenerService::$switchUnit, MqttListenerService::$historyDetails)
+                    MqttStoreService::init($this->topic, MqttListenerService::$mqttData, MqttListenerService::$switchUnit, MqttListenerService::$historyDetails)
                         ->mqttDataSave()
                         ->mqttDataHistoriesSave()
                         ->mqttDataSwitchUnitHistorySave()

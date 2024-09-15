@@ -170,7 +170,7 @@ class MqttListenerService
      */
     public function prepareData(): self
     {
-        $this->prepareMqttDataHistory()->prepareDataSave();
+        $this->prepareRelayAndMqttDataHistory()->prepareMqttData();
 
         return $this;
     }
@@ -178,12 +178,12 @@ class MqttListenerService
     /**
      * @return $this
      */
-    public function prepareMqttDataHistory(): MqttListenerService
+    public function prepareRelayAndMqttDataHistory(): MqttListenerService
     {
         $remoteNames = collect(self::$responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec(self::$responseMessage->addr);
 
-        MqttHistoryDataService::$sensorUnit = SensorUnit::query()
+        MqttStoreService::$sensorUnit = SensorUnit::query()
             ->where('serial_number', $serialNumber)
             ->with(['sensorTypes', 'ponds.project', 'ponds.switchUnits'])
             ->whereHas('sensorTypes', fn($q) => $q->whereIn('remote_name', $remoteNames))
@@ -193,11 +193,11 @@ class MqttListenerService
                 });
             })
             ->firstOrFail();
-        MqttHistoryDataService::$pond = MqttHistoryDataService::$sensorUnit->ponds->firstOrFail();
+        MqttStoreService::$pond = MqttStoreService::$sensorUnit->ponds->firstOrFail();
 
         self::$relayArr = array_fill(0, 12, 0);
 
-        MqttHistoryDataService::$sensorUnit->sensorTypes->each(function ($sensorType) {
+        MqttStoreService::$sensorUnit->sensorTypes->each(function ($sensorType) {
             if (!isset(self::$responseMessage->data->{$sensorType->remote_name})) {
                 return;
             }
@@ -223,9 +223,9 @@ class MqttListenerService
                 $typeMessage = implode(', ', $typeMessage);
             }
 
-            MqttHistoryDataService::$mqttDataHistory[] = [
-                'pond_id' => MqttHistoryDataService::$pond->id,
-                'sensor_unit_id' => MqttHistoryDataService::$sensorUnit->id,
+            MqttStoreService::$mqttDataHistory[] = [
+                'pond_id' => MqttStoreService::$pond->id,
+                'sensor_unit_id' => MqttStoreService::$sensorUnit->id,
                 'sensor_type_id' => $sensorType->id,
                 'value' => $value,
                 'message' => $typeMessage,
@@ -272,10 +272,10 @@ class MqttListenerService
      *
      * @return $this
      */
-    public function prepareDataSave(): self
+    public function prepareMqttData(): self
     {
         // considering the first switch unit
-        self::$switchUnit = MqttHistoryDataService::$pond->switchUnits->firstOrFail();
+        self::$switchUnit = MqttStoreService::$pond->switchUnits->firstOrFail();
 
         $addr = dechex((int)self::$switchUnit->serial_number);
         MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
@@ -283,7 +283,7 @@ class MqttListenerService
         MqttPublishService::setPublishMessage(implode('', self::$relayArr), 'relay');
 
         self::$mqttData = new MqttData();
-        self::$mqttData->project_id = MqttHistoryDataService::$pond->project->id;
+        self::$mqttData->project_id = MqttStoreService::$pond->project->id;
         self::$mqttData->data = json_encode(self::$responseMessage);
         self::$mqttData->data_source = 'mqtt';
         self::$mqttData->original_data = self::$originalMessage;

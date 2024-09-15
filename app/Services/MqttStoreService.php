@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use stdClass;
 
-class MqttHistoryDataService
+class MqttStoreService
 {
     /**
      * @var array
@@ -80,9 +80,9 @@ class MqttHistoryDataService
      * @param array $historyDetails
      * @param string $dataSource
      *
-     * @return MqttHistoryDataService
+     * @return MqttStoreService
      */
-    public static function init(string $publishTopic, Builder|MqttData|stdClass $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttHistoryDataService
+    public static function init(string $publishTopic, Builder|MqttData|stdClass $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttStoreService
     {
         self::$mqttData = [
             'type' => 'sensor',
@@ -108,7 +108,7 @@ class MqttHistoryDataService
      *
      * @return $this
      */
-    public static function mqttDataSave(): MqttHistoryDataService
+    public static function mqttDataSave(): MqttStoreService
     {
         $newMqttDataBuilder = MqttData::query()->create([
             'type' => self::$mqttData['type'],
@@ -128,9 +128,9 @@ class MqttHistoryDataService
     /**
      * Update relay
      *
-     * @return MqttHistoryDataService
+     * @return MqttStoreService
      */
-    public static function mqttDataPublishMessageUpdate(): MqttHistoryDataService
+    public static function mqttDataPublishMessageUpdate(): MqttStoreService
     {
         $relay = implode('', self::$relayArr);
         $publishMessage = json_decode(self::$newMqttDataBuilder->publish_message ?? '{}');
@@ -144,9 +144,9 @@ class MqttHistoryDataService
     /**
      * Save mqtt data history for all sensors
      *
-     * @return MqttHistoryDataService
+     * @return MqttStoreService
      */
-    public static function mqttDataHistoriesSave(): MqttHistoryDataService
+    public static function mqttDataHistoriesSave(): MqttStoreService
     {
         self::$relayArr = array_fill(0, 12, 0);
 
@@ -230,9 +230,9 @@ class MqttHistoryDataService
      *
      * @table mqtt_data_switch_unit_history
      *
-     * @return MqttHistoryDataService
+     * @return MqttStoreService
      */
-    public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
+    public static function mqttDataSwitchUnitHistorySave(): MqttStoreService
     {
         self::$switchUnit->ponds->each(function ($pond) {
             self::$mqttDataSwitchUnitHistory[] = MqttDataSwitchUnitHistory::query()->create([
