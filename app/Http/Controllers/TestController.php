@@ -45,7 +45,7 @@ class TestController extends Controller
     public function mqtt(): View|Factory|Application
     {
         $topic = request()->get('topic');
-        $responseMessage = json_decode(json_encode(request()->except('topic')));
+        $responseMessage = json_decode(json_encode(request()->except('topic', 'currentTime')));
         $currentTime = request()->get('currentTime') ?? now()->format('H:i');
 
         $autoFill = json_decode('{
@@ -76,7 +76,7 @@ class TestController extends Controller
                 $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
                 $preparedData = $mqttListenerService
                     ->setUpdate($isUpdate)
-                    ->setTestMode()
+                    ->setTestMode(false)
                     ->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
@@ -103,8 +103,7 @@ class TestController extends Controller
         }
 
         $publishMessage = MqttListenerService::$publishMessage;
-        $previousRelay = MqttListenerService::$previousRelay;
-        $isAlreadyPublished = $publishMessage['relay'] === $previousRelay;
+        $isAlreadyPublished = MqttListenerService::$isAlreadyPublished;
 
         return view(
             'test.mqtt',

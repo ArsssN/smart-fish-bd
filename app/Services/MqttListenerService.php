@@ -39,6 +39,11 @@ class MqttListenerService
     public static string $previousRelay;
 
     /**
+     * @var bool
+     */
+    public static bool $isAlreadyPublished;
+
+    /**
      * @var Builder|SwitchUnit
      */
     public static Builder|SwitchUnit $switchUnit;
@@ -335,6 +340,8 @@ class MqttListenerService
             ->first();
 
         self::$previousRelay = (json_decode(self::$previousMqttData->publish_message, true)['relay'] ?? '');
+
+        self::$isAlreadyPublished = self::$publishMessage['relay'] === self::$previousRelay;
 
         return $this;
     }
