@@ -236,7 +236,7 @@ class MqttStoreService
      */
     public static function mqttDataSwitchUnitHistorySave(): MqttStoreService
     {
-        self::$newSwitchUnitHistory = self::$newMqttDataBuilder->switchUnitHistory()->createMany(self::$mqttDataSwitchUnitHistory);
+        self::$newSwitchUnitHistory = self::$newMqttDataBuilder->switchUnitHistory()->create(self::$mqttDataSwitchUnitHistory);
 
         return new self();
     }

@@ -175,8 +175,10 @@ class MqttListenerService
             ->prepareMqttDataSwitchUnitHistory()
             ->prepareMqttDataSwitchUnitHistoryDetails();
 
+        MqttStoreService::$relayArr = self::$relayArr;
+
         return [
-            'relayArr' => self::$relayArr,
+            'relayArr' => MqttStoreService::$relayArr,
             'mqttData' => self::$mqttData->toArray(),
             'mqttDataHistory' => MqttStoreService::$mqttDataHistory,
             'mqttDataSwitchUnitHistory' => MqttStoreService::$mqttDataSwitchUnitHistory,
@@ -334,23 +336,6 @@ class MqttListenerService
      * @return MqttListenerService
      */
     public function prepareMqttDataSwitchUnitHistory(): MqttListenerService
-    {
-        MqttStoreService::$mqttDataSwitchUnitHistory = [
-            'pond_id' => MqttStoreService::$pond->id,
-            'switch_unit_id' => self::$switchUnit->id,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * Save mqtt data switch unit history
-     *
-     * @table mqtt_data_switch_unit_history
-     *
-     * @return MqttListenerService
-     */
-    public function prepareSwitchUnitSwitches(): MqttListenerService
     {
         MqttStoreService::$mqttDataSwitchUnitHistory = [
             'pond_id' => MqttStoreService::$pond->id,

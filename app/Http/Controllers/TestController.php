@@ -11,12 +11,19 @@ use App\Models\Sensor;
 use App\Models\SwitchUnitSwitch;
 use App\Models\User;
 use App\Services\MqttListenerService;
+use App\Services\MqttPublishService;
 use App\Services\MqttStoreService;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class TestController extends Controller
 {
@@ -26,8 +33,16 @@ class TestController extends Controller
         return view('test.home');
     }
 
-    //mqtt
-    public function mqtt()
+
+    /**
+     * mqtt
+     *
+     * @return Application|Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
+     */
+    public function mqtt(): View|Factory|Application
     {
         $topic = request()->get('topic');
         $responseMessage = json_decode(json_encode(request()->except('topic')));
@@ -55,7 +70,9 @@ class TestController extends Controller
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
 
+
         try {
+            DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
                 $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
                 $preparedData = $mqttListenerService
@@ -66,7 +83,6 @@ class TestController extends Controller
                     ?->prepareData();
 
                 dump($preparedData);
-
                 MqttStoreService::init($topic, $mqttListenerService::$mqttData, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
                     ->mqttDataSave()
                     ->mqttDataHistoriesSave()
@@ -74,11 +90,14 @@ class TestController extends Controller
                     ->mqttDataSwitchUnitHistoryDetailsSave()
                     ->switchUnitSwitchesStatusUpdate();
             }
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
+            throw $e;
         }
 
-        $publishMessage = MqttCommandController::$feedBackArray;
+        $publishMessage = MqttPublishService::getPublishMessage();
         $isAlreadyPublished = MqttCommandController::$isAlreadyPublished;
 
         return view(
