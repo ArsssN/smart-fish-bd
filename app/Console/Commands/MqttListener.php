@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\MqttCommandController;
-use App\Models\MqttData;
 use App\Services\MqttStoreService;
 use App\Services\MqttListenerService;
 use App\Services\MqttPublishService;
@@ -89,7 +87,7 @@ class MqttListener extends Command
                         ?->convertDOValue()
                         ?->prepareData();
 
-                    if ($mqttListenerService::$switchUnit?->run_status == 'off') {
+                    if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
                         Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
                         return;
                     }
