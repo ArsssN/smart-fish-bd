@@ -16,7 +16,7 @@ class MqttStoreService
     /**
      * @var array
      */
-    public static array $mqttData = [
+    public static array $mqttDataArr = [
         'type' => 'sensor',
         'project_id' => '',
         'data' => '',
@@ -67,7 +67,8 @@ class MqttStoreService
     public static Builder|Pond $pond;
 
     /**
-     * Mqtt data switch unit history details
+     * Mqtt data switch unit history details.
+     * AKA: $mqttDataSwitchUnitHistoryDetails array
      *
      * @var array
      */
@@ -89,7 +90,7 @@ class MqttStoreService
      */
     public static function init(string $publishTopic, Builder|MqttData|stdClass $mqttData, Builder|SwitchUnit $switchUnit, array $historyDetails, string $dataSource = 'scheduler'): MqttStoreService
     {
-        self::$mqttData = [
+        self::$mqttDataArr = [
             'type' => 'sensor',
             'project_id' => $mqttData->project_id,
             'data' => $mqttData->data,
@@ -115,33 +116,19 @@ class MqttStoreService
      */
     public static function mqttDataSave(): MqttStoreService
     {
-        $newMqttDataBuilder = MqttData::query()->create([
-            'type' => self::$mqttData['type'],
-            'project_id' => self::$mqttData['project_id'],
-            'data' => self::$mqttData['data'],
-            'data_source' => self::$mqttData['data_source'],
-            'original_data' => self::$mqttData['original_data'],
-            'publish_message' => self::$mqttData['publish_message'],
-            'publish_topic' => self::$mqttData['publish_topic'],
+        $newMqttData = MqttData::query()->create([
+            'type' => self::$mqttDataArr['type'],
+            'project_id' => self::$mqttDataArr['project_id'],
+            'data' => self::$mqttDataArr['data'],
+            'data_source' => self::$mqttDataArr['data_source'],
+            'original_data' => self::$mqttDataArr['original_data'],
+            'publish_message' => self::$mqttDataArr['publish_message'],
+            'publish_topic' => self::$mqttDataArr['publish_topic'],
         ]);
 
-        self::$newMqttDataBuilder = $newMqttDataBuilder->with('project.ponds.sensorUnits.sensorTypes')->find($newMqttDataBuilder->id);
-
-        return new self();
-    }
-
-    /**
-     * Update relay
-     *
-     * @return MqttStoreService
-     */
-    public static function mqttDataPublishMessageUpdate(): MqttStoreService
-    {
-        $relay = implode('', self::$relayArr);
-        $publishMessage = json_decode(self::$newMqttDataBuilder->publish_message ?? '{}');
-        $publishMessage->relay = $relay;
-        self::$newMqttDataBuilder->publish_message = json_encode($publishMessage);
-        self::$newMqttDataBuilder->save();
+        self::$newMqttDataBuilder = $newMqttData
+            ->with('project.ponds.sensorUnits.sensorTypes')
+            ->find($newMqttData->id);
 
         return new self();
     }
@@ -155,76 +142,7 @@ class MqttStoreService
     {
         self::$newMqttDataBuilder->histories()->createMany(self::$mqttDataHistory);
 
-        // self::mqttDataPublishMessageUpdate();
         return new self();
-    }
-
-    /**
-     * Save mqtt data history
-     *
-     * @table mqtt_data_history
-     *
-     * @param $sensorType
-     * @param $sensorUnit
-     * @param $responseMessage
-     * @param $relayArr
-     *
-     * @return void
-     */
-    public static function mqttDataHistorySave($sensorType, $sensorUnit, $responseMessage, &$relayArr): void
-    {
-        if (!isset($responseMessage->data->{$sensorType->remote_name})) {
-            return;
-        }
-
-        self::$sensorUnit = $sensorUnit ?? self::$sensorUnit;
-
-        $sensorMessage = self::getSensorMessage($sensorType, $value = $responseMessage->data->{$sensorType->remote_name}, $relayArr);
-
-        // Save mqtt data history
-        $histories = [];
-        self::$sensorUnit->ponds->each(function ($pond) use ($sensorType, $value, $sensorMessage, &$histories) {
-            $histories[] = [
-                'pond_id' => $pond->id,
-                "sensor_unit_id" => self::$sensorUnit->id,
-                "sensor_type_id" => $sensorType->id,
-                'value' => $value,
-                'type' => 'sensor',
-                'message' => $sensorMessage,
-            ];
-        });
-        self::$newMqttDataBuilder->histories()->createMany($histories);
-    }
-
-    /**
-     * @param $sensorType
-     * @param $value
-     * @param $relayArr
-     * @return string
-     */
-    private static function getSensorMessage($sensorType, $value, &$relayArr): string
-    {
-        $typeName = Str::replace(' ', '', $sensorType->name);
-        $helperMethodName = "get{$typeName}Update";
-
-        $sensorMessage = "No helper method found for sensor: $sensorType->name";
-        if (function_exists($helperMethodName)) {
-            $sensorMessage = ($helperMethodName(
-                $value,
-            ));
-        }
-        // if array
-        if (is_array($sensorMessage)) {
-            $relayArr = $sensorType->can_switch_sensor
-                ? mergeSwitchArray(
-                    $sensorMessage,
-                    $relayArr
-                ) : $relayArr;
-
-            $sensorMessage = implode(', ', $sensorMessage);
-        }
-
-        return $sensorMessage;
     }
 
     /**

@@ -70,7 +70,6 @@ class TestController extends Controller
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
 
-
         try {
             DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
@@ -83,7 +82,7 @@ class TestController extends Controller
                     ?->prepareData();
 
                 dump($preparedData);
-                MqttStoreService::init($topic, $mqttListenerService::$mqttData, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
+                MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
                     ->mqttDataSave()
                     ->mqttDataHistoriesSave()
                     ->mqttDataSwitchUnitHistorySave()

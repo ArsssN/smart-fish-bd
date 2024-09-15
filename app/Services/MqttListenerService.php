@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Console\Commands\MqttListener;
 use App\Models\MqttData;
 use App\Models\Project;
 use App\Models\SensorUnit;
@@ -22,12 +21,12 @@ class MqttListenerService
     /**
      * @var string $switchUnitStatus - switch unit status
      */
-    private static mixed $switchUnitStatus = 'active';
+    private static string $switchUnitStatus = 'active';
 
     /**
-     * @var MqttData|Model|Builder $mqttData - mqtt data
+     * @var MqttData|Model|Builder $mqttDataInstance - mqtt data
      */
-    public static MqttData|Model|Builder $mqttData;
+    public static MqttData|Model|Builder $mqttDataInstance;
 
     /**
      * @var Builder|SwitchUnit
@@ -35,7 +34,8 @@ class MqttListenerService
     public static Builder|SwitchUnit $switchUnit;
 
     /**
-     * Mqtt data switch unit history details
+     * Mqtt data switch unit history details.
+     * AKA: $mqttDataSwitchUnitHistoryDetails array
      *
      * @var array
      */
@@ -72,7 +72,7 @@ class MqttListenerService
      *
      * @var string
      */
-    protected static string $topic;
+    public static string $topic;
 
     /**
      * The flag to check if the message is an update.
@@ -179,7 +179,7 @@ class MqttListenerService
 
         return [
             'relayArr' => MqttStoreService::$relayArr,
-            'mqttData' => self::$mqttData->toArray(),
+            'mqttData' => self::$mqttDataInstance->toArray(),
             'mqttDataHistory' => MqttStoreService::$mqttDataHistory,
             'mqttDataSwitchUnitHistory' => MqttStoreService::$mqttDataSwitchUnitHistory,
             'mqttDataSwitchUnitHistoryDetails' => self::$historyDetails,
@@ -190,6 +190,14 @@ class MqttListenerService
      * @return $this
      */
     public function prepareRelayAndMqttDataHistory(): MqttListenerService
+    {
+        return $this->setSensorUnitAndPond()->setRelayAndMqttDataHistory();
+    }
+
+    /**
+     * @return MqttListenerService
+     */
+    private function setSensorUnitAndPond(): MqttListenerService
     {
         $remoteNames = collect(self::$responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec(self::$responseMessage->addr);
@@ -206,6 +214,14 @@ class MqttListenerService
             ->firstOrFail();
         MqttStoreService::$pond = MqttStoreService::$sensorUnit->ponds->firstOrFail();
 
+        return $this;
+    }
+
+    /**
+     * @return MqttListenerService
+     */
+    private function setRelayAndMqttDataHistory(): MqttListenerService
+    {
         self::$relayArr = array_fill(0, 12, 0);
 
         MqttStoreService::$sensorUnit->sensorTypes->each(function ($sensorType) {
@@ -247,37 +263,6 @@ class MqttListenerService
     }
 
     /**
-     * @param $sensorType
-     * @param $value
-     * @param $relayArr
-     * @return string
-     */
-    private static function getSensorMessage($sensorType, $value, &$relayArr): string
-    {
-        $typeName = Str::replace(' ', '', $sensorType->name);
-        $helperMethodName = "get{$typeName}Update";
-
-        $sensorMessage = "No helper method found for sensor: $sensorType->name";
-        if (function_exists($helperMethodName)) {
-            $sensorMessage = ($helperMethodName(
-                $value,
-            ));
-        }
-        // if array
-        if (is_array($sensorMessage)) {
-            $relayArr = $sensorType->can_switch_sensor
-                ? mergeSwitchArray(
-                    $sensorMessage,
-                    $relayArr
-                ) : $relayArr;
-
-            $sensorMessage = implode(', ', $sensorMessage);
-        }
-
-        return $sensorMessage;
-    }
-
-    /**
      * gw_id is gateway_serial_number
      * addr is serial_number
      *
@@ -293,13 +278,13 @@ class MqttListenerService
         MqttPublishService::setPublishMessage('sw', 'type');
         MqttPublishService::setPublishMessage(implode('', self::$relayArr), 'relay');
 
-        self::$mqttData = new MqttData();
-        self::$mqttData->project_id = MqttStoreService::$pond->project->id;
-        self::$mqttData->data = json_encode(self::$responseMessage);
-        self::$mqttData->data_source = 'mqtt';
-        self::$mqttData->original_data = self::$originalMessage;
-        self::$mqttData->publish_message = json_encode(MqttPublishService::getPublishMessage());
-        self::$mqttData->publish_topic = self::$topic;
+        self::$mqttDataInstance = new MqttData();
+        self::$mqttDataInstance->project_id = MqttStoreService::$pond->project->id;
+        self::$mqttDataInstance->data = json_encode(self::$responseMessage);
+        self::$mqttDataInstance->data_source = 'mqtt';
+        self::$mqttDataInstance->original_data = self::$originalMessage;
+        self::$mqttDataInstance->publish_message = json_encode(MqttPublishService::getPublishMessage());
+        self::$mqttDataInstance->publish_topic = self::$topic;
         self::$historyDetails = [];
 
         self::$switchUnitStatus = self::$switchUnit->status;
