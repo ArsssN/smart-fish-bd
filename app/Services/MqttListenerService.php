@@ -393,11 +393,13 @@ class MqttListenerService
     }
 
     /**
+     * Save if the mqtt data is savable and is not same as the previous one.
+     *
      * @return bool
      */
     public static function checkIfSavable(): bool
     {
-        return self::$isSaveMqttData;
+        return self::$isSaveMqttData && !self::$isAlreadyPublished;
     }
 
     /**
