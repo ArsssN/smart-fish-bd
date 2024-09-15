@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Console\Commands\__MqttListener;
-use App\Console\Commands\MqttListener;
 use App\Models\MqttData;
 use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
@@ -91,10 +89,8 @@ class MqttCommandController extends Controller
         if (self::$isSaveMqttData) {
             $mqttData = $mqttData->create([
                 'type' => $type,
-                'data_source' => 'mqtt',
                 'project_id' => $projectID,
                 'data' => json_encode($responseMessage),
-                'original_data' => MqttListener::getOriginalMessage(),
                 'publish_topic' => $topic,
                 'publish_message' => json_encode([
                     'addr' => $responseMessage->addr,
@@ -113,13 +109,11 @@ class MqttCommandController extends Controller
                 }
             );
 
-        $runTimeSwitchState = $switchState;
-
         if (self::$isSaveMqttData) {
-            self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState, $runTimeSwitchState);
+            self::changeSwitchStateOfSensorUnit($typeUnit->ponds, $switchState);
         }
 
-        self::$feedBackArray['relay'] = implode('', $runTimeSwitchState);
+        self::$feedBackArray['relay'] = implode('', $switchState);
 
         // Confirms if the relay is empty or null, if empty or null then set it to 000000000000
         if (!(bool)self::$feedBackArray['relay']) {
@@ -194,59 +188,35 @@ class MqttCommandController extends Controller
     /**
      * @param $ponds
      * @param $switchState
-     * @param $runTimeSwitchState
      *
      * @return void
      */
-    private static function changeSwitchStateOfSensorUnit($ponds, $switchState, &$runTimeSwitchState): void
+    private static function changeSwitchStateOfSensorUnit($ponds, $switchState): void
     {
-        $ponds->each(function ($pond) use ($switchState, &$runTimeSwitchState) {
+        $ponds->each(function ($pond) use ($switchState) {
             $mqttDataSwitchUnitHistories = [];
             $pond->switchUnits->each(
                 function ($switchUnit)
-                use ($switchState, &$mqttDataSwitchUnitHistories, &$runTimeSwitchState) {
-                    $switchUnitSwitches = collect($switchUnit->switchUnitSwitches ?? '[]');
-                    $switchUnitSwitches = $switchUnitSwitches->map(function ($switch, $index) use ($switchState) {
-                        if ($switch->run_status === 'on') {
-                            if ($switchState[$index] && $switch['status'] === 'off') {
-                                $switch['run_status_updated_at'] = now();
-                            }
-
-                            $switch['status'] = $switchState[$index]
-                                ? 'on'
-                                : 'off';
-                        }
+                use ($switchState, &$mqttDataSwitchUnitHistories
+                ) {
+                    $switches = collect($switchUnit->switches ?? '[]');
+                    $switches = $switches->map(function ($switch, $index) use ($switchState) {
+                        $switch['status'] = $switchState[$index]
+                            ? 'on'
+                            : 'off';
 
                         return $switch;
                     });
 
-                    $switchUnitSwitches->each(
-                        function ($switch, $index) use ($switchUnit, &$runTimeSwitchState) {
-                            $switchUnit->switchUnitSwitches()
-                                ->where([
-                                    'number' => $index + 1,
-                                    'switchType' => $switch['switchType'],
-                                ])
-                                ->update(
-                                    [
-                                        'status' => $switch['status'],
-                                        'run_status_updated_at' => $switch['run_status_updated_at'] ?? null,
-                                    ]
-                                );
-
-                            $runTimeSwitchState[$index] = $switch['status'] === 'on' ? 1 : 0;
-                        }
-                    );
+                    $switchUnit->switches = $switches->toArray();
+                    $switchUnit->save();
 
                     if (self::$mqttData->id) {
-                        // get updated switches
-                        $switchUnitSwitches = $switchUnit->switchUnitSwitches()->get();
-
                         $mqttDataSwitchUnitHistory = [
                             'mqtt_data_id' => self::$mqttData->id,
                             'pond_id' => $switchUnit->pivot->pond_id,
                             'switch_unit_id' => $switchUnit->id,
-                            //'switches' => json_encode($switchUnitSwitches),
+                            //'switches' => json_encode($switches),
                             'switches' => json_encode(collect()),
                             'created_at' => now(),
                             'updated_at' => now(),
@@ -254,8 +224,9 @@ class MqttCommandController extends Controller
 
                         $mqttDataSwitchUnitHistories[] = $mqttDataSwitchUnitHistory;
                         $newMqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create($mqttDataSwitchUnitHistory);
+                        //dd($newMqttDataSwitchUnitHistory, $switches);
 
-                        foreach ($switchUnitSwitches as $switchDetail) {
+                        foreach ($switchUnit->switches as $switchDetail) {
                             $detail = [
                                 'history_id' => $newMqttDataSwitchUnitHistory->id,
                                 'number' => $switchDetail['number'],

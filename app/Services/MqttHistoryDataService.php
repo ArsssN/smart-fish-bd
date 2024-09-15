@@ -36,6 +36,11 @@ class MqttHistoryDataService
     public static Builder|SwitchUnit $switchUnit;
 
     /**
+     * @var Builder|MqttDataSwitchUnitHistory
+     */
+    public static Builder|MqttDataSwitchUnitHistory $mqttDataSwitchUnitHistory;
+
+    /**
      * @var Builder|SensorUnit
      */
     public static Builder|SensorUnit $sensorUnit;
@@ -127,8 +132,8 @@ class MqttHistoryDataService
     {
         self::$relayArr = array_fill(0, 12, 0);
 
-        MqttHistoryDataService::$sensorUnit->sensorTypes->each(function ($sensorType) {
-            MqttHistoryDataService::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
+        self::$sensorUnit->sensorTypes->each(function ($sensorType) {
+            self::mqttDataHistorySave($sensorType, null, MqttListenerService::$responseMessage, self::$relayArr);
         });
 
         return self::mqttDataPublishMessageUpdate();
@@ -212,13 +217,11 @@ class MqttHistoryDataService
     public static function mqttDataSwitchUnitHistorySave(): MqttHistoryDataService
     {
         self::$switchUnit->ponds->each(function ($pond) {
-            $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
+            self::$mqttDataSwitchUnitHistory[] = MqttDataSwitchUnitHistory::query()->create([
                 'mqtt_data_id' => self::$newMqttDataBuilder->id,
                 'pond_id' => $pond->id,
                 'switch_unit_id' => self::$switchUnit->id,
             ]);
-
-            $mqttDataSwitchUnitHistory?->switchUnitHistoryDetails()->createMany(self::$historyDetails);
         });
 
         return new self();
@@ -229,6 +232,27 @@ class MqttHistoryDataService
      */
     public static function switchUnitSwitchesStatusUpdate()
     {
-        //TODO: Implement this method
+        self::$sensorUnit->ponds->each(function ($pond) {
+            $pond->switchUnits->each(function ($switchUnit) {
+                $mqttDataSwitchUnitHistories = [];
+                $switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch) use ($switchUnit) {
+                    $switchUnitSwitch->update([
+                        'status' => self::$relayArr[$switchUnitSwitch->number - 1] == 1 ? 'on' : 'off',
+                    ]);
+
+                    $mqttDataSwitchUnitHistories[] = [
+                        'mqtt_data_id' => self::$mqttData->id,
+                        'pond_id' => $switchUnit->pivot->pond_id,
+                        'switch_unit_id' => $switchUnit->id,
+                        //'switches' => json_encode($switches),
+                        'switches' => json_encode(collect()),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                });
+
+                $switchUnit->switchUnitSwitchHistories()->createMany($mqttDataSwitchUnitHistories);
+            });
+        });
     }
 }

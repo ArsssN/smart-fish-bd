@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Console\Commands\__MqttListener;
 use App\Console\Commands\MqttListener;
 use App\Models\MqttData;
 use App\Models\Project;
@@ -12,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use stdClass;
 
 class MqttListenerService
 {
@@ -182,13 +180,6 @@ class MqttListenerService
 
         $addr = dechex((int)self::$switchUnit->serial_number);
         MqttPublishService::setPublishMessage(Str::startsWith($addr, '0x') ? $addr : '0x' . $addr, 'addr');
-
-        // MqttPublishService::setPublishMessage(implode('', $relayArr), 'relay');
-
-        // MqttHistoryDataService::$mqttData;
-        // MqttHistoryDataService::$switchUnit = $switchUnit;
-        // MqttHistoryDataService::$historyDetails;
-        // MqttHistoryDataService::$newMqttDataBuilder = MqttData::query();
 
         self::$mqttData = MqttData::query();
         self::$mqttData->project_id = $project->id;
