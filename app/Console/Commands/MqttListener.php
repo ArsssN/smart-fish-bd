@@ -9,6 +9,7 @@ use App\Services\MqttListenerService;
 use App\Services\MqttPublishService;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PhpMqtt\Client\Exceptions\DataTransferException;
@@ -102,6 +103,7 @@ class MqttListener extends Command
                 echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
 
                 try {
+                    DB::beginTransaction();
                     (new MqttListenerService($topic, $message))
                         ->republishLastResponse()
                         ?->convertDOValue()
@@ -115,7 +117,9 @@ class MqttListener extends Command
                         ->mqttDataHistoriesSave()
                         ->mqttDataSwitchUnitHistorySave()
                         ->switchUnitSwitchesStatusUpdate();
+                    DB::commit();
                 } catch (Exception $e) {
+                    DB::rollBack();
                     Log::error($e->getMessage());
                     echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
                 }
