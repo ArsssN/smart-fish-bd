@@ -427,6 +427,14 @@ class MqttListenerService
     }
 
     /**
+     * @return bool
+     */
+    public function getTestMode(): bool
+    {
+        return $this->isTest;
+    }
+
+    /**
      * @return $this
      */
     public function setUpdate($isUpdate = true): MqttListenerService

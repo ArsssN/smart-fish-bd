@@ -70,6 +70,8 @@ class TestController extends Controller
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
 
+        $isTest = true;
+
         try {
             DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
@@ -97,6 +99,8 @@ class TestController extends Controller
                         ->mqttDataSwitchUnitHistoryDetailsSave()
                         ->switchUnitSwitchesStatusUpdate();
                 }
+
+                $isTest = $mqttListenerService->getTestMode();
             }
             DB::commit();
         } catch (Exception $e) {
@@ -116,7 +120,8 @@ class TestController extends Controller
                 'publishable',
                 'isAlreadyPublished',
                 'isUpdate',
-                'currentTime'
+                'currentTime',
+                'isTest'
             )
         );
     }

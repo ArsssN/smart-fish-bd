@@ -20,9 +20,15 @@
                                 There is no publishable data
                             </div>
                         @else
-                            <div class="alert alert-light">
-                                Test data has not been published or saved
-                            </div>
+                            @if($isTest)
+                                <div class="alert alert-light">
+                                    Test data has not been published or saved
+                                </div>
+                            @else
+                                <div class="alert alert-success">
+                                    Data has been saved but not published
+                                </div>
+                            @endif
                             @dump($publishMessage ?? '')
                         @endif
                     @else
