@@ -81,7 +81,7 @@ class TestController extends Controller
                     ?->convertDOValue()
                     ?->prepareData();
 
-                if (isset($mqttListenerService::$switchUnit?->run_status) && $mqttListenerService::$switchUnit?->run_status == 'off') {
+                if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
                     Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
                 }
 
