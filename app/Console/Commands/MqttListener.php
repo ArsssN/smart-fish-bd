@@ -110,6 +110,11 @@ class MqttListener extends Command
                         ?->convertDOValue()
                         ?->prepareData();
 
+                    if ($mqttListenerService::$switchUnit?->run_status == 'off') {
+                        Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
+                        return;
+                    }
+
                     /**
                      * mqtt publish
                      *

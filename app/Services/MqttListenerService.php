@@ -389,7 +389,7 @@ class MqttListenerService
      */
     public static function checkIfPublishable(): bool
     {
-        return (self::$isUpdate || self::$isPublishable) && self::$switchUnit?->run_status == 'on';
+        return self::$isUpdate || self::$isPublishable;
     }
 
     /**
@@ -399,7 +399,7 @@ class MqttListenerService
      */
     public static function checkIfSavable(): bool
     {
-        return self::$isSaveMqttData && !self::$isAlreadyPublished && self::$switchUnit?->run_status == 'on';
+        return self::$isSaveMqttData && !self::$isAlreadyPublished;
     }
 
     /**

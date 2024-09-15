@@ -81,7 +81,10 @@ class TestController extends Controller
                     ?->convertDOValue()
                     ?->prepareData();
 
-                //dump($preparedData);
+                if ($mqttListenerService::$switchUnit?->run_status == 'off') {
+                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
+                }
+
                 /**
                  *  Publish must be before store if present.
                  *  Store must be after mqtt publish if present.
