@@ -99,7 +99,7 @@ class MqttListener extends Command
                 $this->setTopic(Str::replaceLast('/PUB', '/SUB', $topic));
                 $this->message = $message;
 
-                Log::info("Received message on topic [$topic]: $message");
+                Log::channel('mqtt_listener')->info("Received message on topic [$topic]: $message");
                 echo sprintf('[%s] Received message on topic [%s]: %s', $this->currentDateTime, $topic, $message);
 
                 try {
@@ -135,19 +135,19 @@ class MqttListener extends Command
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e->getMessage());
+                    Log::channel('mqtt_listener')->error($e->getMessage());
                     echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
                 }
             });
         } catch (DataTransferException|RepositoryException $e) {
-            Log::error($e->getMessage());
+            Log::channel('mqtt_listener')->error($e->getMessage());
             echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
         }
 
         try {
             $mqtt->loop();
         } catch (DataTransferException|InvalidMessageException|ProtocolViolationException|MqttClientException $e) {
-            Log::error($e->getMessage());
+            Log::channel('mqtt_listener')->error($e->getMessage());
             echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
         }
 
@@ -172,7 +172,7 @@ class MqttListener extends Command
             $o2 = convertDOValue($responseMessage->data->o2, $this->currentTime);
             $echo = 'Converted DO value: from ' . $responseMessage->data->o2 . ' to ' . $o2 . ' at ' . $this->currentTime . '<br>';;
             echo $echo;
-            Log::info($echo);
+            Log::channel('mqtt_listener')->info($echo);
             $responseMessage->data->o2 = $o2;
         }
 
@@ -211,7 +211,7 @@ class MqttListener extends Command
         }
 
         $feedBackArr = MqttCommandController::$feedBackArray;
-        Log::info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
+        Log::channel('mqtt_listener')->info("Send message on topic [$this->topic]: " . $feedBackArr['relay']);
         if (!$this->isTest) {
             echo sprintf(
                 '[%s] Send message on topic [%s]: <strong>%s</strong>',
@@ -260,7 +260,7 @@ class MqttListener extends Command
             if (!$publishable) {
                 MqttCommandController::$isAlreadyPublished = true;
 
-                Log::info("Already published message on topic [$this->topic]: " . $feedBackArr['relay']);
+                Log::channel('mqtt_listener')->info("Already published message on topic [$this->topic]: " . $feedBackArr['relay']);
                 if (!$this->isTest) {
                     echo sprintf(
                         '[%s] Already published message on topic [%s], mqtt data id: <strong>%d</strong>',

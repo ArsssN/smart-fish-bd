@@ -74,14 +74,14 @@ class TestController extends Controller
             DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
                 $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
-                $preparedData = $mqttListenerService
+                $mqttListenerService
                     ->setUpdate($isUpdate)
-                    ->setTestMode(false)
+                    ->setTestMode()
                     ->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
 
-                dump($preparedData);
+                //dump($preparedData);
                 /**
                  *  Publish must be before store if present.
                  *  Store must be after mqtt publish if present.
