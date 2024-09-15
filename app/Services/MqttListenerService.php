@@ -166,16 +166,22 @@ class MqttListenerService
     }
 
     /**
-     * @return $this
+     * @return array - All prepared data
      */
-    public function prepareData(): self
+    public function prepareData(): array
     {
         $this->prepareRelayAndMqttDataHistory()
             ->prepareMqttData()
             ->prepareMqttDataSwitchUnitHistory()
             ->prepareMqttDataSwitchUnitHistoryDetails();
 
-        return $this;
+        return [
+            'relayArr' => self::$relayArr,
+            'mqttData' => self::$mqttData->toArray(),
+            'mqttDataHistory' => MqttStoreService::$mqttDataHistory,
+            'mqttDataSwitchUnitHistory' => MqttStoreService::$mqttDataSwitchUnitHistory,
+            'mqttDataSwitchUnitHistoryDetails' => self::$historyDetails,
+        ];
     }
 
     /**

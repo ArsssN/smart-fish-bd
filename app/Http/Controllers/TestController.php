@@ -58,22 +58,14 @@ class TestController extends Controller
         try {
             if (request()->get('gw_id') || $isUpdate) {
                 $mqttListenerService = new MqttListenerService($topic, json_encode($responseMessage));
-                $mqttListenerService
+                $preparedData = $mqttListenerService
                     ->setUpdate($isUpdate)
                     ->setTestMode()
                     ->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
 
-                dd(
-                    $mqttListenerService::$relayArr,
-                    [
-                        'mqttData' => $mqttListenerService::$mqttData->toArray(),
-                        'mqttDataHistory' => MqttStoreService::$mqttDataHistory,
-                        'mqttDataSwitchUnitHistory' => MqttStoreService::$mqttDataSwitchUnitHistory,
-                        'mqttDataSwitchUnitHistoryDetails' => $mqttListenerService::$historyDetails,
-                    ]
-                );
+                dd($preparedData);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
