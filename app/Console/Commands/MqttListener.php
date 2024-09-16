@@ -119,12 +119,18 @@ class MqttListener extends Command
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::channel('mqtt_listener')->error($e->getMessage());
+                    Log::channel('mqtt_listener')->error($e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ]);
                     echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
                 }
             });
         } catch (DataTransferException|RepositoryException $e) {
-            Log::channel('mqtt_listener')->error($e->getMessage());
+            Log::channel('mqtt_listener')->error($e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
             echo sprintf('[%s] %s', $this->currentDateTime, $e->getMessage());
         }
 
