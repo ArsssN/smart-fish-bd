@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -60,6 +61,16 @@ class MqttData extends Model
     public function switchUnitHistories(): HasMany
     {
         return $this->hasMany(MqttDataSwitchUnitHistory::class);
+    }
+
+    /**
+     * Get the mqtt topic that owns the MqttData
+     *
+     * @return HasOne
+     */
+    public function switchUnitHistory(): HasOne
+    {
+        return $this->hasOne(MqttDataSwitchUnitHistory::class);
     }
 
     /**

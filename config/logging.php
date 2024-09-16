@@ -64,6 +64,13 @@ return [
             'days' => 14,
         ],
 
+        'mqtt_listener' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mqtt-listener.log'), // Custom log file
+            'level' => 'info', // Define the log level
+            'days' => 14,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

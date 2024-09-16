@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Console\Commands\AeratorManageCommand;
-use App\Console\Commands\MqttListener;
+use App\Console\Commands\__MqttListener;
 use App\Http\Controllers\Admin\BackupController;
 use App\Jobs\CustomerCreateJob;
 use App\Models\MqttDataSwitchUnitHistoryDetail;
 use App\Models\Sensor;
 use App\Models\SwitchUnitSwitch;
 use App\Models\User;
+use App\Services\MqttListenerService;
+use App\Services\MqttPublishService;
+use App\Services\MqttStoreService;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class TestController extends Controller
 {
@@ -24,12 +33,20 @@ class TestController extends Controller
         return view('test.home');
     }
 
-    //mqtt
-    public function mqtt()
+
+    /**
+     * mqtt
+     *
+     * @return Application|Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
+     */
+    public function mqtt(): View|Factory|Application
     {
         $topic = request()->get('topic');
-        $responseMessage = json_decode(json_encode(request()->except('topic')));
         $currentTime = request()->get('currentTime') ?? now()->format('H:i');
+        $responseMessage = json_decode(json_encode(request()->except('topic', 'currentTime')));
 
         $autoFill = json_decode('{
                 "gw_id": "3083987D2528",
@@ -45,31 +62,55 @@ class TestController extends Controller
                 }
             }'
         );
-        // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
-        // json_decode('{"gw_id":"4A5B3C2D1E4F","type":"sen","addr":"0x1A","data":{"ph":6}}');
+        // json_decode('{"gw_id":"4A5B3C2D2528","type":"sen","addr":"0x1A","data":{"food":42,"tds":123.45,"rain":17,"temp":28.7,"o2":2.8,"ph":6}}');
+        // json_decode('{"gw_id":"4A5B3C2D2528","type":"sen","addr":"0x1A","data":{"ph":6}}');
         // json_decode('{"update":1}');
-        $autoFill->topic = 'SUB/1E4F/PUB';
+        $autoFill->topic = 'SFBD/2528/PUB';
 
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
 
+        $isTest = true;
+
         try {
+            DB::beginTransaction();
             if (request()->get('gw_id') || $isUpdate) {
-                $mqttListener = new MqttListener();
+                $mqttListenerService = new MqttListenerService(Str::replaceLast('/PUB', '/SUB', $topic), json_encode($responseMessage));
+                $mqttListenerService
+                    ->setUpdate($isUpdate)
+                    ->setTestMode() // false, if we want to save data.
+                    ->republishLastResponse()
+                    ?->convertDOValue()
+                    ?->prepareData();
 
-                $mqttListener->setMessage(json_encode($responseMessage));
-                $mqttListener->setCurrentTime($currentTime);
-                $mqttListener->setTopic($topic);
-                $mqttListener->setIsTest(true);
+                if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
+                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
+                }
 
-                $publishable = $mqttListener->processResponse();
+                /**
+                 *  Publish must be before store if present.
+                 *  Store must be after mqtt publish if present.
+                 */
+                if ($mqttListenerService::checkIfSavable()) {
+                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'test')
+                        ->mqttDataSave()
+                        ->mqttDataHistoriesSave()
+                        ->mqttDataSwitchUnitHistorySave()
+                        ->mqttDataSwitchUnitHistoryDetailsSave()
+                        ->switchUnitSwitchesStatusUpdate();
+                }
+
+                $isTest = $mqttListenerService->getTestMode();
             }
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
+            throw $e;
         }
 
-        $publishMessage = MqttCommandController::$feedBackArray;
-        $isAlreadyPublished = MqttCommandController::$isAlreadyPublished;
+        $publishMessage = MqttListenerService::$publishMessage;
+        $isAlreadyPublished = MqttListenerService::$isAlreadyPublished;
 
         return view(
             'test.mqtt',
@@ -79,7 +120,8 @@ class TestController extends Controller
                 'publishable',
                 'isAlreadyPublished',
                 'isUpdate',
-                'currentTime'
+                'currentTime',
+                'isTest'
             )
         );
     }
