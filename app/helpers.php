@@ -1279,3 +1279,15 @@ if (!function_exists('getIntervalRuntime')) {
         return $interval ? CarbonInterval::second($interval ?? 0)->cascade()->forHumans(['short' => true]) : '-';
     }
 }
+
+// getSwitchUnitStatus
+if (!function_exists('getSwitchUnitStatus')) {
+    /**
+     * @param $status
+     * @return string
+     */
+    function getSwitchUnitStatus($status): string
+    {
+        return $status == 'active' ? 'Auto' : 'Manual';
+    }
+}
