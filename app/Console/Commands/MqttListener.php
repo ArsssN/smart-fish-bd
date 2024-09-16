@@ -88,7 +88,7 @@ class MqttListener extends Command
                         ?->prepareData();
 
                     $runStatusOff = $mqttListenerService::$switchUnit?->run_status == 'off';
-                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name}, Run Status: {$runStatusOff}, Run At: {$runStatusOff_updated_at}");
+                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name}, Run Status: {$runStatusOff}, Run At: {$mqttListenerService::$switchUnit?->run_status_updated_at}");
                     if ($runStatusOff == 'off') {
                         Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
                         //return;
