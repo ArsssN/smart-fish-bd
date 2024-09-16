@@ -18,7 +18,7 @@ trait CreatedAt
             'type'     => 'closure',
             'escaped'  => false,
             'function' => function ($entry) use ($name) {
-                return "<span title='{$entry->$name->format('Y/m/d h:i:s')}'>{$entry->$name->diffForHumans()}</span>";
+                return $entry->$name ? "<span title='{$entry->$name->format('Y/m/d h:i:s')}'>{$entry->$name->diffForHumans()}</span>" : '-';
             },
         ];
 

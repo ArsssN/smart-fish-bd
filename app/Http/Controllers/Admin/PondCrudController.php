@@ -300,21 +300,25 @@ class PondCrudController extends CrudController
                     $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
                     $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
 
-                    $switches->each(function ($switch) use (&$html,) {
-                        $aerator_remote_name = 'aerator';
-                        $switch = (object)$switch;
+                    if ($switches->count()) {
+                        $switches->each(function ($switch) use (&$html,) {
+                            $aerator_remote_name = 'aerator';
+                            $switch = (object)$switch;
 
-                        $runTime = $switch->switchType->remote_name == $aerator_remote_name
-                            ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
-                            : '-';
-                        $html .= "<tr>";
-                        $html .= "<td>{$switch->number}</td>";
-                        $html .= "<td>{$switch->switchType->name}</td>";
-                        $html .= "<td>{$switch->status}</td>";
-                        $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . "'>{$runTime}</td>";
-                        $html .= "<td>{$switch->comment}</td>";
-                        $html .= "</tr>";
-                    });
+                            $runTime = $switch->switchType->remote_name == $aerator_remote_name
+                                ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                                : '-';
+                            $html .= "<tr>";
+                            $html .= "<td>{$switch->number}</td>";
+                            $html .= "<td>{$switch->switchType->name}</td>";
+                            $html .= "<td>{$switch->status}</td>";
+                            $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . "'>{$runTime}</td>";
+                            $html .= "<td>{$switch->comment}</td>";
+                            $html .= "</tr>";
+                        });
+                    } else {
+                        $html .= "<tr><td colspan='5'>No data found</td></tr>";
+                    }
                     $html .= "</tbody>";
                     $html .= "</table>";
                     $html .= "</td>";
