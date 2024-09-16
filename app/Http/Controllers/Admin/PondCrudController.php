@@ -297,7 +297,7 @@ class PondCrudController extends CrudController
                     $html .= "</thead>";
                     $html .= "<tbody>";
 
-                    $switchUnitHistories = $switchUnit->histories()->latest()->with('switchUnitHistoryDetails.switchType')->first();
+                    $switchUnitHistories = $switchUnit->histories()->orderByDesc('id')->with('switchUnitHistoryDetails.switchType')->first();
                     $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
 
                     if ($switches->count()) {
