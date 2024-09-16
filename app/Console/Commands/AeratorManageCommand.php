@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Pond;
 use App\Models\SwitchUnit;
+use App\Services\MqttListenerService;
 use App\Services\MqttStoreService;
 use App\Services\MqttPublishService;
 use Exception;
@@ -31,12 +32,12 @@ class AeratorManageCommand extends Command
     /**
      * @var int - start after time in min: 20
      */
-    const switchOnAfter = 5 * 60; // seconds
+    const switchOnAfter = 1 * 60; // seconds
 
     /**
      * @var int - stop after time in min: 40
      */
-    const switchOffAfter = 10 * 60; // seconds
+    const switchOffAfter = 2 * 60; // seconds
 
     /**
      * Execute the console command.
@@ -47,7 +48,7 @@ class AeratorManageCommand extends Command
     public function handle(): void
     {
         Log::channel('aerator_status')->info('Aerator Manage Command Starting');
-
+        echo 'Aerator Manage Command Starting';
         $switchUnits = SwitchUnit::query()
             ->select('id', 'run_status', 'run_status_updated_at')
             ->whereRelation('ponds', 'status', 'active')

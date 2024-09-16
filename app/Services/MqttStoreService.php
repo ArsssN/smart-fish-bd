@@ -199,9 +199,9 @@ class MqttStoreService
         Log::channel('mqtt_listener')->info("relayArr: " . implode('', self::$relayArr) . "; O-Relay: " . implode('', array_fill(0, count(self::$relayArr), 0)));
 
         if (implode('', self::$relayArr) !== implode('', array_fill(0, count(self::$relayArr), 0)) && (empty(self::$switchUnit->run_status_updated_at) || !$matchingFound)) {
-            Log::channel('mqtt_listener')->info("run_status_updated_at");
             self::$switchUnit->run_status_updated_at = now();
             self::$switchUnit->save();
+            Log::channel('mqtt_listener')->info('run_status_updated_at: ' . self::$switchUnit->run_status_updated_at);
         }
     }
 }
