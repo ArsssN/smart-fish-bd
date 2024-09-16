@@ -60,7 +60,7 @@ class MqttPublishService
 
         $publishMessageStr = json_encode(self::$publishMessage);
 
-        Log::channel('mqtt_listener')->info('Publish Topics : ' . self::$topic . ' -- ' . '; Message: ' . $publishMessageStr);
+        Log::channel('mqtt_listener')->info('Publish Topics : ' . self::$topic . '; ' . 'Message: ' . $publishMessageStr);
         MQTT::publish(self::$topic, $publishMessageStr);
     }
 
