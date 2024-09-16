@@ -248,7 +248,7 @@ class MqttListenerService
     private function setSensorUnitAndPond(): MqttListenerService
     {
         Log::channel('mqtt_listener')->info('responseMessage: ' . json_encode(self::$responseMessage));
-        
+
         $remoteNames = collect(self::$responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec(self::$responseMessage->addr);
 
@@ -323,7 +323,6 @@ class MqttListenerService
     {
         // considering the first switch unit
         self::$switchUnit = MqttStoreService::$pond->switchUnits->firstOrFail();
-        Log::channel('mqtt_listener')->info('Switch unit: ' . json_encode(self::$switchUnit));
 
         $addr = dechex((int)self::$switchUnit->serial_number);
         self::$publishMessage = [
