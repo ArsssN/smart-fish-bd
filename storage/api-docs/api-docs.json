@@ -1363,8 +1363,12 @@
                         "description": "The average value of last 24hrs.",
                         "type": "string"
                     },
-                    "value": {
+                    "original_value": {
                         "description": "The latest value of mqtt data history",
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "The latest modified value of mqtt data history",
                         "type": "string"
                     }
                 },
