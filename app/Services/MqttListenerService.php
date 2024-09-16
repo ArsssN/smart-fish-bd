@@ -305,6 +305,8 @@ class MqttListenerService
             ];
         });
 
+        Log::channel('mqtt_listener')->info('MqttDataHistory: ' . json_encode(MqttStoreService::$mqttDataHistory));
+
         return $this;
     }
 
