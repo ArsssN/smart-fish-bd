@@ -195,7 +195,7 @@ class MqttStoreService
             }
         });
 
-        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0) && (empty(self::$switchUnit->run_status_updated_at) || $matchingFound)) {
+        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0) && (empty(self::$switchUnit->run_status_updated_at) || !$matchingFound)) {
             self::$switchUnit->run_status_updated_at = now();
             self::$switchUnit->save();
         }
