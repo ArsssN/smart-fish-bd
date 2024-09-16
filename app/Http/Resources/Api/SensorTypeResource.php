@@ -68,7 +68,7 @@ class SensorTypeResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'avg' => number_format(+$this->avg ?? 0, 2),
-            'value' => $this->mqttDataHistory->value ?? ''
+            'value' => $this?->mqttDataHistory?->value ? (string)getModifiedMqttDataHistoryValue($this->mqttDataHistory) : ''
         ];
     }
 }
