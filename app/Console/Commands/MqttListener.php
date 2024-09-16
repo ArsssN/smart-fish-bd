@@ -112,6 +112,7 @@ class MqttListener extends Command
                             ->mqttDataSave()
                             ->mqttDataHistoriesSave()
                             ->mqttDataSwitchUnitHistorySave()
+                            ->mqttDataSwitchUnitHistoryDetailsSave()
                             ->switchUnitSwitchesStatusUpdate();
                     }
                     DB::commit();
