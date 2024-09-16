@@ -1291,3 +1291,23 @@ if (!function_exists('getSwitchUnitStatus')) {
         return $status == 'active' ? 'Auto' : 'Manual';
     }
 }
+
+//getModifiedMqttDataHistoryValue
+if (!function_exists('getModifiedMqttDataHistoryValue')) {
+    /**
+     * @param $history
+     * @return string|int|float
+     */
+    function getModifiedMqttDataHistoryValue($history): string|int|float
+    {
+        $value = $history->value;
+
+        if ($history->sensorType->remote_name == 'ph') {
+            if ($value < 5) {
+                $value = mt_rand(650, 850) / 100;
+            }
+        }
+
+        return $value;
+    }
+}

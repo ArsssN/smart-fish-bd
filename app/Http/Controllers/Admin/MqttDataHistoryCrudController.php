@@ -51,27 +51,34 @@ class MqttDataHistoryCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::addColumn([
-            'name'  => 'mqttData.project',
+            'name' => 'mqttData.project',
             'label' => 'Project',
         ]);
         CRUD::column('pond_id');
         CRUD::AddColumn([
-            'name'   => 'sensor_type_id',
+            'name' => 'sensor_type_id',
             'entity' => 'sensorType'
         ]);
         CRUD::AddColumn([
-            'name'   => 'sensor_unit_id',
+            'name' => 'sensor_unit_id',
             'entity' => 'sensorUnit'
         ]);
         CRUD::AddColumn([
-            'name'   => 'switch_type_id',
+            'name' => 'switch_type_id',
             'entity' => 'switchType'
         ]);
         CRUD::AddColumn([
-            'name'   => 'switch_unit_id',
+            'name' => 'switch_unit_id',
             'entity' => 'switchUnit'
         ]);
-        CRUD::column('value');
+        CRUD::addColumn([
+            'name' => 'value',
+            'type' => 'closure',
+            'function' => function ($history) {
+                return "<span title='$history->value'>" . getModifiedMqttDataHistoryValue($history) . "</span>";
+            },
+            'escaped' => false,
+        ]);
         CRUD::column('message');
 
         $this->createdAtList();
@@ -79,8 +86,8 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with type
         CRUD::addFilter(
             [
-                'name'  => 'type',
-                'type'  => 'dropdown',
+                'name' => 'type',
+                'type' => 'dropdown',
                 'label' => 'Type',
             ],
             [
@@ -97,9 +104,9 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with project
         CRUD::addFilter(
             [
-                'name'        => 'project_id',
-                'label'       => 'Project',
-                'type'        => 'select2_ajax',
+                'name' => 'project_id',
+                'label' => 'Project',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a project'
             ],
             // the ajax route
@@ -114,8 +121,8 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with pond_id
         CRUD::addFilter(
             [
-                'name'        => 'pond_id',
-                'type'        => 'select2_ajax',
+                'name' => 'pond_id',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a pond'
             ],
             // the ajax route
@@ -128,9 +135,9 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with sensor_type_id
         CRUD::addFilter(
             [
-                'name'        => 'sensor_type_id',
-                'label'       => 'Sensor Type',
-                'type'        => 'select2_ajax',
+                'name' => 'sensor_type_id',
+                'label' => 'Sensor Type',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a sensor type'
             ],
             url(config('backpack.base.route_prefix', 'admin') . '/mqtt-data-history/ajax-sensor-type-options'),
@@ -142,9 +149,9 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with sensor_unit_id
         CRUD::addFilter(
             [
-                'name'        => 'sensor_unit_id',
-                'label'       => 'Sensor Unit',
-                'type'        => 'select2_ajax',
+                'name' => 'sensor_unit_id',
+                'label' => 'Sensor Unit',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a sensor unit'
             ],
             url(config('backpack.base.route_prefix', 'admin') . '/mqtt-data-history/ajax-sensor-unit-options'),
@@ -156,9 +163,9 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with switch_type_id
         CRUD::addFilter(
             [
-                'name'        => 'switch_type_id',
-                'label'       => 'Switch Type',
-                'type'        => 'select2_ajax',
+                'name' => 'switch_type_id',
+                'label' => 'Switch Type',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a switch type'
             ],
             url(config('backpack.base.route_prefix', 'admin') . '/mqtt-data-history/ajax-switch-type-options'),
@@ -170,9 +177,9 @@ class MqttDataHistoryCrudController extends CrudController
         // filter with switch_unit_id
         CRUD::addFilter(
             [
-                'name'        => 'switch_unit_id',
-                'label'       => 'Switch Unit',
-                'type'        => 'select2_ajax',
+                'name' => 'switch_unit_id',
+                'label' => 'Switch Unit',
+                'type' => 'select2_ajax',
                 'placeholder' => 'Pick a switch unit'
             ],
             url(config('backpack.base.route_prefix', 'admin') . '/mqtt-data-history/ajax-switch-unit-options'),
@@ -183,15 +190,15 @@ class MqttDataHistoryCrudController extends CrudController
         );
         // filter with value
         CRUD::addFilter([
-            'type'  => 'text',
-            'name'  => 'value',
+            'type' => 'text',
+            'name' => 'value',
             'label' => 'Value',
         ]);
 
         // filter with date range picker
         CRUD::addFilter([
-            'type'  => 'date_range',
-            'name'  => 'created_at',
+            'type' => 'date_range',
+            'name' => 'created_at',
             'label' => 'Created At',
         ], false, function ($value) {
             $dates = json_decode($value);

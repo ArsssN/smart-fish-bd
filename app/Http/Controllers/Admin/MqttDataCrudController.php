@@ -217,15 +217,7 @@ class MqttDataCrudController extends CrudController
                         $html .= '<tr>';
                         $html .= '<td>' . $history->pond->name . '</td>';
 
-                        $value = $history->value;
-
-                        if ($history->sensorType->remote_name === 'ph') {
-                            if ($value < 6) {
-                                $value = $value + 1.5;
-                            } else if ($value > 9) {
-                                $value = $value - 1.5;
-                            }
-                        }
+                        $value = getModifiedMqttDataHistoryValue($history);
 
                         if ($entry->type == 'sensor') {
                             $html .= '<td>' . optional($history->sensorUnit)->name . '</td>';

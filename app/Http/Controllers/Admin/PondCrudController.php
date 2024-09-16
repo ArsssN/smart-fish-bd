@@ -445,10 +445,12 @@ class PondCrudController extends CrudController
             foreach ($xUnitHistories as $history) {
                 $html .= '<tr>';
 
+                $value = getModifiedMqttDataHistoryValue($history);
+
                 $html .= '<td>' . optional($history->{$type . "Unit"})->name . '</td>';
                 $html .= '<td>' . optional($history->{$type . "Type"})->name . '</td>';
 
-                $html .= '<td>' . $history->value . '</td>';
+                $html .= '<td title="' . $history->value . '">' . $value . '</td>';
                 $html .= '<td>' . $history->message . '</td>';
                 $html .= '<td title="' . $history->created_at->diffForHumans() . '">' . $history->created_at . '</td>';
                 $html .= '</tr>';
