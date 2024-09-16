@@ -54,6 +54,7 @@ class MqttPublishService
     public static function relayPublish(): void
     {
         if (self::$publishMessage['relay'] === self::$previousRelay) {
+            Log::channel('mqtt_listener')->info('Relay is same as previous for Topics: '. self::$topic);
             return;
         }
 

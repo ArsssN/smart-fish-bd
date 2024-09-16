@@ -393,6 +393,7 @@ class MqttListenerService
      */
     public static function checkIfPublishable(): bool
     {
+        Log::channel('aerator_status')->info('isUpdate : ' . self::$isUpdate . '--' . ', isPublishable: ' . self::$isPublishable);
         return self::$isUpdate || self::$isPublishable;
     }
 
@@ -403,6 +404,7 @@ class MqttListenerService
      */
     public static function checkIfSavable(): bool
     {
+        Log::channel('aerator_status')->info('isSaveMqttData : ' . self::$isSaveMqttData . '--' . ', isAlreadyPublished: ' . self::$isAlreadyPublished);
         return self::$isSaveMqttData && !self::$isAlreadyPublished;
     }
 
