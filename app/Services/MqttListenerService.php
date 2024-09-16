@@ -154,6 +154,8 @@ class MqttListenerService
         self::$responseMessage = json_decode($message ?: '{}');
         self::$topic = $topic;
 
+        Log::channel('mqtt_listener')->info('Original message: ' . $message);
+
         $this->currentTime = now()->format('H:i');
         $this->currentDateTime = now()->format('Y-m-d H:i:s');
         self::$isPublishable = true;
@@ -245,6 +247,8 @@ class MqttListenerService
      */
     private function setSensorUnitAndPond(): MqttListenerService
     {
+        Log::channel('mqtt_listener')->info('responseMessage: ' . json_encode(self::$responseMessage));
+        
         $remoteNames = collect(self::$responseMessage->data)->keys()->toArray();
         $serialNumber = hexdec(self::$responseMessage->addr);
 
