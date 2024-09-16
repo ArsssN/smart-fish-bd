@@ -8,6 +8,7 @@ use App\Models\Pond;
 use App\Models\SensorUnit;
 use App\Models\SwitchUnit;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class MqttStoreService
@@ -181,7 +182,7 @@ class MqttStoreService
     public static function switchUnitSwitchesStatusUpdate(): void
     {
         $previousRelay = MqttListenerService::$previousRelay;
-        $currentRelay = []; 
+        $currentRelay = [];
         $matchingFound = false;
 
         self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) use (&$currentRelay, $previousRelay, &$matchingFound) {
@@ -195,7 +196,10 @@ class MqttStoreService
             }
         });
 
-        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0) && (empty(self::$switchUnit->run_status_updated_at) || !$matchingFound)) {
+        Log::channel('mqtt_listener')->info("relayArr: " . implode('', self::$relayArr) . "; O-Relay: " . implode('', array_fill(0, count(self::$relayArr), 0)));
+
+        if (implode('', self::$relayArr) !== implode('', array_fill(0, count(self::$relayArr), 0)) && (empty(self::$switchUnit->run_status_updated_at) || !$matchingFound)) {
+            Log::channel('mqtt_listener')->info("run_status_updated_at");
             self::$switchUnit->run_status_updated_at = now();
             self::$switchUnit->save();
         }
