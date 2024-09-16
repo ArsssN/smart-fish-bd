@@ -70,44 +70,9 @@ class TestController extends Controller
         $publishable = false;
         $isUpdate = request()->get('update') ?? false;
 
-        $isTest = true;
+        $isTest = request()->get('isTest') ?? false;
 
-        try {
-            DB::beginTransaction();
-            if (request()->get('gw_id') || $isUpdate) {
-                $mqttListenerService = new MqttListenerService(Str::replaceLast('/PUB', '/SUB', $topic), json_encode($responseMessage));
-                $mqttListenerService
-                    ->setUpdate($isUpdate)
-                    ->setTestMode() // false, if we want to save data.
-                    ->republishLastResponse()
-                    ?->convertDOValue()
-                    ?->prepareData();
-
-                if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
-                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
-                }
-
-                /**
-                 *  Publish must be before store if present.
-                 *  Store must be after mqtt publish if present.
-                 */
-                if ($mqttListenerService::checkIfSavable()) {
-                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'test')
-                        ->mqttDataSave()
-                        ->mqttDataHistoriesSave()
-                        ->mqttDataSwitchUnitHistorySave()
-                        ->mqttDataSwitchUnitHistoryDetailsSave()
-                        ->switchUnitSwitchesStatusUpdate();
-                }
-
-                $isTest = $mqttListenerService->getTestMode();
-            }
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            throw $e;
-        }
+        $this->executeMqtt($topic, $responseMessage, $isUpdate, $isTest);
 
         $publishMessage = MqttListenerService::$publishMessage;
         $isAlreadyPublished = MqttListenerService::$isAlreadyPublished;
@@ -124,6 +89,55 @@ class TestController extends Controller
                 'isTest'
             )
         );
+    }
+
+    /**
+     * @param $topic
+     * @param $responseMessage
+     * @param $isUpdate
+     * @param $isTest
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
+     */
+    private function executeMqtt($topic, $responseMessage, $isUpdate, $isTest): void
+    {
+        try {
+            DB::beginTransaction();
+            if (request()->get('gw_id') || $isUpdate) {
+                $mqttListenerService = new MqttListenerService(Str::replaceLast('/PUB', '/SUB', $topic), json_encode($responseMessage));
+                $mqttListenerService
+                    ->setUpdate($isUpdate)
+                    ->setTestMode($isTest) // false, if we want to save data.
+                    ->republishLastResponse()
+                    ?->convertDOValue()
+                    ?->prepareData();
+
+                if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
+                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
+                    return;
+                }
+
+                /**
+                 *  Publish must be before store if present.
+                 *  Store must be after mqtt publish if present.
+                 */
+                if ($mqttListenerService::checkIfSavable()) {
+                    MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'test')
+                        ->mqttDataSave()
+                        ->mqttDataHistoriesSave()
+                        ->mqttDataSwitchUnitHistorySave()
+                        ->mqttDataSwitchUnitHistoryDetailsSave()
+                        ->switchUnitSwitchesStatusUpdate();
+                }
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e;
+        }
     }
 
     // aerator-manage
