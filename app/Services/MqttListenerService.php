@@ -270,6 +270,7 @@ class MqttListenerService
     {
         self::$relayArr = array_fill(0, 12, 0);
 
+        MqttStoreService::$mqttDataHistory = [];
         MqttStoreService::$sensorUnit->sensorTypes->each(function ($sensorType) {
             if (!isset(self::$responseMessage->data->{$sensorType->remote_name})) {
                 return;
@@ -333,7 +334,6 @@ class MqttListenerService
         self::$mqttDataInstance->original_data = self::$originalMessage;
         self::$mqttDataInstance->publish_message = json_encode(self::$publishMessage);
         self::$mqttDataInstance->publish_topic = self::$topic;
-        self::$historyDetails = [];
 
         self::$switchUnitStatus = self::$switchUnit->status;
 
@@ -361,6 +361,7 @@ class MqttListenerService
      */
     public function prepareMqttDataSwitchUnitHistoryDetails(): MqttListenerService
     {
+        self::$historyDetails = [];
         self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) {
             self::$historyDetails[$index] = [
                 'number' => $switchUnitSwitch->number,
