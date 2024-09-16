@@ -164,6 +164,22 @@ class MqttListenerService
     }
 
     /**
+     * If the response message has relay, then ignore the message.
+     *
+     * @return $this|self|null
+     */
+    public function ignoreIfResponseMessageHasRelay(): self|null
+    {
+        if (isset(self::$responseMessage->relay)) {
+            self::$isPublishable = false;
+            self::$isSaveMqttData = false;
+            return null;
+        }
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function convertDOValue(): self

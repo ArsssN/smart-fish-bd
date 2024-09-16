@@ -83,7 +83,8 @@ class MqttListener extends Command
                     DB::beginTransaction();
                     $mqttListenerService = (new MqttListenerService($this->topic, $message));
                     $mqttListenerService
-                        ->republishLastResponse()
+                        ->ignoreIfResponseMessageHasRelay()
+                        ?->republishLastResponse()
                         ?->convertDOValue()
                         ?->prepareData();
 
