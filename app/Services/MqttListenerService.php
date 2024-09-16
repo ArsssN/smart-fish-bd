@@ -319,6 +319,7 @@ class MqttListenerService
     {
         // considering the first switch unit
         self::$switchUnit = MqttStoreService::$pond->switchUnits->firstOrFail();
+        Log::channel('mqtt_listener')->info('Switch unit: ' . json_encode(self::$switchUnit));
 
         $addr = dechex((int)self::$switchUnit->serial_number);
         self::$publishMessage = [
@@ -392,23 +393,25 @@ class MqttListenerService
     }
 
     /**
+     * @param bool $publishable
      * @return bool
      */
-    public static function checkIfPublishable(): bool
+    public static function checkIfPublishable(bool $publishable = true): bool
     {
-        Log::channel('mqtt_listener')->info('isUpdate : ' . self::$isUpdate . ' -- ' . '; isPublishable: ' . self::$isPublishable);
-        return self::$isUpdate || self::$isPublishable;
+        Log::channel('mqtt_listener')->info('isUpdate : ' . self::$isUpdate . ' -- ' . '; isPublishable: ' . self::$isPublishable . ' -- ' . '; Publishable: ' . $publishable);
+        return $publishable && (self::$isUpdate || self::$isPublishable);
     }
 
     /**
      * Save if the mqtt data is savable and is not same as the previous one.
      *
+     * @param bool $savable
      * @return bool
      */
-    public static function checkIfSavable(): bool
+    public static function checkIfSavable(bool $savable = true): bool
     {
-        Log::channel('mqtt_listener')->info('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished);
-        return self::$isSaveMqttData && !self::$isAlreadyPublished;
+        Log::channel('mqtt_listener')->info('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished . ' -- ' . '; Savable: ' . $savable);
+        return $savable && self::$isSaveMqttData && !self::$isAlreadyPublished;
     }
 
     /**

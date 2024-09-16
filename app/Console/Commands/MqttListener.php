@@ -87,10 +87,11 @@ class MqttListener extends Command
                         ?->convertDOValue()
                         ?->prepareData();
 
-                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name}, Run Status: {$mqttListenerService::$switchUnit->run_status}, Run At: {$mqttListenerService::$switchUnit->run_status_updated_at}");
-                    if (isset($mqttListenerService::$switchUnit->run_status) && $mqttListenerService::$switchUnit->run_status == 'off') {
+                    $runStatusOff = $mqttListenerService::$switchUnit?->run_status == 'off';
+                    Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name}, Run Status: {$runStatusOff}, Run At: {$runStatusOff_updated_at}");
+                    if ($runStatusOff == 'off') {
                         Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
-                        return;
+                        //return;
                     }
 
                     /**
@@ -98,7 +99,7 @@ class MqttListener extends Command
                      *
                      * Publish must be before store if present.
                      */
-                    if ($mqttListenerService::checkIfPublishable()) {
+                    if ($mqttListenerService::checkIfPublishable($runStatusOff)) {
                         MqttPublishService::relayPublish();
                     }
 
@@ -107,7 +108,7 @@ class MqttListener extends Command
                      *
                      * Store must be after mqtt publish if present.
                      */
-                    if ($mqttListenerService::checkIfSavable()) {
+                    if ($mqttListenerService::checkIfSavable($runStatusOff)) {
                         MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
                             ->mqttDataSave()
                             ->mqttDataHistoriesSave()
