@@ -305,8 +305,6 @@ class MqttListenerService
             ];
         });
 
-        Log::channel('mqtt_listener')->info('MqttDataHistory: ' . json_encode(MqttStoreService::$mqttDataHistory));
-
         return $this;
     }
 
@@ -348,6 +346,8 @@ class MqttListenerService
         self::$previousRelay = (json_decode(self::$previousMqttData->publish_message, true)['relay'] ?? '');
 
         self::$isAlreadyPublished = self::$publishMessage['relay'] === self::$previousRelay;
+
+        Log::channel('mqtt_listener')->info('Previous relay: ' . self::$previousRelay . '; Current relay: ' . self::$publishMessage['relay']);
 
         return $this;
     }
@@ -395,8 +395,8 @@ class MqttListenerService
      */
     public static function checkIfPublishable(): bool
     {
-        Log::channel('aerator_status')->info('isUpdate : ' . self::$isUpdate . '--' . ', isPublishable: ' . self::$isPublishable .', Run status At'. self::$switchUnit->run_status_updated_at);
-        return (self::$isUpdate || self::$isPublishable) && empty(self::$switchUnit->run_status_updated_at);
+        Log::channel('mqtt_listener')->info('isUpdate : ' . self::$isUpdate . ' -- ' . '; isPublishable: ' . self::$isPublishable);
+        return self::$isUpdate || self::$isPublishable;
     }
 
     /**
@@ -406,7 +406,7 @@ class MqttListenerService
      */
     public static function checkIfSavable(): bool
     {
-        Log::channel('aerator_status')->info('isSaveMqttData : ' . self::$isSaveMqttData . '--' . ', isAlreadyPublished: ' . self::$isAlreadyPublished);
+        Log::channel('mqtt_listener')->info('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished);
         return self::$isSaveMqttData && !self::$isAlreadyPublished;
     }
 
