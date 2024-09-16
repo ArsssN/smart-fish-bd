@@ -49,10 +49,20 @@ class SwitchUnitCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('serial_number');
-        CRUD::column('status');
 
+        CRUD::addColumn([
+            'name' => 'status',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return getSwitchUnitStatus($entry->status);
+            },
+            'escaped' => false,
+        ]);
+        CRUD::column('run_status');
+        $this->createdAtList('run_status_updated_at');
+
+        $this->createdAtList('updated_at');
         $this->createdByList();
-        $this->createdAtList();
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
