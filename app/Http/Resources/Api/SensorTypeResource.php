@@ -51,7 +51,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(
  *         property="value",
  *         type="string",
- *         description="The latest value of mqtt data history",
+ *         description="The latest modified value of mqtt data history",
  *     ),
  * )
  */

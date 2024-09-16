@@ -1368,7 +1368,7 @@
                         "type": "string"
                     },
                     "value": {
-                        "description": "The latest value of mqtt data history",
+                        "description": "The latest modified value of mqtt data history",
                         "type": "string"
                     }
                 },
