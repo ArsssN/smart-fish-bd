@@ -393,8 +393,8 @@ class MqttListenerService
      */
     public static function checkIfPublishable(): bool
     {
-        Log::channel('aerator_status')->info('isUpdate : ' . self::$isUpdate . '--' . ', isPublishable: ' . self::$isPublishable);
-        return self::$isUpdate || self::$isPublishable;
+        Log::channel('aerator_status')->info('isUpdate : ' . self::$isUpdate . '--' . ', isPublishable: ' . self::$isPublishable .', Run status At'. self::$switchUnit->run_status_updated_at);
+        return (self::$isUpdate || self::$isPublishable) && empty(self::$switchUnit->run_status_updated_at);
     }
 
     /**
