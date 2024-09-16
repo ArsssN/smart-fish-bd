@@ -120,9 +120,13 @@ class AeratorManageCommand extends Command
                     ]);
                 }
                 DB::commit();
-            } catch (Exception $exception) {
+            } catch (Exception $e) {
                 DB::rollBack();
-                throw $exception;
+                Log::channel('aerator_status')->error($e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
+                throw $e;
             }
         }
     }
