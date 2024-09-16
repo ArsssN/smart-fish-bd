@@ -94,9 +94,9 @@ class MqttStoreService
         self::$mqttDataArr = [
             'type' => 'sensor',
             'project_id' => $mqttData->project_id,
-            'data' => $mqttData->data,
+            'data' => $mqttData->data ?? null,
             'data_source' => $dataSource,
-            'original_data' => $mqttData->original_data ?? $mqttData->data,
+            'original_data' => $mqttData->original_data ?? $mqttData->data ?? null,
             'publish_message' => json_encode(MqttPublishService::getPublishMessage()), // assuming before initiating store, mqtt has been published
             'publish_topic' => $publishTopic,
         ];
@@ -121,7 +121,7 @@ class MqttStoreService
         $newMqttData = MqttData::query()->create([
             'type' => self::$mqttDataArr['type'],
             'project_id' => self::$mqttDataArr['project_id'],
-            'data' => self::$mqttDataArr['data'],
+            'data' => self::$mqttDataArr['data'] ?? null,
             'data_source' => self::$mqttDataArr['data_source'],
             'original_data' => self::$mqttDataArr['original_data'],
             'publish_message' => self::$mqttDataArr['publish_message'],
