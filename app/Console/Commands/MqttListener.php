@@ -89,7 +89,7 @@ class MqttListener extends Command
 
                     $runStatusOff = $mqttListenerService::$switchUnit?->run_status == 'off';
                     Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name}, Run Status: {$runStatusOff}, Run At: {$mqttListenerService::$switchUnit?->run_status_updated_at}");
-                    if ($runStatusOff == 'off') {
+                    if ($runStatusOff) {
                         Log::channel('mqtt_listener')->info("Switch: {$mqttListenerService::$switchUnit->name} unit is off");
                         //return;
                     }
@@ -99,7 +99,7 @@ class MqttListener extends Command
                      *
                      * Publish must be before store if present.
                      */
-                    if ($mqttListenerService::checkIfPublishable($runStatusOff)) {
+                    if ($mqttListenerService::checkIfPublishable(!$runStatusOff)) {
                         MqttPublishService::relayPublish();
                     }
 
@@ -108,7 +108,7 @@ class MqttListener extends Command
                      *
                      * Store must be after mqtt publish if present.
                      */
-                    if ($mqttListenerService::checkIfSavable($runStatusOff)) {
+                    if ($mqttListenerService::checkIfSavable(!$runStatusOff)) {
                         MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
                             ->mqttDataSave()
                             ->mqttDataHistoriesSave()
