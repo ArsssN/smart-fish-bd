@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Monolog\Logger;
+use Monolog\Processor\IntrospectionProcessor;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,5 +48,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         proMode();
+
+        // Customize the logger to add file and line number to every log
+        $monolog = Log::getLogger();
+        $monolog->pushProcessor(new IntrospectionProcessor(Logger::DEBUG));
     }
 }
