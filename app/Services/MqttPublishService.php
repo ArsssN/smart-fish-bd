@@ -61,9 +61,7 @@ class MqttPublishService
         $publishMessageStr = json_encode(self::$publishMessage);
 
         Log::channel('aerator_status')->info('Publish Topics : ' . self::$topic . '--' . ', Message: ' . $publishMessageStr);
-        if (config('app.env') === 'production') {
-            MQTT::publish(self::$topic, $publishMessageStr);
-        }
+        MQTT::publish(self::$topic, $publishMessageStr);
     }
 
     /**
