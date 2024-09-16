@@ -156,6 +156,8 @@ class MqttListenerService
 
         Log::channel('mqtt_listener')->info('Original message: ' . $message);
 
+        self::$responseMessage->data = self::$responseMessage->data ?? (object)[];
+
         $this->currentTime = now()->format('H:i');
         $this->currentDateTime = now()->format('Y-m-d H:i:s');
         self::$isPublishable = true;
