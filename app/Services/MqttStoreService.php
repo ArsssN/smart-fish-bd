@@ -180,14 +180,24 @@ class MqttStoreService
      */
     public static function switchUnitSwitchesStatusUpdate(): void
     {
-        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0) && empty(self::$switchUnit->run_status_updated_at)) {
+        $previousRelay = MqttListenerService::$previousRelay;
+        $currentRelay = []; 
+        $matchingFound = false;
+
+        self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) use (&$currentRelay, $previousRelay, &$matchingFound) {
+            $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
+            $switchUnitSwitch->save();
+
+            $currentRelay[] = $switchUnitSwitch->status === 'off' ? 0 : 1;
+
+            if (isset($previousRelay[$index]) && $previousRelay[$index] === '1' && $currentRelay[$index] === 1) {
+                $matchingFound = true;
+            }
+        });
+
+        if (self::$relayArr !== array_fill(1, count(self::$relayArr), 0) && (empty(self::$switchUnit->run_status_updated_at) || $matchingFound)) {
             self::$switchUnit->run_status_updated_at = now();
             self::$switchUnit->save();
         }
-
-        self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) {
-            $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
-            $switchUnitSwitch->save();
-        });
     }
 }
