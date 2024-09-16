@@ -173,6 +173,7 @@ class MqttListenerService
         if (isset(self::$responseMessage->relay)) {
             self::$isPublishable = false;
             self::$isSaveMqttData = false;
+            Log::channel('mqtt_listener')->info('Relay is present in the response message. Ignoring the message.');
             return null;
         }
 
