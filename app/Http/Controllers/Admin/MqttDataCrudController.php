@@ -154,6 +154,7 @@ class MqttDataCrudController extends CrudController
             },
         ]);
 
+        CRUD::column('run_status');
         CRUD::addColumn([
             'name' => 'publish_message',
             'type' => 'table',

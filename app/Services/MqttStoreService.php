@@ -24,6 +24,7 @@ class MqttStoreService
         'original_data' => '',
         'publish_message' => '',
         'publish_topic' => '',
+        'run_status' => '',
     ];
     /**
      * @var array
@@ -100,6 +101,7 @@ class MqttStoreService
             'original_data' => $mqttData->original_data ?? $mqttData->data ?? null,
             'publish_message' => json_encode(MqttPublishService::getPublishMessage()), // assuming before initiating store, mqtt has been published
             'publish_topic' => $publishTopic,
+            'run_status' => $mqttData->run_status ?? 'on',
         ];
         self::$switchUnit = $switchUnit;
         self::$historyDetails = $historyDetails;
@@ -127,6 +129,7 @@ class MqttStoreService
             'original_data' => self::$mqttDataArr['original_data'],
             'publish_message' => self::$mqttDataArr['publish_message'],
             'publish_topic' => self::$mqttDataArr['publish_topic'],
+            'run_status' => self::$mqttDataArr['run_status'],
         ]);
 
         self::$newMqttDataBuilder = $newMqttData
