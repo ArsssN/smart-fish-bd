@@ -28,6 +28,7 @@ class MqttDataHistory extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $appends = ['new_value'];
 
     /*
     |--------------------------------------------------------------------------
@@ -91,6 +92,10 @@ class MqttDataHistory extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getNewValueAttribute()
+    {
+        return getModifiedMqttDataHistoryValue($this);
+    }
 
     /*
     |--------------------------------------------------------------------------

@@ -96,7 +96,7 @@ class ReportController extends Controller
                 $data = $sensorType->mqttDataHistories->map(function ($mqttDataHistory) {
                     return [
                         'x' => $mqttDataHistory->created_at->format('Y-m-d H:i:s'),
-                        'y' => $mqttDataHistory->value
+                        'y' => $mqttDataHistory->new_value
                     ];
                 });
 
