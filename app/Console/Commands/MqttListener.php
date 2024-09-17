@@ -100,7 +100,7 @@ class MqttListener extends Command
                      *
                      * Publish must be before store if present.
                      */
-                    if ($mqttListenerService::checkIfPublishable(!$runStatusOff)) {
+                    if ($mqttListenerService::checkIfPublishable(!$runStatusOff || $mqttListenerService::$isUpdate)) {
                         MqttPublishService::relayPublish();
                     }
 

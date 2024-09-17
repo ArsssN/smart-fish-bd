@@ -126,8 +126,8 @@
                                                     <th>Switch</th>
                                                     <th>Start At</th>
                                                     <th>End At</th>
-                                                    <th>Cumulative Run time</th>
-                                                    <th title="Total runtime of last on-off cycle">Last Runtime</th>
+                                                    <th>Interval Runtime</th>
+                                                    <th title="Total runtime of last on-off cycle">Cumulative Runtime</th>
                                                     <th>Status</th>
                                                 </tr>
                                                 </thead>
