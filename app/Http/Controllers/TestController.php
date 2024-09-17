@@ -110,7 +110,8 @@ class TestController extends Controller
                 $mqttListenerService
                     ->setUpdate($isUpdate)
                     ->setTestMode($isTest) // false, if we want to save data.
-                    ->republishLastResponse()
+                    ->ignoreIfResponseMessageHasRelay() // keep this method after all properties are set.
+                    ?->republishLastResponse()
                     ?->convertDOValue()
                     ?->prepareData();
 
