@@ -55,6 +55,7 @@ class MqttDataCrudController extends CrudController
             },
         ]);
         CRUD::column('data_source');
+        CRUD::column('run_status');
 
         /*$this->createdByList();*/
         if (isShellAdmin()) {

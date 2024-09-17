@@ -108,7 +108,7 @@ class MqttListener extends Command
                      *
                      * Store must be after mqtt publish if present.
                      */
-                    if ($mqttListenerService::checkIfSavable(!$runStatusOff)) {
+                    if ($mqttListenerService::checkIfSavable()) {
                         MqttStoreService::init($mqttListenerService::$topic, $mqttListenerService::$mqttDataInstance, $mqttListenerService::$switchUnit, $mqttListenerService::$historyDetails, 'mqtt')
                             ->mqttDataSave()
                             ->mqttDataHistoriesSave()
