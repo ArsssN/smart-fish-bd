@@ -357,6 +357,7 @@ class MqttListenerService
         self::$mqttDataInstance->original_data = self::$originalMessage;
         self::$mqttDataInstance->publish_message = json_encode(self::$publishMessage);
         self::$mqttDataInstance->publish_topic = self::$topic;
+        self::$mqttDataInstance->run_status = self::$switchUnit->run_status;
 
         self::$switchUnitStatus = self::$switchUnit->status;
 
@@ -433,7 +434,7 @@ class MqttListenerService
     public static function checkIfSavable(bool $savable = true): bool
     {
         Log::channel('mqtt_listener')->info('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished . ' -- ' . '; Savable: ' . $savable);
-        return $savable && self::$isSaveMqttData && !self::$isAlreadyPublished;
+        return $savable && self::$isSaveMqttData;
     }
 
     /**
