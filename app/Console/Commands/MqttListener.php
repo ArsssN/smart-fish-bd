@@ -86,6 +86,7 @@ class MqttListener extends Command
                         ->ignoreIfResponseMessageHasRelay()
                         ?->republishLastResponse()
                         ?->convertDOValue()
+                        ?->convertPHValue()
                         ?->prepareData();
 
                     $runStatusOff = isset($mqttListenerService::$switchUnit->run_status) && ($mqttListenerService::$switchUnit->run_status == 'off');

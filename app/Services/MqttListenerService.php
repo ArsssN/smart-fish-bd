@@ -19,6 +19,11 @@ class MqttListenerService
     const upperLimitOfCustomDOValue = 1.5;
 
     /**
+     * The upper limit of the custom PH value.
+     */
+    const upperLimitOfCustomPHValue = 5;
+
+    /**
      * @var string $switchUnitStatus - switch unit status
      */
     private static string $switchUnitStatus = 'active';
@@ -191,6 +196,21 @@ class MqttListenerService
             echo $echo;
             Log::channel('mqtt_listener')->info($echo);
             self::$responseMessage->data->o2 = $o2;
+        }
+
+        return $this;
+    }
+    /**
+     * @return $this
+     */
+    public function convertPHValue(): self
+    {
+        if (isset(self::$responseMessage->data->ph) && self::$responseMessage->data->ph < self::upperLimitOfCustomPHValue) {
+            $ph =  mt_rand(650, 850) / 100;
+            $echo = 'Converted PH value: from ' . self::$responseMessage->data->ph . ' to ' . $ph . ' at ' . $this->currentTime . '<br>';
+            echo $echo;
+            Log::channel('mqtt_listener')->info($echo);
+            self::$responseMessage->data->ph = $ph;
         }
 
         return $this;

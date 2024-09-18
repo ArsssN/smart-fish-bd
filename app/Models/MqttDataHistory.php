@@ -94,7 +94,7 @@ class MqttDataHistory extends Model
     */
     public function getNewValueAttribute()
     {
-        return getModifiedMqttDataHistoryValue($this);
+        return $this->value;
     }
 
     /*
