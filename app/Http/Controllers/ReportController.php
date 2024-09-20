@@ -318,60 +318,77 @@ class ReportController extends Controller
             ])
             ->groupBy('number');
 
-        $mqttDataSwitchUnitHistoryDetailFirst = $mqttDataSwitchUnitHistoryDetail->first();
-        $onOff = [
-            'start' => null,
-            'end' => null
-        ];
-        $lastOnOff = [
-            'start' => null,
-            'end' => null
-        ];
-        $fullRunTime = 0;
-        $count = $mqttDataSwitchUnitHistoryDetailFirst->count();
-        $mqttDataSwitchUnitHistoryDetailFirst->each(function ($item, $index) use ($count, $end_date, &$onOff, &$fullRunTime, &$lastOnOff) {
-            $isLast = $index === $count - 1;
+        $onOff = [];
+        $lastOnOff = [];
+        $fullRunTime = [];
+        $lastRunTime = [];
 
-            if ($item->status === 'on') {
-                $start = $onOff['start'] ?: $item->created_at;
-                $end = !$isLast
-                    ? $onOff['start'] ? $item->created_at : null
-                    : $end_date;
-
-                $onOff = [
-                    'start' => $start,
-                    'end' => $end,
+        $mqttDataSwitchUnitHistoryDetail->each(function ($aHistoryDetail, $switchNumber) use ($end_date, &$onOff, &$lastOnOff, &$fullRunTime, &$lastRunTime) {
+            echo $aHistoryDetail->map(function ($item) {
+                return [
+                    'status' => $item->status,
+                    'created_at' => $item->created_at
                 ];
+            });
+            echo "<br>";
+            echo "<br>";
 
-                $lastOnOff = [
-                    'start' => $start,
-                    'end' => $end_date
-                ];
-            } else {
-                $start = $onOff['start'] ?: null;
-                $end = $onOff['start'] ? $item->created_at : null;
+            $onOff[$switchNumber] = [
+                'start' => null,
+                'end' => null
+            ];
+            $lastOnOff[$switchNumber] = [
+                'start' => null,
+                'end' => null
+            ];
+            $fullRunTime[$switchNumber] = 0;
 
-                $onOff = [
-                    'start' => $start,
-                    'end' => $end,
-                ];
+            $count = $aHistoryDetail->count();
+            $aHistoryDetail->each(function ($item, $index) use ($count, $end_date, $switchNumber, &$onOff, &$fullRunTime, &$lastOnOff) {
+                $isLast = $index === $count - 1;
 
-                $fullRunTime += Carbon::parse($start)->diffInSeconds($end);
+                if ($item->status === 'on') {
+                    $start = $onOff[$switchNumber]['start'] ?: $item->created_at;
+                    $end = !$isLast
+                        ? $onOff[$switchNumber]['start'] ? $item->created_at : null
+                        : $end_date;
 
-                $lastOnOff = [
-                    'start' => $start,
-                    'end' => $end
-                ];
+                    $onOff[$switchNumber] = [
+                        'start' => $start,
+                        'end' => $end,
+                    ];
 
-                $onOff = [
-                    'start' => null,
-                    'end' => null
-                ];
-            }
+                    $lastOnOff[$switchNumber] = [
+                        'start' => $start,
+                        'end' => $end_date
+                    ];
+                } else {
+                    $start = $onOff[$switchNumber]['start'] ?: null;
+                    $end = $onOff[$switchNumber]['start'] ? $item->created_at : null;
+
+                    $onOff[$switchNumber] = [
+                        'start' => $start,
+                        'end' => $end,
+                    ];
+
+                    $fullRunTime[$switchNumber] += Carbon::parse($start)->diffInSeconds($end);
+
+                    $lastOnOff[$switchNumber] = [
+                        'start' => $start,
+                        'end' => $end
+                    ];
+
+                    $onOff[$switchNumber] = [
+                        'start' => null,
+                        'end' => null
+                    ];
+                }
+            });
+
+            $fullRunTime[$switchNumber] += Carbon::parse($onOff[$switchNumber]['start'])->diffInSeconds($onOff[$switchNumber]['end']);
+            $lastRunTime[$switchNumber] = Carbon::parse($lastOnOff[$switchNumber]['start'])->diffInSeconds($lastOnOff[$switchNumber]['end']);
         });
 
-        $fullRunTime += Carbon::parse($onOff['start'])->diffInSeconds($onOff['end']);
-        $lastRunTime = Carbon::parse($lastOnOff['start'])->diffInSeconds($lastOnOff['end']);
 
         dd($onOff, $fullRunTime, $lastOnOff, $lastRunTime);
 
