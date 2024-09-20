@@ -117,6 +117,9 @@
                                 <!-- Table Tab Pane -->
                                 <div class="tab-pane fade show active" id="table" role="tabpanel"
                                      aria-labelledby="table-tab">
+                                    <div class="alert alert-info">
+                                        <strong><i class="la la-info-circle"></i> Info!</strong> All values are shown between the selected date range.
+                                    </div>
                                     <div class="card no-padding no-border m-0">
                                         <div class="table-responsive">
                                             <table class="table table-striped table-hover m-0">
@@ -124,7 +127,7 @@
                                                 <tr>
                                                     <th style="width: 5rem;">#</th>
                                                     <th>Switch</th>
-                                                    <th>Interval Runtime</th>
+                                                    <th>Total Runtime</th>
                                                     <th title="Total runtime of last on-off cycle">Last Runtime</th>
                                                     <th>Status</th>
                                                 </tr>
