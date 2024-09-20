@@ -79,7 +79,7 @@ class AeratorManageCommand extends Command
                 DB::beginTransaction();
 
                 if ($runStatus === 'on' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOffAfter) {
-                    Log::channel('aerator_status')->info('When run status on and offAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
+                    Log::channel('aerator_status')->warning('When run status on and offAbleTime switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
                     $switchUnit->update([
                         'run_status' => 'off',
                         'run_status_updated_at' => now()
@@ -114,7 +114,7 @@ class AeratorManageCommand extends Command
                         ->mqttDataSwitchUnitHistorySave()
                         ->mqttDataSwitchUnitHistoryDetailsSave();
                 } else if ($runStatus === 'off' && $runStatusUpdatedAt->diffInSeconds(now()) >= self::switchOnAfter) {
-                    Log::channel('aerator_status')->info('When run status off and onAbleTim switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
+                    Log::channel('aerator_status')->warning('When run status off and onAbleTime switch : ' . $switchUnit->name . '--' . ', Time: ' . now());
                     $switchUnit->update([
                         'run_status' => 'on',
                         'run_status_updated_at' => null,
@@ -130,6 +130,7 @@ class AeratorManageCommand extends Command
                 throw $e;
             }
         }
+        Log::channel('aerator_status')->info('Aerator Manage Command Ending');
     }
 
     /**

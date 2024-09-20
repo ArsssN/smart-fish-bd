@@ -189,6 +189,7 @@ class MqttStoreService
         $matchingFound = false;
 
         if (!(self::$newMqttDataBuilder->data_source == 'mqtt' && self::$newMqttDataBuilder->run_status == 'off')) {
+            Log::channel('mqtt_listener')->warning("Updating switch unit switches status");
             self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) use (&$currentRelay, $previousRelay, &$matchingFound) {
                 $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
                 $switchUnitSwitch->save();
@@ -201,12 +202,12 @@ class MqttStoreService
             });
         }
 
-        Log::channel('mqtt_listener')->info("relayArr: " . implode('', self::$relayArr) . "; O-Relay: " . implode('', array_fill(0, count(self::$relayArr), 0)));
+        Log::channel('mqtt_listener')->warning("Relay: " . implode('', self::$relayArr) . "; EmptyRelay: " . implode('', array_fill(0, count(self::$relayArr), 0)));
 
         if (implode('', self::$relayArr) !== implode('', array_fill(0, count(self::$relayArr), 0)) && (empty(self::$switchUnit->run_status_updated_at) || !$matchingFound)) {
             self::$switchUnit->run_status_updated_at = now();
             self::$switchUnit->save();
-            Log::channel('mqtt_listener')->info('run_status_updated_at: ' . self::$switchUnit->run_status_updated_at);
+            Log::channel('mqtt_listener')->warning('Run status updated_at: ' . self::$switchUnit->run_status_updated_at);
         }
     }
 }
