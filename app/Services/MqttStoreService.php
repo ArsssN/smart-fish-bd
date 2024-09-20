@@ -188,16 +188,18 @@ class MqttStoreService
         $currentRelay = [];
         $matchingFound = false;
 
-        self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) use (&$currentRelay, $previousRelay, &$matchingFound) {
-            $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
-            $switchUnitSwitch->save();
+        if (!(self::$newMqttDataBuilder->data_source == 'mqtt' && self::$newMqttDataBuilder->run_status == 'off')) {
+            self::$switchUnit->switchUnitSwitches->each(function ($switchUnitSwitch, $index) use (&$currentRelay, $previousRelay, &$matchingFound) {
+                $switchUnitSwitch->status = self::$relayArr[$index] ? 'on' : 'off';
+                $switchUnitSwitch->save();
 
-            $currentRelay[] = $switchUnitSwitch->status === 'off' ? 0 : 1;
+                $currentRelay[] = $switchUnitSwitch->status === 'off' ? 0 : 1;
 
-            if (isset($previousRelay[$index]) && $previousRelay[$index] === '1' && $currentRelay[$index] === 1) {
-                $matchingFound = true;
-            }
-        });
+                if (isset($previousRelay[$index]) && $previousRelay[$index] === '1' && $currentRelay[$index] === 1) {
+                    $matchingFound = true;
+                }
+            });
+        }
 
         Log::channel('mqtt_listener')->info("relayArr: " . implode('', self::$relayArr) . "; O-Relay: " . implode('', array_fill(0, count(self::$relayArr), 0)));
 
