@@ -124,10 +124,8 @@
                                                 <tr>
                                                     <th style="width: 5rem;">#</th>
                                                     <th>Switch</th>
-                                                    <th>Start At</th>
-                                                    <th>End At</th>
                                                     <th>Interval Runtime</th>
-                                                    <th title="Total runtime of last on-off cycle">Cumulative Runtime</th>
+                                                    <th title="Total runtime of last on-off cycle">Last Runtime</th>
                                                     <th>Status</th>
                                                 </tr>
                                                 </thead>
@@ -135,7 +133,7 @@
                                                 @php($index = 0)
                                                 @foreach($graphData[0]["data"] as $key => $runtime)
                                                     @php(++$index)
-                                                    @php($status = $graphData[0]["status"][$index] ?? '')
+                                                    @php($status = $allStatus[$index] ?? '')
                                                     @php($isOn = $status == 'on')
                                                     <tr
                                                         class="{{$isOn ? 'table-success' : 'table-danger'}}"
@@ -144,32 +142,16 @@
                                                             {{$index}}
                                                         </td>
                                                         <td>
-                                                            {{$runtime ? "Aerator" : "-"}}
+                                                            Aerator
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $graphData[0]['on_off'][$index]['on']
-                                                                ? \Illuminate\Support\Carbon::make($graphData[0]['on_off'][$index]['on'])->format('Y-m-d H:i:s')
-                                                                : '-'
+                                                                $graphData[0]['data'][$index] ?? '0'
                                                             }}
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $graphData[0]['on_off'][$index]['off']
-                                                                ? \Illuminate\Support\Carbon::make($graphData[0]['on_off'][$index]['off'])->format('Y-m-d H:i:s')
-                                                                : '-'
-                                                            }}
-                                                        </td>
-                                                        <td>
-                                                            {{
-                                                                getIntervalRuntime($runtime, $index, $graphData[0], [$_start_date, $_end_date])
-                                                            }}
-                                                        </td>
-                                                        <td>
-                                                            {{
-                                                                $runtime
-                                                                ? $graphData[0]["formated_run_time"][$index] ?? "-"
-                                                                : "-"
+                                                                $lastRunTime[$index] ?? '0'
                                                             }}
                                                         </td>
                                                         <td>
