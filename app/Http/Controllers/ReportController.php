@@ -340,12 +340,13 @@ class ReportController extends Controller
             $count = $aHistoryDetail->count();
             $aHistoryDetail->each(function ($item, $index) use ($count, $end_date, $switchNumber, &$onOff, &$fullRunTime, &$lastOnOff) {
                 $isLast = $index === $count - 1;
+                $min_of_end_date_or_now = Carbon::parse($end_date)->min(now())->format('Y-m-d H:i:s');
 
                 if ($item->status === 'on') {
                     $start = $onOff[$switchNumber]['start'] ?: $item->created_at;
                     $end = !$isLast
                         ? $onOff[$switchNumber]['start'] ? $item->created_at : null
-                        : $end_date;
+                        : $min_of_end_date_or_now;
 
                     $onOff[$switchNumber] = [
                         'start' => $start,
@@ -354,7 +355,7 @@ class ReportController extends Controller
 
                     $lastOnOff[$switchNumber] = [
                         'start' => $start,
-                        'end' => $end_date
+                        'end' => $min_of_end_date_or_now
                     ];
                 } else {
                     $start = $onOff[$switchNumber]['start'] ?: null;
