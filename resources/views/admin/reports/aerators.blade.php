@@ -31,7 +31,7 @@
                                         <option value="">Select Pond</option>
                                         @foreach($ponds as $pond)
                                             <option
-                                                value="{{$pond->id}}" {{request()->get('pond_id') == $pond->id ? 'selected' : ''}}>
+                                                    value="{{$pond->id}}" {{request()->get('pond_id') == $pond->id ? 'selected' : ''}}>
                                                 {{$pond->name}}
                                             </option>
                                         @endforeach
@@ -136,7 +136,7 @@
                                                     @php($status = $allStatus[$index] ?? '')
                                                     @php($isOn = $status == 'on')
                                                     <tr
-                                                        class="{{$isOn ? 'table-success' : 'table-danger'}}"
+                                                            class="{{$isOn ? 'table-success' : 'table-danger'}}"
                                                     >
                                                         <td>
                                                             {{$index}}
@@ -146,12 +146,12 @@
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $graphData[0]['data'][$index] ?? '0'
+                                                                \Carbon\CarbonInterval::second($graphData[0]['data'][$index] ?? 0)->cascade()->forHumans(['short' => true])
                                                             }}
                                                         </td>
                                                         <td>
                                                             {{
-                                                                $lastRunTime[$index] ?? '0'
+                                                                \Carbon\CarbonInterval::second($lastRunTime[$index] ?? 0)->cascade()->forHumans(['short' => true])
                                                             }}
                                                         </td>
                                                         <td>
