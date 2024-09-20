@@ -354,7 +354,8 @@ class ReportController extends Controller
                     ];
 
                     $lastOnOff[$switchNumber] = [
-                        'start' => $item->created_at,
+                        // 'start' => $item->created_at,
+                        'start' => $start,
                         'end' => $min_of_end_date_or_now
                     ];
                 } else {
