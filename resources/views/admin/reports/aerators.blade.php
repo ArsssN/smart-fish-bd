@@ -146,12 +146,12 @@
                                                         </td>
                                                         <td>
                                                             {{
-                                                                \Carbon\CarbonInterval::second($graphData[0]['data'][$index] ?? 0)->cascade()->forHumans(['short' => true])
+                                                                ($val = $graphData[0]['data'][$index] ?? 0) ? \Carbon\CarbonInterval::second($val)->cascade()->forHumans(['short' => true]) : '-'
                                                             }}
                                                         </td>
                                                         <td>
                                                             {{
-                                                                \Carbon\CarbonInterval::second($lastRunTime[$index] ?? 0)->cascade()->forHumans(['short' => true])
+                                                                ($val = $lastRunTime[$index] ?? 0) ? \Carbon\CarbonInterval::second($val)->cascade()->forHumans(['short' => true]) : '-'
                                                             }}
                                                         </td>
                                                         <td>
