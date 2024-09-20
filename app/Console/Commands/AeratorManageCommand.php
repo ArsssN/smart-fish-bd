@@ -90,6 +90,7 @@ class AeratorManageCommand extends Command
                     $relay = $this->switchUnitSwitchesStatusUpdate($switchUnit->switchUnitSwitches, $historyDetails);
 
                     $mqttData = $switchUnit->history->mqttData;
+                    $mqttData->run_status = 'off';
 
                     $publishMessage = json_decode($mqttData->publish_message ?? '{}');
                     $publishTopic = $mqttData->publish_topic;
