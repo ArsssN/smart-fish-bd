@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,6 +72,11 @@ class MqttDataSwitchUnitHistoryDetail extends Model
 
     }
 
+    public function setAppendsManually(array $appends): void
+    {
+        $this->appends = $appends;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -97,6 +103,14 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     | SCOPES
     |--------------------------------------------------------------------------
     */
+    /**
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeWithoutAppends(Builder $query): void
+    {
+        $this->setAppends([]);
+    }
 
     /*
     |--------------------------------------------------------------------------

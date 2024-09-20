@@ -11,6 +11,7 @@ use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -297,31 +298,84 @@ class ReportController extends Controller
         $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i');
         $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i');
 
-        $mqttDataSwitchUnitHistoryDetail = MqttDataSwitchUnitHistoryDetail::query()
-            ->whereHas(
-                'mqttDataSwitchUnitHistory',
-                function ($query) use ($pond_id) {
-                    $query->where('pond_id', $pond_id);
-                }
+        $mqttDataSwitchUnitHistoryDetail = DB::table('mqtt_data_switch_unit_history_details AS mdshd')
+            ->leftJoin(
+                'mqtt_data_switch_unit_histories AS mdsh',
+                'mdsh.id',
+                '=',
+                'mdshd.history_id'
             )
-            ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('switch_type_id', 1)
+            ->where('mdsh.pond_id', $pond_id)
+            ->whereBetween('mdshd.created_at', [$start_date, $end_date])
+            ->where('mdshd.switch_type_id', 1)
+            ->orderBy('mdshd.created_at')
             ->get([
-                'status',
-                'created_at',
-                'switch_type_id',
-                'number'
+                'mdshd.id',
+                'mdshd.status',
+                'mdshd.created_at',
+                'mdshd.switch_type_id',
+                'mdshd.number'
             ])
-            ->groupBy('number')
-            ->map(function ($item) {
-                $total_run_time = $item->sum('run_time');
-                return [
-                    'items' => $item->toArray(),
-                    'total_run_time' => $total_run_time,
-                    'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
+            ->groupBy('number');
+
+        $mqttDataSwitchUnitHistoryDetailFirst = $mqttDataSwitchUnitHistoryDetail->first();
+        $onOff = [
+            'start' => null,
+            'end' => null
+        ];
+        $lastOnOff = [
+            'start' => null,
+            'end' => null
+        ];
+        $fullRunTime = 0;
+        $count = $mqttDataSwitchUnitHistoryDetailFirst->count();
+        $mqttDataSwitchUnitHistoryDetailFirst->each(function ($item, $index) use ($count, $end_date, &$onOff, &$fullRunTime, &$lastOnOff) {
+            $isLast = $index === $count - 1;
+
+            if ($item->status === 'on') {
+                $start = $onOff['start'] ?: $item->created_at;
+                $end = !$isLast
+                    ? $onOff['start'] ? $item->created_at : null
+                    : $end_date;
+
+                $onOff = [
+                    'start' => $start,
+                    'end' => $end,
                 ];
-            });
-        //dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
+
+                $lastOnOff = [
+                    'start' => $start,
+                    'end' => $end_date
+                ];
+            } else {
+                $start = $onOff['start'] ?: null;
+                $end = $onOff['start'] ? $item->created_at : null;
+
+                $onOff = [
+                    'start' => $start,
+                    'end' => $end,
+                ];
+
+                $fullRunTime += Carbon::parse($start)->diffInSeconds($end);
+
+                $lastOnOff = [
+                    'start' => $start,
+                    'end' => $end
+                ];
+
+                $onOff = [
+                    'start' => null,
+                    'end' => null
+                ];
+            }
+        });
+
+        $fullRunTime += Carbon::parse($onOff['start'])->diffInSeconds($onOff['end']);
+        $lastRunTime = Carbon::parse($lastOnOff['start'])->diffInSeconds($lastOnOff['end']);
+
+        dd($onOff, $fullRunTime, $lastOnOff, $lastRunTime);
+
+        // dd($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
         $labels = $mqttDataSwitchUnitHistoryDetail->keys()
             ->map(function ($key) {
                 return "Aerator Switch: $key";
