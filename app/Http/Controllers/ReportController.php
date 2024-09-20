@@ -320,7 +320,7 @@ class ReportController extends Controller
                         ->where('md.run_status', 'off');
                 });
             })
-            ->orderBy('mdshd.created_at')
+            ->orderBy('mdshd.id')
             ->get([
                 'mdshd.id',
                 'mdshd.status',
