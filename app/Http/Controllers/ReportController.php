@@ -294,8 +294,8 @@ class ReportController extends Controller
         }
 
         $pond_id = request()->get('pond_id');
-        $start_date = request()->get('start_date') ?? Carbon::now()->startOfDay()->format('Y-m-d H:i');
-        $end_date = request()->get('end_date') ?? Carbon::now()->endOfDay()->format('Y-m-d H:i');
+        $start_date = request()->get('start_date') ?? Carbon::now()->subHours(3)->format('Y-m-d H:i');
+        $end_date = request()->get('end_date') ?? Carbon::now()->format('Y-m-d H:i');
 
         $mqttDataSwitchUnitHistoryDetail = MqttDataSwitchUnitHistoryDetail::query()
             ->whereHas(
@@ -307,20 +307,23 @@ class ReportController extends Controller
             ->whereBetween('created_at', [$start_date, $end_date])
             ->where('switch_type_id', 1)
             ->get([
+                'id',
                 'status',
                 'created_at',
                 'switch_type_id',
                 'number'
             ])
             ->groupBy('number')
-            ->map(function ($item) {
+            /*->map(function ($item) {
                 $total_run_time = $item->sum('run_time');
                 return [
                     'items' => $item->toArray(),
                     'total_run_time' => $total_run_time,
                     'total_formated_run_time' => CarbonInterval::second($total_run_time)->cascade()->forHumans(['short' => true])
                 ];
-            });
+            })*/;
+        // dd(now(),[$start_date, $end_date], $mqttDataSwitchUnitHistoryDetail->toArray(), MqttDataSwitchUnitHistoryDetail::orderByDesc('id')->first()->toArray());
+        dd($mqttDataSwitchUnitHistoryDetail->toArray());
         //dump($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
         $labels = $mqttDataSwitchUnitHistoryDetail->keys()
             ->map(function ($key) {

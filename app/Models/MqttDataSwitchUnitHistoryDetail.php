@@ -41,35 +41,45 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function getOnOffTime(MqttDataSwitchUnitHistoryDetail $modal, string $status)
+
+    // getMachineOnAt
+    private function getMachineOnAt()
     {
-        if ($status === 'on') {
-            if ($modal->status == 'off') {
-                $beforeData = DB::table('mqtt_data_switch_unit_history_details')
-                    /*->whereNot('id', $modal->id)*/
-                    /*->whereNot('history_id', $modal->history_id)*/
-                    ->where('switch_type_id', $modal->switch_type_id)
-                    ->where('number', $modal->number)
-                    ->where('status', 'on')
-                    ->orderByDesc('history_id')
-                    ->first();
-                $at = $beforeData?->created_at ? Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s') : null;
-            } else {
-                $at = Carbon::parse($modal->created_at)->format('Y-m-d H:i:s');
-            }
-        } else if ($status === 'off') {
-            if ($modal->status == 'on') {
-                $at = null;
-            } else {
-                $at = Carbon::parse($modal->updated_at ?: $modal->created_at)->format('Y-m-d H:i:s');
-            }
+        if ($this->status == 'off') {
+            $beforeData = DB::table('mqtt_data_switch_unit_history_details')
+                /*->whereNot('id', $this->id)*/
+                /*->whereNot('history_id', $this->history_id)*/
+                ->where('switch_type_id', $this->switch_type_id)
+                ->where('number', $this->number)
+                ->where('status', 'on')
+                ->where('id', '<', $this->id)
+                ->orderByDesc('id')
+                ->first(['created_at', 'id']);
+            return [$beforeData?->created_at ? Carbon::parse($beforeData?->created_at)->format('Y-m-d H:i:s') : null, $beforeData?->id];
         } else {
-            $at = null;
+            return [Carbon::parse($this->created_at)->format('Y-m-d H:i:s'), $this->id];
         }
-
-        return $at;
-
     }
+
+    // getMachineOffAt
+    private function getMachineOffAt()
+    {
+        if ($this->status == 'on') {
+            $beforeData = DB::table('mqtt_data_switch_unit_history_details')
+                /*->whereNot('id', $this->id)*/
+                /*->whereNot('history_id', $this->history_id)*/
+                ->where('switch_type_id', $this->switch_type_id)
+                ->where('number', $this->number)
+                //->where('status', 'on')
+                ->where('id', '>', $this->id)
+                ->orderBy('id')
+                ->first(['created_at', 'id']);
+            return [$beforeData?->created_at ? Carbon::parse($beforeData?->created_at)->format('Y-m-d H:i:s') : null, $beforeData?->id];
+        } else {
+            return [Carbon::parse($this->created_at)->format('Y-m-d H:i:s'), $this->id];
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +117,7 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     public function machineOnAt(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->getOnOffTime($this, 'on'),
+            get: fn() => $this->getMachineOnAt(),
         );
     }
 
@@ -115,24 +125,22 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     public function machineOffAt(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->getOnOffTime($this, 'off'),
+            get: fn() => $this->getMachineOffAt(),
         );
     }
 
     // runtime in seconds
     public function runTime(): Attribute
     {
-        $startAt = Carbon::parse($this->getOnOffTime($this, 'on'));
-        $endAt = Carbon::parse($this->getOnOffTime($this, 'off'));
+        $startAt = Carbon::parse($this->getMachineOnAt()[0]);
+        $endAt = Carbon::parse($this->getMachineOffAt()[0]);
 
         $runTime = null;
 
         if ($startAt && $endAt) {
             $runTime = $startAt->diffInSeconds($endAt);
-        } else if ($startAt) {
+        } else if ($startAt && !$endAt) {
             $runTime = $startAt->diffInSeconds(now());
-        } else if ($endAt) {
-            $runTime = $endAt->diffInSeconds(now());
         }
 
         return Attribute::make(
