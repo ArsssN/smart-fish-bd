@@ -305,9 +305,21 @@ class ReportController extends Controller
                 '=',
                 'mdshd.history_id'
             )
+            ->leftJoin(
+                'mqtt_data AS md',
+                'md.id',
+                '=',
+                'mdsh.mqtt_data_id'
+            )
             ->where('mdsh.pond_id', $pond_id)
             ->whereBetween('mdshd.created_at', [$start_date, $end_date])
             ->where('mdshd.switch_type_id', 1)
+            ->where(function ($query) {
+                $query->whereNot(function ($q) {
+                    $q->where('md.data_source', 'mqtt')
+                        ->where('md.run_status', 'off');
+                });
+            })
             ->orderBy('mdshd.created_at')
             ->get([
                 'mdshd.id',
