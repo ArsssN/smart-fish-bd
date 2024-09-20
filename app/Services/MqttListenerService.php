@@ -441,7 +441,7 @@ class MqttListenerService
      */
     public static function checkIfPublishable(bool $publishable = true): bool
     {
-        Log::channel('mqtt_listener')->alert('isUpdate : ' . self::$isUpdate . ' -- ' . '; isPublishable: ' . self::$isPublishable . ' -- ' . '; Publishable: ' . $publishable);
+        Log::channel('mqtt_listener')->warning('isUpdate : ' . self::$isUpdate . ' -- ' . '; isPublishable: ' . self::$isPublishable . ' -- ' . '; Publishable: ' . $publishable);
         return $publishable && (self::$isUpdate || self::$isPublishable);
     }
 
@@ -453,7 +453,7 @@ class MqttListenerService
      */
     public static function checkIfSavable(bool $savable = true): bool
     {
-        Log::channel('mqtt_listener')->alert('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished . ' -- ' . '; Savable: ' . $savable);
+        Log::channel('mqtt_listener')->warning('isSaveMqttData : ' . self::$isSaveMqttData . ' -- ' . '; isNotAlreadyPublished: ' . !self::$isAlreadyPublished . ' -- ' . '; Savable: ' . $savable);
         return $savable && self::$isSaveMqttData;
     }
 
