@@ -322,17 +322,9 @@ class ReportController extends Controller
         $lastOnOff = [];
         $fullRunTime = [];
         $lastRunTime = [];
+        $allStatus = [];
 
-        $mqttDataSwitchUnitHistoryDetail->each(function ($aHistoryDetail, $switchNumber) use ($end_date, &$onOff, &$lastOnOff, &$fullRunTime, &$lastRunTime) {
-            echo $aHistoryDetail->map(function ($item) {
-                return [
-                    'status' => $item->status,
-                    'created_at' => $item->created_at
-                ];
-            });
-            echo "<br>";
-            echo "<br>";
-
+        $mqttDataSwitchUnitHistoryDetail->each(function ($aHistoryDetail, $switchNumber) use ($end_date, &$onOff, &$lastOnOff, &$fullRunTime, &$lastRunTime, &$allStatus) {
             $onOff[$switchNumber] = [
                 'start' => null,
                 'end' => null
@@ -342,6 +334,8 @@ class ReportController extends Controller
                 'end' => null
             ];
             $fullRunTime[$switchNumber] = 0;
+
+            $allStatus[$switchNumber] = $aHistoryDetail?->reverse()?->first()?->status ?? 'off';
 
             $count = $aHistoryDetail->count();
             $aHistoryDetail->each(function ($item, $index) use ($count, $end_date, $switchNumber, &$onOff, &$fullRunTime, &$lastOnOff) {
@@ -389,56 +383,11 @@ class ReportController extends Controller
             $lastRunTime[$switchNumber] = Carbon::parse($lastOnOff[$switchNumber]['start'])->diffInSeconds($lastOnOff[$switchNumber]['end']);
         });
 
-
-        dd($onOff, $fullRunTime, $lastOnOff, $lastRunTime);
-
         // dd($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
         $labels = $mqttDataSwitchUnitHistoryDetail->keys()
             ->map(function ($key) {
                 return "Aerator Switch: $key";
             })->toArray();
-
-        $emptyGraphData = collect(array_fill(1, 12, null));
-        $empty_formated_run_time = collect(array_fill(1, 12, ""));
-        $empty_status = collect(array_fill(1, 12, "off"));
-        $empty_on_off = collect(array_fill(1, 12, [
-            'on' => null,
-            'off' => null
-        ]));
-
-        $formated_run_time = $mqttDataSwitchUnitHistoryDetail->map(
-            fn($item) => $item["total_formated_run_time"] ?? ""
-        );
-        $status = $mqttDataSwitchUnitHistoryDetail->map(
-            fn($item) => array_reverse($item["items"] ?? [])[0]["status"] ?? "off"
-        );
-        $on_off = $mqttDataSwitchUnitHistoryDetail->map(
-            fn($item) => [
-                'on' => ($top1 = array_reverse($item["items"] ?? [])[0])["machine_on_at"] ?? null,
-                'off' => $top1["machine_off_at"] ?? null
-            ]
-        );
-        $graphData = $mqttDataSwitchUnitHistoryDetail->map(
-            fn($item) => $item["total_run_time"] ?? 0
-        );
-
-        $graphData = $emptyGraphData->mapWithKeys(
-            fn($item, $key) => [$key => $graphData->get($key, null)]
-        );
-        $formated_run_time = $empty_formated_run_time->mapWithKeys(
-            fn($item, $key) => [$key => $formated_run_time->get($key, "")]
-        );
-        $status = $empty_status->mapWithKeys(
-            fn($item, $key) => [$key => $status->get($key, "-")]
-        );
-        $on_off = $empty_on_off->mapWithKeys(
-            fn($item, $key) => [$key => $on_off->get($key, ["on" => null, "off" => null])]
-        );
-
-        $graphData = $graphData->reduce(function ($carry, $item, $key) {
-            $carry["Aerator: $key"] = $item;
-            return $carry;
-        }, []);
 
         $borderColors = [
             1 => 'blue',
@@ -473,7 +422,7 @@ class ReportController extends Controller
         $graphData = [
             [
                 'label' => 'Aerator Run Time (Seconds)',
-                'data' => $graphData,
+                'data' => $fullRunTime,
                 'backgroundColor' => [
                     ...$colorsWith50pOpacity
                 ],
@@ -484,9 +433,6 @@ class ReportController extends Controller
                 'tension' => 0.3,
                 // border top radius
                 'borderRadius' => 4,
-                'status' => $status,
-                'formated_run_time' => $formated_run_time,
-                'on_off' => $on_off
             ]
         ];
 
@@ -501,6 +447,8 @@ class ReportController extends Controller
                 'start_date',
                 'end_date',
                 'borderColors',
+                'lastRunTime',
+                'allStatus'
             )
         );
     }
