@@ -67,17 +67,22 @@ class MqttDataSwitchUnitHistoryDetail extends Model
                     })
                     ->where('mdshd.switch_type_id', $this->switch_type_id)
                     ->where('mdshd.number', $this->number)
-                    ->where('mdshd.status', 'on')
                     ->where('mdshd.id', '<', $this->id)
                     /*->whereNot('id', $this->id)*/
                     /*->whereNot('history_id', $this->history_id)*/
                     ->orderByDesc('mdshd.id')
                     ->select('mdshd.*')
                     ->first();
-                    if($this->number == 3) {
-                        //dump("$this->id; $this->switch_type_id; " . json_encode($beforeData));
-                    }
-                $at = $beforeData?->created_at ? Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s') : null;
+                if ($this->number == 3) {
+                    //dump("$this->id; $this->switch_type_id; " . json_encode($beforeData));
+                }
+                $at = $beforeData
+                    ? ($beforeData->status == 'on'
+                        ? ($beforeData?->created_at
+                            ? Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s')
+                            : null)
+                        : $this->machine_off_at)
+                    : null;
             } else {
                 $at = Carbon::parse($this->created_at)->format('Y-m-d H:i:s');
             }
