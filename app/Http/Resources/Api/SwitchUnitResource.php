@@ -51,7 +51,7 @@ class SwitchUnitResource extends JsonResource
                 'switchType' => $switchUnitHistoryDetail->switch_type_id,
                 'status' => $switchUnitHistoryDetail->status,
                 'comment' => $switchUnitHistoryDetail->comment,
-                'run_time' => $run_time ? CarbonInterval::second($run_time)->cascade()->forHumans(['short' => true]) : null,
+                'run_time' => $run_time ? CarbonInterval::second($run_time)->cascade()->forHumans(['short' => true]) : '',
             ];
         });
 
