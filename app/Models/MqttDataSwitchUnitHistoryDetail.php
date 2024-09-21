@@ -46,24 +46,46 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     {
         if ($status === 'on') {
             if ($modal->status == 'off') {
-                $beforeData = DB::table('mqtt_data_switch_unit_history_details')
-                    ->where('id', '<', $modal->id)
-                    /*->whereNot('id', $modal->id)*/
-                    /*->whereNot('history_id', $modal->history_id)*/
-                    ->where('switch_type_id', $modal->switch_type_id)
-                    ->where('number', $modal->number)
-                    ->where('status', 'on')
-                    ->orderByDesc('id')
+                $beforeData = DB::table('mqtt_data_switch_unit_history_details AS mdshd')
+                    ->leftJoin(
+                        'mqtt_data_switch_unit_histories AS mdsh',
+                        'mdsh.id',
+                        '=',
+                        'mdshd.history_id'
+                    )
+                    ->leftJoin(
+                        'mqtt_data AS md',
+                        'md.id',
+                        '=',
+                        'mdsh.mqtt_data_id'
+                    )
+                    ->where(function ($query) {
+                        $query->whereNot(function ($q) {
+                            $q->where('md.data_source', 'mqtt')
+                                ->where('md.run_status', 'off');
+                        });
+                    })
+                    ->where('mdshd.switch_type_id', $this->switch_type_id)
+                    ->where('mdshd.number', $this->number)
+                    ->where('mdshd.status', 'on')
+                    ->where('mdshd.id', '<', $this->id)
+                    /*->whereNot('id', $this->id)*/
+                    /*->whereNot('history_id', $this->history_id)*/
+                    ->orderByDesc('mdshd.id')
+                    ->select('mdshd.*')
                     ->first();
+                    if($this->number == 3) {
+                        //dump("$this->id; $this->switch_type_id; " . json_encode($beforeData));
+                    }
                 $at = $beforeData?->created_at ? Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s') : null;
             } else {
-                $at = Carbon::parse($modal->created_at)->format('Y-m-d H:i:s');
+                $at = Carbon::parse($this->created_at)->format('Y-m-d H:i:s');
             }
         } else if ($status === 'off') {
-            if ($modal->status == 'on') {
+            if ($this->status == 'on') {
                 $at = null;
             } else {
-                $at = Carbon::parse($modal->created_at)->format('Y-m-d H:i:s');
+                $at = Carbon::parse($this->created_at)->format('Y-m-d H:i:s');
             }
         } else {
             $at = null;
@@ -137,8 +159,8 @@ class MqttDataSwitchUnitHistoryDetail extends Model
     // runtime in seconds
     public function runTime(): Attribute
     {
-        $startAt = Carbon::parse($this->getOnOffTime($this, 'on'));
-        $endAt = Carbon::parse($this->getOnOffTime($this, 'off'));
+        $startAt = Carbon::parse($this->machine_on_at);
+        $endAt = Carbon::parse($this->machine_off_at);
 
         $runTime = null;
 

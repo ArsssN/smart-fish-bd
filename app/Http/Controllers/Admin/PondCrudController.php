@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PondRequest;
+use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\Project;
 use App\Models\SensorUnit;
 use App\Models\SwitchType;
@@ -278,7 +279,7 @@ class PondCrudController extends CrudController
                 $html .= "</thead>";
                 $html .= "<tbody>";
 
-                $entry->switchUnits->each(function ($switchUnit) use (&$html) {
+                $entry->switchUnits->each(function ($switchUnit) use (&$html, $entry) {
                     $html .= "<tr>";
                     $html .= "<td><a target='_blank' href='" . route('switch-unit.show', $switchUnit->id)
                         . "'>{$switchUnit->name}</a><br/>Status:<small class='text-capitalize rounded bg-info px-2 py-1 ml-2' title='{$switchUnit->status}' >"
@@ -297,13 +298,25 @@ class PondCrudController extends CrudController
                     $html .= "</thead>";
                     $html .= "<tbody>";
 
-                    $switchUnitHistories = $switchUnit->histories()
+                    /*$switchUnitHistories = $switchUnit->histories()
                         ->whereDoesntHave('mqttData', function ($query) {
                             $query->where('data_source', 'mqtt')
                                 ->where('run_status', 'off');
                         })
                         ->orderByDesc('id')->with('switchUnitHistoryDetails.switchType')->first();
-                    $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
+                    $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();*/
+
+                    $switchUnitHistory = MqttDataSwitchUnitHistory::query()
+                        ->where('switch_unit_id', $switchUnit->id)
+                        ->whereDoesntHave('mqttData', function ($query) {
+                            $query->where('data_source', 'mqtt')
+                                ->where('run_status', 'off');
+                        })
+                        ->where('pond_id', $entry->id)
+                        ->with('switchUnitHistoryDetails')
+                        ->orderByDesc('id')
+                        ->first();
+                    $switches = $switchUnitHistory?->switchUnitHistoryDetails ?? collect();
 
                     if ($switches->count()) {
                         $switches->each(function ($switch) use (&$html) {

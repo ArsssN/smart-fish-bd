@@ -336,6 +336,8 @@ class ReportController extends Controller
         $lastRunTime = [];
         $allStatus = [];
 
+        // dump($mqttDataSwitchUnitHistoryDetail[1]->toArray());
+
         $mqttDataSwitchUnitHistoryDetail->each(function ($aHistoryDetail, $switchNumber) use ($end_date, &$onOff, &$lastOnOff, &$fullRunTime, &$lastRunTime, &$allStatus) {
             $onOff[$switchNumber] = [
                 'start' => null,
@@ -366,10 +368,15 @@ class ReportController extends Controller
                     ];
 
                     $lastOnOff[$switchNumber] = [
-                        // 'start' => $item->created_at,
-                        'start' => $start,
+                        //'start' => $item->created_at,
+                        // 'start' => Carbon::parse($start)->max(Carbon::parse($item->created_at))->format('Y-m-d H:i:s'),
+                        'start' => $item->created_at,
                         'end' => $min_of_end_date_or_now
                     ];
+
+                    if ($switchNumber == 3) {
+                        //dump("On:: start: {$lastOnOff[$switchNumber]['start']}; created_at: {$item->created_at}; id: $item->id");
+                    }
                 } else {
                     $start = $onOff[$switchNumber]['start'] ?: null;
                     $end = $onOff[$switchNumber]['start'] ? $item->created_at : null;
@@ -382,19 +389,28 @@ class ReportController extends Controller
                     $fullRunTime[$switchNumber] += Carbon::parse($start)->diffInSeconds($end);
 
                     $lastOnOff[$switchNumber] = [
-                        'start' => $start,
-                        'end' => $end
+                        'start' => $lastOnOff[$switchNumber]['start'] ?: $start,
+                        'end' => $end ?: $lastOnOff[$switchNumber]['end']
                     ];
 
                     $onOff[$switchNumber] = [
                         'start' => null,
                         'end' => null
                     ];
+
+
+                    if ($switchNumber == 3) {
+                        //dump("Off:: end: {$lastOnOff[$switchNumber]['end']}; created_at: {$item->created_at}; id: $item->id");
+                    }
                 }
             });
 
             $fullRunTime[$switchNumber] += Carbon::parse($onOff[$switchNumber]['start'])->diffInSeconds($onOff[$switchNumber]['end']);
             $lastRunTime[$switchNumber] = Carbon::parse($lastOnOff[$switchNumber]['start'])->diffInSeconds($lastOnOff[$switchNumber]['end']);
+
+            if ($switchNumber == 3) {
+                //dump($lastRunTime[$switchNumber], $lastOnOff[$switchNumber]);
+            }
         });
 
         // dd($mqttDataSwitchUnitHistoryDetail->toArray(), $start_date, $end_date);
