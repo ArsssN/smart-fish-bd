@@ -306,18 +306,18 @@ class PondCrudController extends CrudController
                     $switches = $switchUnitHistories?->switchUnitHistoryDetails ?? collect();
 
                     if ($switches->count()) {
-                        $switches->each(function ($switch) use (&$html,) {
+                        $switches->each(function ($switch) use (&$html) {
                             $aerator_remote_name = 'aerator';
                             $switch = (object)$switch;
 
                             $runTime = $switch->switchType->remote_name == $aerator_remote_name
-                                ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true])
+                                ? $switch->run_time ? CarbonInterval::second($switch->run_time)->cascade()->forHumans(['short' => true]) : '-'
                                 : '-';
                             $html .= "<tr>";
                             $html .= "<td>{$switch->number}</td>";
                             $html .= "<td>{$switch->switchType->name}</td>";
                             $html .= "<td>{$switch->status}</td>";
-                            $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . "'>{$runTime}</td>";
+                            $html .= "<td title='" . $switch->machine_on_at . ' -> ' . ($switch->machine_off_at ?: 'Now') . ": $switch->run_time'>{$runTime}</td>";
                             $html .= "<td>{$switch->comment}</td>";
                             $html .= "</tr>";
                         });

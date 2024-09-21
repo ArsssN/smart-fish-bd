@@ -47,12 +47,13 @@ class MqttDataSwitchUnitHistoryDetail extends Model
         if ($status === 'on') {
             if ($modal->status == 'off') {
                 $beforeData = DB::table('mqtt_data_switch_unit_history_details')
+                    ->where('id', '<', $modal->id)
                     /*->whereNot('id', $modal->id)*/
                     /*->whereNot('history_id', $modal->history_id)*/
                     ->where('switch_type_id', $modal->switch_type_id)
                     ->where('number', $modal->number)
                     ->where('status', 'on')
-                    ->orderByDesc('history_id')
+                    ->orderByDesc('id')
                     ->first();
                 $at = $beforeData?->created_at ? Carbon::parse($beforeData->created_at)->format('Y-m-d H:i:s') : null;
             } else {
@@ -62,7 +63,7 @@ class MqttDataSwitchUnitHistoryDetail extends Model
             if ($modal->status == 'on') {
                 $at = null;
             } else {
-                $at = Carbon::parse($modal->updated_at ?: $modal->created_at)->format('Y-m-d H:i:s');
+                $at = Carbon::parse($modal->created_at)->format('Y-m-d H:i:s');
             }
         } else {
             $at = null;
