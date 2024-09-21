@@ -7,15 +7,18 @@ use App\Http\Controllers\MqttCommandController;
 use App\Http\Resources\Api\SwitchTypeResource;
 use App\Http\Resources\Api\SwitchUnitResource;
 use App\Models\MqttData;
-use App\Models\MqttDataSwitchUnitHistory;
 use App\Models\Pond;
 use App\Models\SwitchType;
 use App\Models\SwitchUnit;
+use App\Services\MqttListenerService;
+use App\Services\MqttPublishService;
+use App\Services\MqttStoreService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use PhpMqtt\Client\Facades\MQTT;
+use Throwable;
 
 class SwitchUnitController extends Controller
 {
@@ -204,6 +207,7 @@ class SwitchUnitController extends Controller
      * @param SwitchUnit $switchUnit - The switch unit
      * @param Pond $pond - The pond
      * @return JsonResponse
+     * @throws Throwable
      */
     public function switchesStatusUpdate(SwitchUnit $switchUnit, Pond $pond): JsonResponse
     {
@@ -213,9 +217,16 @@ class SwitchUnitController extends Controller
             ]);
         }
 
+        if ($switchUnit->run_status === 'off') {
+            return response()->json([
+                'message' => 'No action taken. Switch unit run status is off'
+            ]);
+        }
+
         $topic = '';
-        //$defaultStitchesStatus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+        //$defaultStitchesStatus = [0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0];
         $defaultStitchesStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
         $switchesStatus = request()->switchesStatus ?? $defaultStitchesStatus;
         $defaultStatus = "active";
         $status = request()->status ?? $defaultStatus;
@@ -234,23 +245,11 @@ class SwitchUnitController extends Controller
             array_keys($switchesStatus)
         );
 
-        // $switchUnit->switches = $newSwitches;
-        // it means that the switch unit is automatic or manual
-        $switchUnit->status = $status;
-        $switchUnit->save();
-
-        foreach ($newSwitches as $newSwitch) {
-            $switchUnit->switchUnitSwitches()->updateOrCreate(
-                ['number' => $newSwitch['number']],
-                [
-                    'status' => $newSwitch['status'],
-                    'comment' => $newSwitch['comment'],
-                    'switchType' => $newSwitch['switch_type_id'],
-                ]
-            );
-        }
-
         try {
+            DB::beginTransaction();
+            // it means that the switch unit is automatic or manual
+            $switchUnit->status = $status;
+
             $mqttData = MqttData::query()
                 ->whereHas(
                     'switchUnitHistories',
@@ -263,51 +262,46 @@ class SwitchUnitController extends Controller
                 )
                 ->orderByDesc('id')
                 ->first();
+            $mqttData->run_status = $switchUnit->run_status;
 
-            $topic = $mqttData?->publish_topic ?? '';
-            $data = json_decode($mqttData?->data ?? '{}');
+            $topic = $mqttData->publish_topic ?? '';
 
             $addr = dechex((int)$switchUnit->serial_number);
             $addr = Str::startsWith($addr, '0x') ? $addr : '0x' . $addr;
 
-            $project_id = $mqttData?->project_id ?? null;
+            $publish_message = json_decode($mqttData->publish_message ?? '{}');
+            $prevRelay = $publish_message?->relay ?? '';
 
-            if (!$project_id) {
-                $project_id = $pond->project()->first()->id;
-            }
-
-            $newMqttData = MqttData::query()->create([
-                'type' => 'sensor',
-                'data_source' => 'api',
-                'project_id' => $project_id,
-                'data' => json_encode($data),
-                'publish_message' => json_encode([
-                    'addr' => $addr,
-                    'type' => 'sw',
-                    'relay' => implode('', $switchesStatus),
-                ]),
-                'publish_topic' => $topic,
-            ]);
-            $mqttDataSwitchUnitHistory = MqttDataSwitchUnitHistory::query()->create([
-                'mqtt_data_id' => $newMqttData->id,
+            MqttStoreService::$mqttDataSwitchUnitHistory = [
                 'pond_id' => $pond->id,
                 'switch_unit_id' => $switchUnit->id,
-                // 'switches' => json_encode($newSwitches),
-            ]);
+            ];
+            MqttStoreService::$relayArr = $switchesStatus;
+            MqttListenerService::$previousRelay = $prevRelay;
 
-            $mqttDataSwitchUnitHistory->switchUnitHistoryDetails()->createMany($newSwitches);
+            MqttPublishService::init($topic, implode('', $switchesStatus), $addr, $prevRelay)->relayPublish();
 
-            MQTT::publish($topic, $newMqttData->publish_message);
-            Log::info("Switches status updated successfully on topic [$topic]: " . MqttCommandController::$feedBackArray['relay']);
+            MqttStoreService::init($topic, $mqttData, $switchUnit, $newSwitches, 'api')
+                ->mqttDataSave()
+                ->mqttDataSwitchUnitHistorySave()
+                ->mqttDataSwitchUnitHistoryDetailsSave()
+                ->switchUnitUpdate()
+                ->switchUnitSwitchesStatusUpdate();
 
             $res = [
                 'message' => 'Switches status updated successfully',
                 'switchUnit' => new SwitchUnitResource($switchUnit)
             ];
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $currentDateTime = now()->format('Y-m-d H:i:s');
             Log::info("Tries to update switches status on topic [$topic || '--NoTopic--']: " . MqttCommandController::$feedBackArray['relay']);
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
             echo sprintf('[%s] %s', $currentDateTime, $e->getMessage());
             $res = [
                 'message' => 'Failed to update switches status',

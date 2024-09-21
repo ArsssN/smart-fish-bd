@@ -210,4 +210,14 @@ class MqttStoreService
             Log::channel('mqtt_listener')->warning('Run status updated_at: ' . self::$switchUnit->run_status_updated_at);
         }
     }
+
+    /**
+     * @return MqttStoreService
+     */
+    public static function switchUnitUpdate(): MqttStoreService
+    {
+        self::$switchUnit->save();
+
+        return new self();
+    }
 }
