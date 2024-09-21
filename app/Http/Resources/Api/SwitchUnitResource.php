@@ -2,7 +2,11 @@
 
 namespace App\Http\Resources\Api;
 
+use Carbon\CarbonInterval;
+use Exception;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
 /**
  * @OA\Schema(
@@ -35,17 +39,19 @@ class SwitchUnitResource extends JsonResource
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array|Arrayable|JsonSerializable
+     * @throws Exception
      */
     public function toArray($request)
     {
         $switches = $this->history->switchUnitHistoryDetails->map(function ($switchUnitHistoryDetail) {
+            $run_time = $switchUnitHistoryDetail->run_time ?? 0;
             return [
                 'number' => $switchUnitHistoryDetail->number,
                 'switchType' => $switchUnitHistoryDetail->switch_type_id,
                 'status' => $switchUnitHistoryDetail->status,
                 'comment' => $switchUnitHistoryDetail->comment,
-                'run_time' => \Carbon\CarbonInterval::second($switchUnitHistoryDetail->run_time ?? 0)->cascade()->forHumans(['short' => true]),
+                'run_time' => $run_time ? CarbonInterval::second($run_time)->cascade()->forHumans(['short' => true]) : null,
             ];
         });
 
