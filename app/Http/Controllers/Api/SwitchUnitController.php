@@ -213,12 +213,14 @@ class SwitchUnitController extends Controller
     {
         if ($pond->status === 'inactive') {
             return response()->json([
+                'status' => false,
                 'message' => 'Pond is inactive'
             ]);
         }
 
         if ($switchUnit->run_status === 'off') {
             return response()->json([
+                'status' => false,
                 'message' => 'No action taken. Switch unit run status is off'
             ]);
         }
@@ -289,6 +291,7 @@ class SwitchUnitController extends Controller
                 ->switchUnitSwitchesStatusUpdate();
 
             $res = [
+                'status' => true,
                 'message' => 'Switches status updated successfully',
                 'switchUnit' => new SwitchUnitResource($switchUnit)
             ];
@@ -304,6 +307,7 @@ class SwitchUnitController extends Controller
             ]);
             echo sprintf('[%s] %s', $currentDateTime, $e->getMessage());
             $res = [
+                'status' => false,
                 'message' => 'Failed to update switches status',
                 'error' => $e->getMessage()
             ];
